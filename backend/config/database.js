@@ -2,11 +2,11 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
 module.exports = (app) => {
-    var url = process.env.DBURL + process.env.DBNAME
+    var url = 'mongodb://' + process.env.DBUSERNAME + ':' + process.env.DBPASSWORD + '@' + process.env.DBURL + ':' + process.env.DBPORT + '/' + process.env.DBNAME + "?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@012skate-db@"
     console.log('dbserver: ' + url);
 
     mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://' + url, { useNewUrlParser: true , useUnifiedTopology: true });
+    mongoose.connect(url, { useNewUrlParser: true , useUnifiedTopology: true });
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {

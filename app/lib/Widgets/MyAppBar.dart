@@ -5,10 +5,9 @@ import 'package:provider/provider.dart';
 
 myAppBar(BuildContext context, String currentRoute) {
   ProfileService service = Provider.of<ProfileService>(context);
-
   return AppBar(
     toolbarHeight: 48,
-    title: Text("Morpheus"),
+    title: Text("012SKATE"),
     leading: Column(
       children: [
         Navigator.canPop(context)

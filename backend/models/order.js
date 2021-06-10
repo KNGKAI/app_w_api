@@ -1,15 +1,14 @@
 var mongoose = require('mongoose');
 
-var User = new mongoose.Schema({
+var Order = new mongoose.Schema({
   createdDateTim: Date,
   updatedDateTime: Date,
-  username: String,
-  email: String,
-  address: String,
-  role: String,
+  user: String,
+  product: String,
+  status: String,
 });
 
-User.pre('save', function(callback) {
+Order.pre('save', function(callback) {
   var model = this;
   if (model.createdDateTime === null){
     model.createdDateTime = new Date();
@@ -18,4 +17,4 @@ User.pre('save', function(callback) {
   callback();
 });
 
-module.exports.UserModel = mongoose.model('user', User);
+module.exports.OrderModel = mongoose.model('order', Order);

@@ -1,15 +1,13 @@
 var mongoose = require('mongoose');
 
-var User = new mongoose.Schema({
+var Category = new mongoose.Schema({
   createdDateTim: Date,
   updatedDateTime: Date,
-  username: String,
-  email: String,
-  address: String,
-  role: String,
+  name: String,
+  description: String,
 });
 
-User.pre('save', function(callback) {
+Category.pre('save', function(callback) {
   var model = this;
   if (model.createdDateTime === null){
     model.createdDateTime = new Date();
@@ -18,4 +16,4 @@ User.pre('save', function(callback) {
   callback();
 });
 
-module.exports.UserModel = mongoose.model('user', User);
+module.exports.CategoryModel = mongoose.model('category', Category, 'categories');

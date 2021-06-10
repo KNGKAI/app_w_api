@@ -1,4 +1,5 @@
 import 'package:app/Services/Api.dart';
+import 'package:app/Services/ProductService.dart';
 import 'package:app/Services/ProfileService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Views/HomeView.dart';
@@ -15,17 +16,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferenceService().init();
 
-  final HttpLink httpLink = HttpLink(
-    'http://localhost:1337/graphql',
-  );
-
   final policies = Policies(
     fetch: FetchPolicy.noCache,
   );
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
-      link: HttpLink('http://localhost:1337/graphql'),
+      link: HttpLink('http://localhost:8008/graphql'),
       cache: GraphQLCache(),
       defaultPolicies: DefaultPolicies(
         watchQuery: policies,
@@ -48,13 +45,16 @@ class App extends StatelessWidget {
       providers: [
         Provider.value(value: Api()),
         ProxyProvider<Api, ProfileService>(
-          update: (context, api, profileService) => ProfileService(api: api),
+          update: (context, api, service) => ProfileService(api: api),
+        ),
+        ProxyProvider<Api, ProductService>(
+          update: (context, api, service) => ProductService(api: api),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.lightBlue,
           visualDensity: VisualDensity.comfortable,
         ),
         initialRoute: '/',

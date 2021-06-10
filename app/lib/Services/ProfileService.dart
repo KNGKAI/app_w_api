@@ -16,20 +16,6 @@ class ProfileService {
   User get user => _user;
   String get token => _token;
 
-  static void setToken(String token) async {
-    _token = token;
-    SharedPreferenceService.setToken(token);
-  }
-
-  Future<bool> registerUser(User user, String password) async {
-    Map<String, dynamic> response = await _api.post('user/register', {
-      "username": user.username,
-      "email": user.email,
-      "password": password
-    });
-    return response != null;
-  }
-
   Future<bool> authorizeUser(String username, String password) async {
     Map<String, dynamic> response = await _api
         .post('auth/local', {"username": username, "password": password});
@@ -42,16 +28,18 @@ class ProfileService {
     return false;
   }
 
-  Future<bool> tokenAuthorizeUser(String token) async {
-    Map<String, dynamic> response =
-        await _api.post('auth/token', {"token": token});
-    if (response != null) {
-      _user = User.fromJson(response['user']);
-      _token = response['token'];
-      setToken(_token);
-      return true;
-    }
-    return false;
+  Future<bool> registerUser(User user, String password) async {
+    Map<String, dynamic> response = await _api.post('user/register', {
+      "username": user.username,
+      "email": user.email,
+      "password": password
+    });
+    return response != null;
+  }
+
+  static void setToken(String token) async {
+    _token = token;
+    SharedPreferenceService.setToken(token);
   }
 
   Future<bool> signOutUser() async {
@@ -59,6 +47,18 @@ class ProfileService {
     _token = null;
     setToken(null);
     return true;
+  }
+
+  Future<bool> tokenAuthorizeUser(String token) async {
+    Map<String, dynamic> response =
+    await _api.post('auth/token', {"token": token});
+    if (response != null) {
+      _user = User.fromJson(response['user']);
+      _token = response['token'];
+      setToken(_token);
+      return true;
+    }
+    return false;
   }
 
   Future<bool> updateUser(User user) async {
@@ -70,8 +70,6 @@ class ProfileService {
     });
     if (response != null) {
       _user = User.fromJson(response['user']);
-      // _token = response['token'];
-      // setToken(_token);
       return true;
     }
     return false;
