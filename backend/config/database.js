@@ -2,7 +2,7 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
 module.exports = (app) => {
-    var url = 'mongodb://' + process.env.DBUSERNAME + ':' + process.env.DBPASSWORD + '@' + process.env.DBURL + ':' + process.env.DBPORT + '/' + process.env.DBNAME + "?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@012skate-db@"
+    var url = 'mongodb://' + process.env.DBUSERNAME + ':' + process.env.DBPASSWORD + '@' + process.env.DBHOST + ':' + process.env.DBPORT + '/' + process.env.DBNAME + "?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@012skate-db@"
     console.log('dbserver: ' + url);
 
     mongoose.Promise = global.Promise;
