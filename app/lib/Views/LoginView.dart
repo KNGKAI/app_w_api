@@ -9,6 +9,10 @@ class LoginView extends StatefulWidget {
   _State createState() => _State();
 }
 
+Widget spacedButton(child) {
+  return Padding(padding: EdgeInsets.only(top: 7, bottom: 7), child: child);
+}
+
 class _State extends State<LoginView> {
   TextEditingController _oldPasswordController;
   TextEditingController _emailController;
@@ -85,7 +89,15 @@ class _State extends State<LoginView> {
               print('Forgot password');
             },
           ),
-          MaterialButton(
+          spacedButton(MaterialButton(
+            color: Colors.blue,
+            child: Text('Continue with Facebook',
+                style: TextStyle(color: Colors.white)),
+            onPressed: () async {
+              print("facebook login");
+            },
+          )),
+          spacedButton(MaterialButton(
             color: Colors.blue,
             child: Text(
               'Register',
@@ -94,16 +106,8 @@ class _State extends State<LoginView> {
             onPressed: () {
               Navigator.pushNamed(context, '/register');
             },
-          ),
-          MaterialButton(
-            color: Colors.blue,
-            child: Text('Continue with Facebook',
-                style: TextStyle(color: Colors.white)),
-            onPressed: () async {
-              print("facebook login");
-            },
-          ),
-          MaterialButton(
+          )),
+          spacedButton(MaterialButton(
             color: Colors.blue,
             child: Text('Login', style: TextStyle(color: Colors.white)),
             onPressed: () async {
@@ -117,7 +121,7 @@ class _State extends State<LoginView> {
                 });
               }
             },
-          ),
+          )),
           Text(_userCommunication),
         ],
       ),
