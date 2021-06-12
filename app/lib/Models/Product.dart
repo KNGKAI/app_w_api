@@ -10,7 +10,7 @@ class Product {
   int price;
   int inStock;
 
-  get id => _id;
+  String get id => _id;
 
   Product.fromJson(Map<String, dynamic> json) {
     _id = json['id'];

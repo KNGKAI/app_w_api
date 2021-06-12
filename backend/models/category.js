@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var Category = new mongoose.Schema({
-  createdDateTim: Date,
+  createdDateTime: Date,
   updatedDateTime: Date,
   name: String,
   description: String,

@@ -1,11 +1,12 @@
 var mongoose = require('mongoose');
 
 var Order = new mongoose.Schema({
-  createdDateTim: Date,
+  createdDateTime: Date,
   updatedDateTime: Date,
   user: String,
-  product: String,
+  products: [String],
   status: String,
+  reference: String,
 });
 
 Order.pre('save', function(callback) {

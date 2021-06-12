@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 final String baseUrl = 'http://localhost:8008/';
+// final String baseUrl = 'https://012sktate-server.azurewebsites.net';
 
 class Api {
   var dio = Dio(

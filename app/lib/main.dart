@@ -22,6 +22,7 @@ void main() async {
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
+      // link: HttpLink('https://012skate-db.mongo.cosmos.azure.com:443/graphql'),
       link: HttpLink('http://localhost:8008/graphql'),
       cache: GraphQLCache(),
       defaultPolicies: DefaultPolicies(
