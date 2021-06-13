@@ -19,7 +19,6 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView>
     with TickerProviderStateMixin {
-
   @override
   void initState() {
     super.initState();
@@ -59,9 +58,12 @@ class _ProfileViewState extends State<ProfileView>
               .map<Category>((json) => Category.fromJson(json))
               .toList();
           User user = profileService.user;
-          TextEditingController usernameController = TextEditingController(text: user.username);
-          TextEditingController emailController = TextEditingController(text: user.email);
-          TextEditingController addressController = TextEditingController(text: user.address);
+          TextEditingController usernameController =
+              TextEditingController(text: user.username);
+          TextEditingController emailController =
+              TextEditingController(text: user.email);
+          TextEditingController addressController =
+              TextEditingController(text: user.address);
           return Column(children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -83,22 +85,26 @@ class _ProfileViewState extends State<ProfileView>
               },
             ),
             Expanded(
-              child: DefaultTabController(
-                length: 3,
-                child: Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: Colors.lightBlue,
-                    automaticallyImplyLeading: false,
-                    bottom: TabBar(
-                      tabs: [
-                        Tab(icon: Icon(Icons.shopping_cart), text: "Cart",),
-                        Tab(icon: Icon(Icons.format_align_left), text: "Stock"),
-                        Tab(icon: Icon(Icons.settings), text: "Profile"),
-                      ],
-                    ),
-                  ),
-                  body: TabBarView(
-                      children: [
+                child: DefaultTabController(
+                    length: 3,
+                    child: Scaffold(
+                      appBar: AppBar(
+                        backgroundColor: Colors.lightBlue,
+                        automaticallyImplyLeading: false,
+                        bottom: TabBar(
+                          tabs: [
+                            Tab(
+                              icon: Icon(Icons.shopping_cart),
+                              text: "Cart",
+                            ),
+                            Tab(
+                                icon: Icon(Icons.format_align_left),
+                                text: "Stock"),
+                            Tab(icon: Icon(Icons.settings), text: "Profile"),
+                          ],
+                        ),
+                      ),
+                      body: TabBarView(children: [
                         ListView(
                           padding: EdgeInsets.all(20.0),
                           children: [],
@@ -111,12 +117,8 @@ class _ProfileViewState extends State<ProfileView>
                               children: categories.map((category) {
                                 return CategoryTile(
                                   category: category,
-                                  onEdit: () {
-
-                                  },
-                                  onRemove: () {
-
-                                  },
+                                  onEdit: () {},
+                                  onRemove: () {},
                                 );
                               }).toList(),
                             ),
@@ -124,32 +126,33 @@ class _ProfileViewState extends State<ProfileView>
                               child: Text("Add Category"),
                               onPressed: () async {
                                 Category category = Category.create();
-                                TextEditingController nameController = TextEditingController(text: category.name);
+                                TextEditingController nameController =
+                                    TextEditingController(text: category.name);
                                 await showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text("Add Category"),
-                                    content: TextField(
-                                      controller: nameController,
-                                      onChanged: (value) => category.name = value,
-                                      decoration: InputDecoration(
-                                        labelText: "Name"
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        child: Text("Update"),
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: Text("Cancel"),
-                                        onPressed: () => Navigator.pop(context),
-                                      )
-                                    ],
-                                  )
-                                );
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          title: Text("Add Category"),
+                                          content: TextField(
+                                            controller: nameController,
+                                            onChanged: (value) =>
+                                                category.name = value,
+                                            decoration: InputDecoration(
+                                                labelText: "Name"),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              child: Text("Update"),
+                                              onPressed: () async {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text("Cancel"),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                            )
+                                          ],
+                                        ));
                               },
                             ),
                             Text("Products:"),
@@ -168,53 +171,56 @@ class _ProfileViewState extends State<ProfileView>
                                     await showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          title: Text("Editing: ${product.name}"),
-                                          content: ProductEditing(
-                                              product: product,
-                                              categories: categories.map((e) => e.name).toList()
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              child: Text("Update"),
-                                              onPressed: () async {
-                                                if (await productService.updateProduct(product)) {
-                                                  Navigator.pop(context);
-                                                  refetch();
-                                                }
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: Text("Cancel"),
-                                              onPressed: () {
-                                                setState(() {
-                                                  product = cachedProduct;
-                                                });
-                                                Navigator.pop(context);
-                                              },
-                                            )
-                                          ],
-                                        )
-                                    );
+                                              title: Text(
+                                                  "Editing: ${product.name}"),
+                                              content: ProductEditing(
+                                                  product: product,
+                                                  categories: categories
+                                                      .map((e) => e.name)
+                                                      .toList()),
+                                              actions: [
+                                                TextButton(
+                                                  child: Text("Update"),
+                                                  onPressed: () async {
+                                                    if (await productService
+                                                        .updateProduct(
+                                                            product)) {
+                                                      Navigator.pop(context);
+                                                      refetch();
+                                                    }
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Text("Cancel"),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      product = cachedProduct;
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                )
+                                              ],
+                                            ));
                                   },
                                 );
                               }).toList(),
                             ),
                             TextButton(
                               child: Text("Add Product"),
-                              onPressed: () {
-
-                              },
+                              onPressed: () {},
                             ),
                           ],
                         ),
-                        ListView( //Settings
+                        ListView(
+                          //Settings
                           padding: EdgeInsets.all(20.0),
                           children: [
                             Text("Profile:", textScaleFactor: 1.4),
                             TextField(
                               controller: usernameController,
                               onChanged: (value) => user.username = value,
-                              decoration: InputDecoration(labelText: "Username"),
+                              decoration:
+                                  InputDecoration(labelText: "Username"),
                             ),
                             TextField(
                               controller: emailController,
@@ -228,11 +234,8 @@ class _ProfileViewState extends State<ProfileView>
                             ),
                           ],
                         )
-                      ]
-                  ),
-                )
-              )
-            )
+                      ]),
+                    )))
           ]);
         },
       ),

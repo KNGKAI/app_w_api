@@ -8,25 +8,16 @@ myAppBar(BuildContext context, String currentRoute) {
   return AppBar(
     toolbarHeight: 48,
     title: Text("012SKATE"),
-    leading: Column(
-      children: [
-        Navigator.canPop(context)
-            ? IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context))
-            : Container(),
-      ],
-    ),
     actions: [
       currentRoute == "/login" || currentRoute == "/profile"
           ? Container()
           : service.authorized
-          ? IconButton(
-          icon: Icon(Icons.person),
-          onPressed: () => Navigator.pushNamed(context, '/profile'))
-          : IconButton(
-          icon: Icon(Icons.login),
-          onPressed: () => Navigator.pushNamed(context, '/login'))
+              ? IconButton(
+                  icon: Icon(Icons.person),
+                  onPressed: () => Navigator.pushNamed(context, '/profile'))
+              : IconButton(
+                  icon: Icon(Icons.login),
+                  onPressed: () => Navigator.pushNamed(context, '/login'))
     ],
   );
 }

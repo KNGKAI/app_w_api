@@ -3,6 +3,7 @@ import 'package:app/Widgets/Logo.dart';
 import 'package:provider/provider.dart';
 import 'package:app/Services/Api.dart';
 import 'package:app/Services/ProfileService.dart';
+import 'package:app/Views/RootView.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ class _State extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     ProfileService profileService = Provider.of(context);
-    return Scaffold(
+    return RootView(
       body: ListView(
         padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 50.0),
         children: [
