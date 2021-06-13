@@ -4,8 +4,8 @@ var orderController = require('../controllers/order.js');
 
 router.get('/', orderController.getOrders);
 router.get('/get', orderController.getOrder);
-// router.post('/add', orderController.addProduct);
-// router.post('/remove', orderController.removeProduct);
-// router.post('/update', orderController.updateProduct);
+router.post('/add', orderController.addOrder);
+router.post('/remove', orderController.removeOrder);
+router.post('/update', orderController.updateOrder);
 
 module.exports = router;

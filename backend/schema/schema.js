@@ -16,6 +16,8 @@ const { UserType } = require('./types/UserType')
 const { CategoryModel } = require('../models/category');
 const { UserModel } = require('../models/user');
 const { ProductModel } = require('../models/product');
+const { OrderModel } = require('../models/order');
+const { OrderType } = require('./types/OrderType');
 
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
@@ -44,6 +46,19 @@ const RootQuery = new GraphQLObjectType({
             args: { id: { type: GraphQLString } },
             resolve(parent, args) {
                 return ProductModel.findOne({ _id: args.id });
+            }
+        },
+        orders: {
+            type: new GraphQLList(OrderType),
+            resolve(parent, args) {
+                return OrderModel.find({});
+            }
+        },
+        order: {
+            type: OrderType,
+            args: { id: { type: GraphQLString } },
+            resolve(parent, args) {
+                return OrderModel.findOne({ _id: args.id });
             }
         },
         users: {

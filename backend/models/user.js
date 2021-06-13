@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var User = new mongoose.Schema({
-  createdDateTim: Date,
+  createdDateTime: Date,
   updatedDateTime: Date,
   username: String,
   email: String,

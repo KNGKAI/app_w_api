@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var Product = new mongoose.Schema({
-  createdDateTim: Date,
+  createdDateTime: Date,
   updatedDateTime: Date,
   name: String,
   description: String,

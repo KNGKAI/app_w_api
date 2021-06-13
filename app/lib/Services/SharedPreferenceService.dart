@@ -18,4 +18,6 @@ class SharedPreferenceService {
   static String getToken() {
     return _sharedPrefs.getString("token");
   }
+
+  static SharedPreferences get instance => _sharedPrefs;
 }
