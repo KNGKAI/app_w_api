@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:app/Models/Category.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/MyAppBar.dart';
 // import 'package:app/Widgets/ProductTile.dart';
 import 'package:app/Widgets/Products.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,6 @@ class _HomeView extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return RootView(
-      // appBar: myAppBar(context, '/home'),
       body: BaseQueryWidget(
         query: """{
           products {

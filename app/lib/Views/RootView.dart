@@ -17,12 +17,12 @@ ListTile ListItem(title, route, current, context) {
 
 class RootView extends StatelessWidget {
   final Widget body;
-  final String currentRoute;
-  const RootView({Key key, Widget this.body, String this.currentRoute})
-      : super(key: key);
+  const RootView({Key key, Widget this.body}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var route = ModalRoute.of(context);
+    var currentRoute = route != null ? route.settings.name : '/';
     return Scaffold(
         appBar: myAppBar(context, currentRoute),
         body: body,
