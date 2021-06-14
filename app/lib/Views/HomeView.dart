@@ -5,6 +5,7 @@ import 'package:app/Models/Product.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 // import 'package:app/Widgets/ProductTile.dart';
 import 'package:app/Widgets/Products.dart';
+import 'package:app/Widgets/FilterBottomSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:app/Views/RootView.dart';
@@ -20,6 +21,14 @@ class _HomeView extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return RootView(
+      modal: (BuildContext) => FilterBottomSheet(
+          updateSelection: (cat) {
+            setState(() {
+              _selectedCategories = cat;
+            });
+          },
+          selectedCategories: _selectedCategories),
+      modalIcon: Icon(Icons.filter_alt),
       body: BaseQueryWidget(
         query: """{
           products {
@@ -37,21 +46,16 @@ class _HomeView extends State<HomeView> {
         }""",
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
-          List<Category> categories = result.data['categories']
-              .map<Category>((json) => Category.fromJson(json))
-              .toList();
-          if (_selectedCategories == null) {
-            _selectedCategories =
-                categories.map((category) => category.name).toList();
-          }
           List<Product> products = result.data['products']
               .map<Product>((json) => Product.fromJson(json))
               .where(
                   (product) => _selectedCategories.contains(product.category))
               .toList();
-          int horizontalCount = 2;
-          double width = MediaQuery.of(context).size.width / horizontalCount;
-          return Products(products: products);
+          // ,
+
+          return Column(
+            children: [Expanded(child: Products(products: products))],
+          );
           // ListView(
           //   children: [
           //     Row(

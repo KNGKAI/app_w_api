@@ -3,7 +3,7 @@ import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/MyAppBar.dart';
+import 'package:app/Widgets/SkateAppBar.dart';
 import 'package:app/Widgets/ProductEditing.dart';
 import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +11,8 @@ import 'package:app/Models/User.dart';
 import 'package:app/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+
+import 'package:app/Views/RootView.dart';
 
 class ProfileView extends StatefulWidget {
   @override
@@ -31,8 +33,7 @@ class _ProfileViewState extends State<ProfileView>
     if (!profileService.authorized) {
       return (Text("Unauthorized"));
     }
-    return Scaffold(
-      appBar: myAppBar(context, '/profile'),
+    return RootView(
       body: BaseQueryWidget(
         query: """{
           products {

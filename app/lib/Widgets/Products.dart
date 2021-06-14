@@ -45,19 +45,16 @@ class _ProductsState extends State<Products> {
   @override
   Widget build(BuildContext context) {
     int hcount = (MediaQuery.of(context).size.width / productTileWidth).round();
-    return Container(
-      color: Colors.grey,
-      child: GridView.count(
-        padding: EdgeInsets.all(7),
-        crossAxisCount: hcount,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        children: widget.products.isEmpty
-            ? [Text("No products")]
-            : widget.products
-                .map<Widget>((product) => ProductTile(product: product))
-                .toList(),
-      ),
+    return GridView.count(
+      padding: EdgeInsets.all(7),
+      crossAxisCount: hcount,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      children: widget.products.isEmpty
+          ? [Text("No products")]
+          : widget.products
+              .map<Widget>((product) => ProductTile(product: product))
+              .toList(),
     );
   }
 }

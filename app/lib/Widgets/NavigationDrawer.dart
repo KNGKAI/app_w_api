@@ -6,7 +6,7 @@ ListTile ListItem(title, route, context, current, icon) {
   return ListTile(
     leading: Icon(icon),
     title: Text(title),
-    tileColor: current == route ? Colors.grey[400] : Colors.white,
+    tileColor: current == route ? Colors.blue[400] : Colors.white,
     enabled: current != route,
     onTap: () {
       Navigator.pushNamed(context, route);
