@@ -8,7 +8,7 @@ class User {
   String role;
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'] ?? json['_id'];
     email = json['email'];
     username = json['username'];
     address = json['address'];
@@ -16,12 +16,12 @@ class User {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "email": email,
-    "username": username,
-    "address": address,
-    "role": role,
-  };
+        "id": id,
+        "email": email,
+        "username": username,
+        "address": address,
+        "role": role,
+      };
 
   User({
     this.id,
