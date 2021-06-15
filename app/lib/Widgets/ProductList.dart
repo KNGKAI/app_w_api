@@ -1,6 +1,5 @@
-
 import 'package:app/Models/Product.dart';
-import 'package:app/Widgets/ProductCard.dart';
+import 'package:app/Views/ProductView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,9 @@ class _State extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: widget.products.map((product) => ProductCard(product: product)).toList(),
+      children: widget.products
+          .map((product) => ListTile(title: Text(product.name)))
+          .toList(),
     );
   }
 }

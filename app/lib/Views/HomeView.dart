@@ -4,7 +4,7 @@ import 'package:app/Models/Category.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 // import 'package:app/Widgets/ProductTile.dart';
-import 'package:app/Widgets/Products.dart';
+import 'package:app/Widgets/ProductGrid.dart';
 import 'package:app/Widgets/FilterBottomSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -16,18 +16,16 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeView extends State<HomeView> {
-  List<String> _selectedCategories;
+  List<String> _selectedCategories = [];
 
   @override
   Widget build(BuildContext context) {
     return RootView(
-      modal: (BuildContext) => FilterBottomSheet(
-          updateSelection: (cat) {
-            setState(() {
-              _selectedCategories = cat;
-            });
-          },
-          selectedCategories: _selectedCategories),
+      modal: (BuildContext) => FilterBottomSheet(updateSelection: (cat) {
+        setState(() {
+          _selectedCategories = cat;
+        });
+      }),
       modalIcon: Icon(Icons.filter_alt),
       body: BaseQueryWidget(
         query: """{
@@ -48,13 +46,14 @@ class _HomeView extends State<HomeView> {
             {VoidCallback refetch, FetchMore fetchMore}) {
           List<Product> products = result.data['products']
               .map<Product>((json) => Product.fromJson(json))
-              .where(
-                  (product) => _selectedCategories.contains(product.category))
+              .where((product) =>
+                  _selectedCategories.contains(product.category) ||
+                  _selectedCategories.isEmpty)
               .toList();
           // ,
 
           return Column(
-            children: [Expanded(child: Products(products: products))],
+            children: [Expanded(child: ProductGrid(products: products))],
           );
           // ListView(
           //   children: [

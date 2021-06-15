@@ -9,24 +9,33 @@ class RootView extends StatelessWidget {
   final Widget body;
   final Function(BuildContext) modal;
   final Icon modalIcon;
+  final bool enableDrawer;
   const RootView(
       {Key key,
       Widget this.body,
       Function(BuildContext) this.modal,
-      Icon this.modalIcon})
+      Icon this.modalIcon,
+      bool this.enableDrawer = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: SkateAppBar(modal != null
-            ? IconButton(
-                onPressed: () {
-                  showModalBottomSheet(context: context, builder: modal);
-                },
-                icon: modalIcon)
-            : Container()),
-        body: body,
-        drawer: NavigationDrawer());
+      appBar: SkateAppBar(
+          modal != null
+              ? IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(context: context, builder: modal);
+                  },
+                  icon: modalIcon)
+              : Container(),
+          backbtn: !enableDrawer
+              ? IconButton(
+                  onPressed: () => {Navigator.pop(context)},
+                  icon: Icon(Icons.arrow_back))
+              : null),
+      body: body,
+      drawer: enableDrawer ? NavigationDrawer() : null,
+    );
   }
 }

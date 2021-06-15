@@ -1,26 +1,35 @@
-
-import 'package:app/Models/Product.dart';
-import 'package:app/Widgets/ProductCard.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:app/Models/Product.dart';
+import 'dart:convert';
+import 'package:app/Widgets/ProductGridTile.dart';
 
-class ProductList extends StatefulWidget {
-  final List<Product> products;
+const double productTileWidth = 200;
 
-  const ProductList({
-    @required this.products,
-    Key key,
-  }) : super(key: key);
+class ProductGrid extends StatefulWidget {
+  List<Product> products = [];
+
+  ProductGrid({@required List<Product> this.products, Key key})
+      : super(key: key);
 
   @override
-  _State createState() => _State();
+  _ProductsState createState() => _ProductsState();
 }
 
-class _State extends State<ProductList> {
+class _ProductsState extends State<ProductGrid> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: widget.products.map((product) => ProductCard(product: product)).toList(),
+    int hcount = (MediaQuery.of(context).size.width / productTileWidth).round();
+    return GridView.count(
+      padding: EdgeInsets.all(7),
+      crossAxisCount: hcount,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      children: widget.products.isEmpty
+          ? [Text("No products")]
+          : widget.products
+              .map<Widget>((product) =>
+                  ProductGridTile(product: product, width: productTileWidth))
+              .toList(),
     );
   }
 }

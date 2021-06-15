@@ -5,12 +5,10 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   final void Function(List<String> e) updateSelection;
-  List<String> selectedCategories = [];
+  List<String> _selectedCategories = [];
   List<String> _categories = [];
   FilterBottomSheet(
-      {Key key,
-      @required Function(List<String> e) this.updateSelection,
-      List<String> this.selectedCategories})
+      {Key key, @required Function(List<String> e) this.updateSelection})
       : super(key: key);
 
   @override
@@ -33,17 +31,17 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             .toList();
         widget._categories =
             __categories.map((category) => category.name).toList();
-        if (widget.selectedCategories == null) {
-          widget.selectedCategories = widget._categories;
+        if (widget._selectedCategories.isEmpty) {
+          widget._selectedCategories = widget._categories;
         }
-        print(__categories);
+
         return SizedBox(
-            height: 200,
+            height: 250,
             child: Container(
                 width: 200,
                 child: ListView(
                     children: widget._categories.map((e) {
-                  bool selected = widget.selectedCategories.contains(e);
+                  bool selected = widget._selectedCategories.contains(e);
                   return ListTile(
                     title: Text(e),
                     trailing: Icon(!selected
@@ -52,10 +50,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     onTap: () => {
                       setState(() {
                         if (!selected)
-                          widget.selectedCategories.add(e);
+                          widget._selectedCategories.add(e);
                         else
-                          widget.selectedCategories.remove(e);
-                        widget.updateSelection(widget.selectedCategories);
+                          widget._selectedCategories.remove(e);
+                        widget.updateSelection(widget._selectedCategories);
                       })
                     },
                   );
@@ -79,8 +77,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     //           _categories = result.data['categories']
     //               .map<Category>((json) => Category.fromJson(json))
     //               .toList();
-    //           // if (_selectedCategories == null) {
-    //           //   _selectedCategories = _categories.toList();
+    //           // if (__selectedCategories == null) {
+    //           //   __selectedCategories = _categories.toList();
     //           // }
     //           print(_categories);
 
