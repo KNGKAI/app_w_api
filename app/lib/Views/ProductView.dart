@@ -5,6 +5,8 @@ import 'package:app/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/Views/RootView.dart';
+import 'package:app/Providers/CartProvider.dart';
+import 'package:provider/provider.dart';
 
 class ProductView extends StatelessWidget {
   const ProductView({
@@ -13,6 +15,7 @@ class ProductView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ModalRoute.of(context).settings.arguments as Product;
+    Cart cart = Provider.of<Cart>(context);
 
     return RootView(
       enableDrawer: false,
@@ -27,11 +30,29 @@ class ProductView extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.add_shopping_cart))
-            ],
+          Container(
+            color: Colors.blue[200],
+            child: GestureDetector(
+              child: Padding(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("Add to cart"),
+                          Icon(Icons.add_shopping_cart)
+                        ],
+                      )
+                    ],
+                  ),
+                  padding: EdgeInsets.all(12)),
+              onTap: () {
+                print('Add ${product.name} to cart');
+                cart.addProductToCart(product);
+                print(cart.getProductsInCart());
+              },
+            ),
           ),
           Expanded(
               child: Padding(

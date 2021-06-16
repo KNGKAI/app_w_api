@@ -22,10 +22,10 @@ class Category {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": description,
-    "description": description,
-  };
+        "id": id,
+        "name": description,
+        "description": description,
+      };
 
   Category.create() {
     _id = '';
