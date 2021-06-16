@@ -3,11 +3,6 @@ import 'dart:convert';
 import 'package:app/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-
-import 'package:app/Models/Product.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class ProductGridTile extends StatefulWidget {
   final Product product;

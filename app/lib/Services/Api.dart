@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 
-final String baseUrl = 'http://localhost:8008/';
+// final String baseUrl = 'http://localhost:8008/';
+final String baseUrl = 'https://012sktate-server.azurewebsites.net/';
 
 class Api {
   var dio = Dio(
@@ -14,7 +15,7 @@ class Api {
     ),
   );
 
-  Future<Response<dynamic>> request(
+  Future<Response> request(
       String method, String route, Map<String, dynamic> data) async {
     String url = baseUrl + route;
     print("API Request:");

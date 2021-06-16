@@ -9,9 +9,9 @@ module.exports = {
     getUsers: (req, res, next) => {
         UserModel.find({}, function(err, docs) {
             if (err) {
-                res.send(err);
+                res.status(404).send(err);
             } else {
-                res.send(docs);
+                res.status(200).send(docs);
             }
         })
     },
@@ -19,9 +19,9 @@ module.exports = {
     getUser: (req, res, next) => {
         UserModel.find({ _id: req.query.id }, function(err, doc) {
             if (err) {
-                res.send(err);
+                res.status(404).send(err);
             } else {
-                res.send(doc);
+                res.status(200).send(doc);
             }
         })
     },
@@ -70,11 +70,11 @@ module.exports = {
     updateUser: (req, res, next) => {
         var id = req.body.id
         delete req.body.id
-        UserModel.updateOne({ _id: id }, { $set: req.body }, function(err, doc) {
+        UserModel.updateOne({ _id: id }, req.body, function(err, doc) {
             if (err) {
-                res.send(err);
+                res.status(404).send(err);
             } else {
-                res.send(doc);
+                res.status(200).send(doc);
             }
         })
     }

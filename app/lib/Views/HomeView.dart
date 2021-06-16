@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:app/Models/Category.dart';
 import 'package:app/Models/Product.dart';
+import 'package:app/Services/ProductService.dart';
+import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 // import 'package:app/Widgets/ProductTile.dart';
 import 'package:app/Widgets/ProductGrid.dart';
@@ -35,6 +37,7 @@ class _HomeView extends State<HomeView> {
             description
             category
             size
+            inStock
             image
             price
           }

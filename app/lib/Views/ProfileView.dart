@@ -1,6 +1,12 @@
 import 'package:app/Models/Category.dart';
+import 'package:app/Models/Order.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
+import 'package:app/Services/SharedPreferenceService.dart';
+import 'package:app/Views/CartView.dart';
+import 'package:app/Views/OrderView.dart';
+import 'package:app/Views/ProfileEditingView.dart';
+import 'package:app/Views/StockView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
 import 'package:app/Widgets/SkateAppBar.dart';
@@ -29,7 +35,6 @@ class _ProfileViewState extends State<ProfileView>
   @override
   Widget build(BuildContext context) {
     ProfileService profileService = Provider.of<ProfileService>(context);
-    ProductService productService = Provider.of<ProductService>(context);
     if (!profileService.authorized) {
       return (Text("Unauthorized"));
     }
