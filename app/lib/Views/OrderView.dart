@@ -8,7 +8,7 @@ import 'package:app/Views/ProfileEditingView.dart';
 import 'package:app/Views/StockView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/MyAppBar.dart';
+
 import 'package:app/Widgets/OrderTile.dart';
 import 'package:app/Widgets/OrderWidget.dart';
 import 'package:app/Widgets/ProductEditing.dart';
@@ -25,7 +25,6 @@ class OrderView extends StatefulWidget {
 }
 
 class _State extends State<OrderView> {
-
   @override
   void initState() {
     super.initState();
@@ -69,47 +68,48 @@ class _State extends State<OrderView> {
             orders.isEmpty
                 ? Center(child: Text("No Orders"))
                 : Column(
-              children: orders.map((order) {
-                return OrderTile(
-                  order: order,
-                  onTap: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                      title: Text("Edit Category"),
-                      content: OrderWidget(order: order),
-                      actions: [
-                        TextButton(
-                          child: Text("Ship"),
-                          onPressed: () async {
-                            if (order.status == "shipped") return;
-                            order.status = "shipped";
-                            if (await productService.updateOrder(order)) {
-                              Navigator.pop(context);
-                              refetch();
-                            }
-                          },
-                        ),
-                        TextButton(
-                          child: Text("Remove"),
-                          onPressed: () async {
-                            if (await productService.removeOrder(order)) {
-                              Navigator.pop(context);
-                              refetch();
-                            }
-                          },
-                        ),
-                        TextButton(
-                          child: Text("Cancel"),
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      ],
-                    )
-                    );
-                  },
-                );
-              }).toList(),
-            ),
+                    children: orders.map((order) {
+                      return OrderTile(
+                        order: order,
+                        onTap: () async {
+                          await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text("Edit Category"),
+                                    content: OrderWidget(order: order),
+                                    actions: [
+                                      TextButton(
+                                        child: Text("Ship"),
+                                        onPressed: () async {
+                                          if (order.status == "shipped") return;
+                                          order.status = "shipped";
+                                          if (await productService
+                                              .updateOrder(order)) {
+                                            Navigator.pop(context);
+                                            refetch();
+                                          }
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text("Remove"),
+                                        onPressed: () async {
+                                          if (await productService
+                                              .removeOrder(order)) {
+                                            Navigator.pop(context);
+                                            refetch();
+                                          }
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text("Cancel"),
+                                        onPressed: () => Navigator.pop(context),
+                                      )
+                                    ],
+                                  ));
+                        },
+                      );
+                    }).toList(),
+                  ),
           ],
         );
       },

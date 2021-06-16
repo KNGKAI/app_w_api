@@ -22,7 +22,12 @@ class RootView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SkateAppBar(
-          modal != null
+          moreActions: [
+            IconButton(
+                onPressed: () => Navigator.pushNamed(context, '/cart'),
+                icon: Icon(Icons.shopping_cart))
+          ],
+          openModal: modal != null
               ? IconButton(
                   onPressed: () {
                     showModalBottomSheet(context: context, builder: modal);

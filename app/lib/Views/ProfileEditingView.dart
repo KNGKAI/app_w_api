@@ -6,7 +6,7 @@ import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Views/CartView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/MyAppBar.dart';
+
 import 'package:app/Widgets/OrderTile.dart';
 import 'package:app/Widgets/ProductEditing.dart';
 import 'package:app/Widgets/ProductTile.dart';
@@ -22,7 +22,6 @@ class ProfileEditingView extends StatefulWidget {
 }
 
 class _State extends State<ProfileEditingView> {
-
   @override
   void initState() {
     super.initState();
@@ -35,10 +34,14 @@ class _State extends State<ProfileEditingView> {
       return (Text("Unauthorized"));
     }
     User user = profileService.user;
-    TextEditingController usernameController = TextEditingController(text: user.username);
-    TextEditingController emailController = TextEditingController(text: user.email);
-    TextEditingController addressController = TextEditingController(text: user.address);
-    return ListView( //Settings
+    TextEditingController usernameController =
+        TextEditingController(text: user.username);
+    TextEditingController emailController =
+        TextEditingController(text: user.email);
+    TextEditingController addressController =
+        TextEditingController(text: user.address);
+    return ListView(
+      //Settings
       padding: EdgeInsets.all(20.0),
       children: [
         Text("Profile:", textScaleFactor: 1.4),

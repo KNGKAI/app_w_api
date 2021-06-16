@@ -1,19 +1,10 @@
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Order.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/MyAppBar.dart';
-import 'package:app/Widgets/OrderTile.dart';
-import 'package:app/Widgets/ProductEditing.dart';
-import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+
 import 'package:provider/provider.dart';
+import 'dart:convert';
+import 'package:app/Views/RootView.dart';
+import 'package:app/Providers/CartProvider.dart';
+import 'package:app/Models/Product.dart';
 
 class CartView extends StatefulWidget {
   @override
@@ -21,7 +12,6 @@ class CartView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<CartView> {
-
   @override
   void initState() {
     super.initState();
@@ -29,95 +19,59 @@ class _ProfileViewState extends State<CartView> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileService profileService = Provider.of<ProfileService>(context);
-    if (!profileService.authorized) {
-      return (Text("Unauthorized"));
-    }
-    ProductService productService = Provider.of<ProductService>(context);
-    return BaseQueryWidget(
-      query: """{
-          products {
-            id
-            price
-            name
-            category
-            description
-            image
-            size
-            inStock
-          }
-        }""",
-      builder: (QueryResult result,
-          {VoidCallback refetch, FetchMore fetchMore}) {
-        List<Product> products = result.data['products']
-            .map<Product>((json) => Product.fromJson(json))
-            .toList();
-        print(productService.getCart().toString());
-        List<Product> cart = productService.getCart()
-            .map<Product>((id) => products.firstWhere((product) => product.id == id,
-            orElse: () => Product(id: id, name: "none", price: 0, size: "none", category: "none")))
-            .toList();
-        return cart.isEmpty
-            ? Center(child: Text("Nothing in your cart"))
-            : ListView(
-          padding: EdgeInsets.all(20.0),
+    Cart cart = Provider.of<Cart>(context);
+    List<Product> products = cart.getProductsInCart();
+
+    return RootView(
+        body: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: cart.map((product) => ListTile(
-                title: Text(product.name + " - R" + product.price.toString()),
-                subtitle: Text(product.size),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text("Remove from cart?"),
-                          actions: [
-                            TextButton(
-                              child: Text("Yes"),
-                              onPressed: () async {
-                                if (await productService.removeFromCart(product)) {
-                                  setState(() {
-                                    Navigator.pop(context);
-                                  });
-                                }
-                              },
-                            ),
-                            TextButton(
-                              child: Text("Cancel"),
-                              onPressed: () => Navigator.pop(context),
-                            )
-                          ],
-                        )
-                    );
-                  },
-                ),
-              )).toList(),
+            Padding(
+              child: TextButton(
+                child: Text("Checkout"),
+                onPressed: () => print("Cart checkout "),
+              ),
+              padding: EdgeInsets.all(12),
             ),
-            TextButton(
-              child: Text("Place Order"),
-              onPressed: () async {
-                if (await productService.placeOrder(profileService.user)) {
-                  setState(() { });
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text("Order Place"),
-                      actions: [
-                        TextButton(
-                          child: Text("Okay"),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    )
-                  );
-                }
-              },
+            Padding(
+              child: Text('Total: ${cart.getCost()}'),
+              padding: EdgeInsets.all(12),
             )
           ],
-        );
-      },
-    );
+        ),
+        Divider(),
+        Expanded(
+          child: products.isEmpty
+              ? Text("The cart is empty")
+              : ListView(
+                  children: products.map((p) {
+                    return ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(p.name),
+                            Text('R${p.price}.00'),
+                          ],
+                        ),
+                        leading: Image.memory(
+                          Base64Decoder().convert(p.image),
+                          fit: BoxFit.cover,
+                        ),
+                        trailing: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                cart.removeFromCart(p);
+                              });
+                            },
+                            icon: Icon(Icons.delete))
+                        // Text('R${p.price}.00'),
+                        );
+                  }).toList(),
+                ),
+        )
+      ],
+    ));
   }
 }

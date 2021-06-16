@@ -10,4 +10,16 @@ class Cart {
   List<Product> getProductsInCart() {
     return _products;
   }
+
+  void removeFromCart(Product p) {
+    _products.remove(p);
+  }
+
+  num getCost() {
+    num ret = 0;
+    for (var p in _products) {
+      ret += p.price;
+    }
+    return ret;
+  }
 }

@@ -32,27 +32,27 @@ class ProductView extends StatelessWidget {
           ),
           Container(
             color: Colors.blue[200],
-            child: GestureDetector(
-              child: Padding(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text("Add to cart"),
-                          Icon(Icons.add_shopping_cart)
-                        ],
-                      )
-                    ],
-                  ),
-                  padding: EdgeInsets.all(12)),
-              onTap: () {
-                print('Add ${product.name} to cart');
-                cart.addProductToCart(product);
-                print(cart.getProductsInCart());
-              },
-            ),
+            child: TextButton(
+                child: Padding(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text("Add to cart"),
+                            Icon(Icons.add_shopping_cart)
+                          ],
+                        )
+                      ],
+                    ),
+                    padding: EdgeInsets.all(12)),
+                onPressed: () {
+                  print('Add ${product.name} to cart');
+                  cart.addProductToCart(product);
+                  print(cart.getProductsInCart());
+                  Navigator.pop(context);
+                }),
           ),
           Expanded(
               child: Padding(

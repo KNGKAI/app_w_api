@@ -13,7 +13,7 @@ class _TestView extends State<TestView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SkateAppBar(Container()),
+      appBar: SkateAppBar(openModal: Container()),
       // body: WateringWidget()
     );
   }

@@ -35,6 +35,7 @@ class _ProfileViewState extends State<ProfileView>
   @override
   Widget build(BuildContext context) {
     ProfileService profileService = Provider.of<ProfileService>(context);
+    ProductService productService = Provider.of<ProductService>(context);
     if (!profileService.authorized) {
       return (Text("Unauthorized"));
     }

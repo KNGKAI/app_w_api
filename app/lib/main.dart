@@ -6,6 +6,7 @@ import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Views/HomeView.dart';
 import 'package:app/Views/LoginView.dart';
 import 'package:app/Views/ProfileView.dart';
+import 'package:app/Views/CartView.dart';
 import 'package:app/Views/RegistrationView.dart';
 import 'package:app/Views/ProductView.dart';
 import 'package:app/Views/SplashView.dart';
@@ -69,6 +70,7 @@ class App extends StatelessWidget {
           '/register': (context) => RegistrationView(),
           '/profile': (context) => ProfileView(),
           '/product': (context) => ProductView(),
+          '/cart': (context) => CartView(),
         },
       ),
     );
