@@ -4,8 +4,10 @@ import 'package:app/Services/ProfileService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Views/HomeView.dart';
 import 'package:app/Views/LoginView.dart';
+import 'package:app/Views/ProfileView.dart';
 import 'package:app/Views/RegistrationView.dart';
 import 'package:app/Views/SplashView.dart';
+import 'package:app/Providers/CartProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +46,7 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider.value(value: Api()),
+        Provider.value(value: Cart()),
         ProxyProvider<Api, ProfileService>(
           update: (context, api, service) => ProfileService(api: api),
         ),
@@ -63,6 +66,7 @@ class App extends StatelessWidget {
           '/home': (context) => HomeView(),
           '/login': (context) => LoginView(),
           '/register': (context) => RegistrationView(),
+          '/profile': (context) => ProfileView(),
         },
       ),
     );

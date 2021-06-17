@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/Models/Product.dart';
+import 'package:app/Providers/CartProvider.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 class ProductDialog extends StatelessWidget {
@@ -9,6 +11,8 @@ class ProductDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Cart cart = Provider.of<Cart>(context);
+
     return SimpleDialog(
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -20,6 +24,7 @@ class ProductDialog extends StatelessWidget {
               IconButton(
                   // AddTo basket
                   onPressed: () {
+                    cart.addProductToCart(product);
                     print('Adding ${product.name} to basket');
                     Navigator.pop(context);
                   },

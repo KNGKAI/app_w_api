@@ -3,13 +3,11 @@ import 'package:app/Models/Order.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/Views/CartView.dart';
-import 'package:app/Views/OrderView.dart';
-import 'package:app/Views/ProfileEditingView.dart';
-import 'package:app/Views/StockView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
 import 'package:app/Widgets/SkateAppBar.dart';
+import 'package:app/Widgets/Settings.dart';
+import 'package:app/Widgets/ProductWidget.dart';
 import 'package:app/Widgets/ProductEditing.dart';
 import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +15,8 @@ import 'package:app/Models/User.dart';
 import 'package:app/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:app/Models/Product.dart';
+import 'package:app/Providers/CartProvider.dart';
 import 'package:app/Views/RootView.dart';
 
 class ProfileView extends StatefulWidget {
@@ -36,6 +35,39 @@ class _ProfileViewState extends State<ProfileView>
   Widget build(BuildContext context) {
     ProfileService profileService = Provider.of<ProfileService>(context);
     ProductService productService = Provider.of<ProductService>(context);
+    Cart cart = Provider.of<Cart>(context);
+
+    List<Widget> CartListItems = cart.getAll().entries.map((ci) {
+      return ListTile(
+          title: Text(ci.key.name),
+          trailing: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  width: 100,
+                  child: Padding(
+                    child: Text('${ci.value} x R${ci.key.price}'),
+                    padding: EdgeInsets.all(4),
+                  )),
+              Container(
+                width: 100,
+                child: Padding(
+                  child: Text('R${ci.value * ci.key.price}'),
+                  padding: EdgeInsets.all(4),
+                ),
+              )
+            ],
+          ));
+    }).toList();
+    CartListItems.add(ListTile(title: Divider()));
+    CartListItems.add(ListTile(
+        title: Text("Total:"),
+        trailing: Container(
+          width: 100,
+          child: Text('R${cart.getCost()}'),
+        )));
+
     if (!profileService.authorized) {
       return (Text("Unauthorized"));
     }
@@ -50,6 +82,7 @@ class _ProfileViewState extends State<ProfileView>
             description
             image
             size
+            inStock
           }
           categories {
             id
@@ -71,6 +104,7 @@ class _ProfileViewState extends State<ProfileView>
               TextEditingController(text: user.email);
           TextEditingController addressController =
               TextEditingController(text: user.address);
+
           return Column(children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -112,135 +146,72 @@ class _ProfileViewState extends State<ProfileView>
                         ),
                       ),
                       body: TabBarView(children: [
-                        ListView(
-                          padding: EdgeInsets.all(20.0),
-                          children: [],
-                        ),
-                        ListView(
-                          padding: EdgeInsets.all(20.0),
-                          children: [
-                            Text("Categories:"),
-                            Column(
-                              children: categories.map((category) {
-                                return CategoryTile(
-                                  category: category,
-                                  onEdit: () {},
-                                  onRemove: () {},
-                                );
-                              }).toList(),
-                            ),
-                            TextButton(
-                              child: Text("Add Category"),
-                              onPressed: () async {
-                                Category category = Category.create();
-                                TextEditingController nameController =
-                                    TextEditingController(text: category.name);
-                                await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          title: Text("Add Category"),
-                                          content: TextField(
-                                            controller: nameController,
-                                            onChanged: (value) =>
-                                                category.name = value,
-                                            decoration: InputDecoration(
-                                                labelText: "Name"),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              child: Text("Update"),
-                                              onPressed: () async {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: Text("Cancel"),
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                            )
-                                          ],
-                                        ));
-                              },
-                            ),
-                            Text("Products:"),
-                            Column(
-                              children: products.map((product) {
-                                return ProductTile(
-                                  product: product,
-                                  onTap: () async {
-                                    Product cachedProduct = Product(
-                                      name: product.name,
-                                      description: product.description,
-                                      category: product.category,
-                                      price: product.price,
-                                      size: product.name,
-                                    );
-                                    await showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                              title: Text(
-                                                  "Editing: ${product.name}"),
-                                              content: ProductEditing(
-                                                  product: product,
-                                                  categories: categories
-                                                      .map((e) => e.name)
-                                                      .toList()),
-                                              actions: [
-                                                TextButton(
-                                                  child: Text("Update"),
-                                                  onPressed: () async {
-                                                    if (await productService
-                                                        .updateProduct(
-                                                            product)) {
-                                                      Navigator.pop(context);
-                                                      refetch();
-                                                    }
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Text("Cancel"),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      product = cachedProduct;
-                                                    });
-                                                    Navigator.pop(context);
-                                                  },
-                                                )
-                                              ],
-                                            ));
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                            TextButton(
-                              child: Text("Add Product"),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                        ListView(
-                          //Settings
-                          padding: EdgeInsets.all(20.0),
-                          children: [
-                            Text("Profile:", textScaleFactor: 1.4),
-                            TextField(
-                              controller: usernameController,
-                              onChanged: (value) => user.username = value,
-                              decoration:
-                                  InputDecoration(labelText: "Username"),
-                            ),
-                            TextField(
-                              controller: emailController,
-                              onChanged: (value) => user.email = value,
-                              decoration: InputDecoration(labelText: "Email"),
-                            ),
-                            TextField(
-                              controller: addressController,
-                              onChanged: (value) => user.address = value,
-                              decoration: InputDecoration(labelText: "Address"),
-                            ),
-                          ],
-                        )
+                        cart.getAll().isEmpty
+                            ? Center(child: Text("Cart is empty"))
+                            : ListView(
+                                children: CartListItems,
+                              ),
+                        ProductWidget.list(products),
+                        // children: [
+                        // ListView(
+                        //   padding: EdgeInsets.all(20.0),
+                        //   children: [],
+                        // ),
+                        // ListView(
+                        //   padding: EdgeInsets.all(20.0),
+                        //   children: [
+                        //     Text("Categories:"),
+                        //     Column(
+                        //       children: categories.map((category) {
+                        //         return CategoryTile(
+                        //           category: category,
+                        //           onEdit: () {},
+                        //           onRemove: () {},
+                        //         );
+                        //       }).toList(),
+                        //     ),
+                        //     TextButton(
+                        //       child: Text("Add Category"),
+                        //       onPressed: () async {
+                        //         Category category = Category.create();
+                        //         TextEditingController nameController =
+                        //             TextEditingController(text: category.name);
+                        //         await showDialog(
+                        //             context: context,
+                        //             builder: (context) => AlertDialog(
+                        //                   title: Text("Add Category"),
+                        //                   content: TextField(
+                        //                     controller: nameController,
+                        //                     onChanged: (value) =>
+                        //                         category.name = value,
+                        //                     decoration: InputDecoration(
+                        //                         labelText: "Name"),
+                        //                   ),
+                        //                   actions: [
+                        //                     TextButton(
+                        //                       child: Text("Update"),
+                        //                       onPressed: () async {
+                        //                         Navigator.pop(context);
+                        //                       },
+                        //                     ),
+                        //                     TextButton(
+                        //                       child: Text("Cancel"),
+                        //                       onPressed: () =>
+                        //                           Navigator.pop(context),
+                        //                     )
+                        //                   ],
+                        //                 ));
+                        //       },
+                        //     ),
+                        //     Text("Products:"),
+
+                        //     TextButton(
+                        //       child: Text("Add Product"),
+                        //       onPressed: () {},
+                        //     ),
+                        //   ],
+                        // ),
+                        Settings()
                       ]),
                     )))
           ]);

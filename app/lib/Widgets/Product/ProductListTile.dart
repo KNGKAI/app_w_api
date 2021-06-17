@@ -23,7 +23,10 @@ class ProductListTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(Icons.filter_none),
-                  Text('${product.inStock}'),
+                  Padding(
+                    child: Text('${product.inStock}'),
+                    padding: EdgeInsets.all(4),
+                  )
                 ],
               ),
             ),

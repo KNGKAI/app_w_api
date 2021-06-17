@@ -11,6 +11,7 @@ import 'package:app/Widgets/FilterBottomSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:app/Views/RootView.dart';
+import 'package:app/Widgets/Filter/CategoryChips.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -19,16 +20,11 @@ class HomeView extends StatefulWidget {
 
 class _HomeView extends State<HomeView> {
   List<String> _selectedCategories = [];
+  List<String> _categories = [];
 
   @override
   Widget build(BuildContext context) {
     return RootView(
-      modal: (BuildContext) => FilterBottomSheet(updateSelection: (cat) {
-        setState(() {
-          _selectedCategories = cat;
-        });
-      }),
-      modalIcon: Icon(Icons.filter_alt),
       body: BaseQueryWidget(
         query: """{
           products {
@@ -54,9 +50,21 @@ class _HomeView extends State<HomeView> {
                   _selectedCategories.isEmpty)
               .toList();
           // ,
-
+          List<Category> __categories = result.data['categories']
+              .map<Category>((json) => Category.fromJson(json))
+              .toList();
+          _categories = __categories.map((e) => e.name).toList();
+          if (_selectedCategories.isEmpty) _selectedCategories = _categories;
           return Column(
-            children: [Expanded(child: ProductWidget.grid(products))],
+            children: [
+              CategoryChips(
+                  categories: _categories,
+                  selectedCategories: _selectedCategories,
+                  onFilterUpdate: (ss) => setState(() {
+                        _selectedCategories = ss;
+                      })),
+              Expanded(child: ProductWidget.grid(products))
+            ],
           );
           // ListView(
           //   children: [

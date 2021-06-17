@@ -28,12 +28,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
     var route = ModalRoute.of(context);
     var currentRoute = route != null ? route.settings.name : '/';
+
     return Drawer(
         child: ListView(
       children: [
         ListItem("Home", "/home", context, currentRoute, Icons.house),
-        ListItem(
-            "Settings", "/settings", context, currentRoute, Icons.settings),
         service.authorized
             ? ListItem(
                 "Profile", "/profile", context, currentRoute, Icons.portrait)
