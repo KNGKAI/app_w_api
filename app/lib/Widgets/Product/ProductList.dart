@@ -1,7 +1,7 @@
 import 'package:app/Models/Product.dart';
-import 'package:app/Views/ProductView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './ProductListTile.dart';
 
 class ProductList extends StatefulWidget {
   final List<Product> products;
@@ -18,9 +18,12 @@ class ProductList extends StatefulWidget {
 class _State extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: widget.products
-          .map((product) => ListTile(title: Text(product.name)))
+          .map((product) => Padding(
+                child: ProductListTile(product: product),
+                padding: EdgeInsets.all(6),
+              ))
           .toList(),
     );
   }

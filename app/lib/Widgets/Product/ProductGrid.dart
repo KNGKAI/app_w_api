@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/Models/Product.dart';
-import 'dart:convert';
-import 'package:app/Widgets/ProductGridTile.dart';
+
+import 'package:app/Widgets/Product/ProductGridTile.dart';
 
 const double productTileWidth = 200;
 

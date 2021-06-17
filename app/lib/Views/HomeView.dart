@@ -6,7 +6,7 @@ import 'package:app/Services/ProductService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 // import 'package:app/Widgets/ProductTile.dart';
-import 'package:app/Widgets/ProductGrid.dart';
+import 'package:app/Widgets/ProductWidget.dart';
 import 'package:app/Widgets/FilterBottomSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -56,7 +56,7 @@ class _HomeView extends State<HomeView> {
           // ,
 
           return Column(
-            children: [Expanded(child: ProductGrid(products: products))],
+            children: [Expanded(child: ProductWidget.grid(products))],
           );
           // ListView(
           //   children: [
