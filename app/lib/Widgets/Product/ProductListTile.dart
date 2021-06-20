@@ -4,7 +4,9 @@ import 'dart:convert';
 
 class ProductListTile extends StatelessWidget {
   final Product product;
-  const ProductListTile({@required Product this.product, Key key})
+  final List<Widget> Function(BuildContext, Product) actionBuilder;
+  const ProductListTile(
+      {@required Product this.product, this.actionBuilder, Key key})
       : super(key: key);
 
   @override
@@ -17,6 +19,13 @@ class ProductListTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(child: Text(product.name)),
+            Container(
+              width: 100,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: actionBuilder(context, product),
+              ),
+            ),
             Container(
               width: 100,
               child: Row(

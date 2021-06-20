@@ -3,25 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import './ProductListTile.dart';
 
-class ProductList extends StatefulWidget {
+class ProductList extends StatelessWidget {
   final List<Product> products;
-
+  final Function(BuildContext, Product) actionBuilder;
   const ProductList({
     @required this.products,
+    this.actionBuilder,
     Key key,
   }) : super(key: key);
 
   @override
-  _State createState() => _State();
-}
-
-class _State extends State<ProductList> {
-  @override
   Widget build(BuildContext context) {
     return ListView(
-      children: widget.products
+      children: products
           .map((product) => Padding(
-                child: ProductListTile(product: product),
+                child: ProductListTile(
+                    product: product, actionBuilder: actionBuilder),
                 padding: EdgeInsets.all(6),
               ))
           .toList(),

@@ -98,12 +98,6 @@ class _ProfileViewState extends State<ProfileView>
               .map<Category>((json) => Category.fromJson(json))
               .toList();
           User user = profileService.user;
-          TextEditingController usernameController =
-              TextEditingController(text: user.username);
-          TextEditingController emailController =
-              TextEditingController(text: user.email);
-          TextEditingController addressController =
-              TextEditingController(text: user.address);
 
           return Column(children: [
             Padding(
@@ -151,7 +145,62 @@ class _ProfileViewState extends State<ProfileView>
                             : ListView(
                                 children: CartListItems,
                               ),
-                        ProductWidget.list(products),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (c) {
+                                            return SimpleDialog(
+                                              title: Text("Create product"),
+                                              children: [
+                                                ProductEditing(
+                                                  product: new Product(),
+                                                  categories: categories
+                                                      .map((e) => e.name)
+                                                      .toList(),
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    icon: Icon(Icons.add)),
+                              ],
+                            ),
+                            Expanded(
+                              child: ProductWidget.list(products,
+                                  actionBuilder: (context, Product product) {
+                                return [
+                                  IconButton(
+                                      onPressed: () {
+                                        print(
+                                            'Editing product: ${product.name}');
+                                        showDialog(
+                                            context: context,
+                                            builder: (c) {
+                                              return SimpleDialog(
+                                                title: Text("Create product"),
+                                                children: [
+                                                  ProductEditing(
+                                                    product: product,
+                                                    categories: categories
+                                                        .map((e) => e.name)
+                                                        .toList(),
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      },
+                                      icon: Icon(Icons.edit))
+                                ];
+                              }),
+                            )
+                          ],
+                        ),
+
                         // children: [
                         // ListView(
                         //   padding: EdgeInsets.all(20.0),

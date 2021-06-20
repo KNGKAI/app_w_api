@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -36,147 +35,156 @@ class _State extends State<ProductEditing> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController = TextEditingController(text: widget.product.name);
-    TextEditingController descriptionController = TextEditingController(text: widget.product.description);
-    TextEditingController sizeController = TextEditingController(text: widget.product.size);
-    TextEditingController priceController = TextEditingController(text: widget.product.price.toString());
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: nameController,
-          onChanged: (value) => widget.product.name = value,
-          decoration: InputDecoration(
-            labelText: "Name:",
-            border: OutlineInputBorder(),
-          ),
-        ),
-        SizedBox(height: 10),
-        TextField(
-          controller: descriptionController,
-          onChanged: (value) => widget.product.description = value,
-          decoration: InputDecoration(
-            labelText: "Description:",
-            border: OutlineInputBorder(),
-          ),
-        ),
-        SizedBox(height: 10),
-        TextField(
-          controller: sizeController,
-          onChanged: (value) => widget.product.size = value,
-          decoration: InputDecoration(
-            labelText: "Size:",
-            border: OutlineInputBorder(),
-          ),
-        ),
-        Divider(),
-        Row(
+    TextEditingController nameController =
+        TextEditingController(text: widget.product.name);
+    TextEditingController descriptionController =
+        TextEditingController(text: widget.product.description);
+    TextEditingController sizeController =
+        TextEditingController(text: widget.product.size);
+    TextEditingController priceController =
+        TextEditingController(text: widget.product.price.toString());
+    return Padding(
+        padding: EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Category:"),
-            SizedBox(width: 10.0),
-            DropdownButton(
-              value: widget.product.category,
-              items: widget.categories
-                  .map((category) => DropdownMenuItem(
-                child: Text(category),
-                value: category,
-              )).toList(),
-              onChanged: (value) {
-                setState(() {
-                  widget.product.category = value;
-                });
-              },
+            TextField(
+              controller: nameController,
+              onChanged: (value) => widget.product.name = value,
+              decoration: InputDecoration(
+                labelText: "Name:",
+                border: OutlineInputBorder(),
+              ),
             ),
-          ],
-        ),
-        Divider(),
-        Text("In Stock:"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: Icon(Icons.remove),
-              onPressed: () {
-                setState(() {
-                  widget.product.inStock--;
-                  if (widget.product.inStock < 0) {
-                    widget.product.inStock = 0;
-                  }
-                });
-              },
+            SizedBox(height: 10),
+            TextField(
+              controller: descriptionController,
+              onChanged: (value) => widget.product.description = value,
+              decoration: InputDecoration(
+                labelText: "Description:",
+                border: OutlineInputBorder(),
+              ),
             ),
-            Text(widget.product.inStock.toString()),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                setState(() {
-                  widget.product.inStock++;
-                });
-              },
-            )
-          ],
-        ),
-        Divider(),
-        TextField(
-          controller: priceController,
-          onChanged: (value) => widget.product.price = int.parse(value),
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            labelText: "Price",
-            border: OutlineInputBorder(),
-          ),
-        ),
-        Divider(),
-        widget.product.image.isEmpty
-            ? Text("No Image")
-            : Image.memory(Base64Decoder().convert(widget.product.image), width: MediaQuery.of(context).size.width / 2),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            TextButton(
-              child: Text("Upload", style: TextStyle(color: Colors.white)),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue)),
-              onPressed: () {
-                print('upload');
+            SizedBox(height: 10),
+            TextField(
+              controller: sizeController,
+              onChanged: (value) => widget.product.size = value,
+              decoration: InputDecoration(
+                labelText: "Size:",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            Divider(),
+            Row(
+              children: [
+                Text("Category:"),
+                SizedBox(width: 10.0),
+                DropdownButton(
+                  value: widget.product.category,
+                  items: widget.categories
+                      .map((category) => DropdownMenuItem(
+                            child: Text(category),
+                            value: category,
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      widget.product.category = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Divider(),
+            Text("In Stock:"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: () {
+                    setState(() {
+                      widget.product.inStock--;
+                      if (widget.product.inStock < 0) {
+                        widget.product.inStock = 0;
+                      }
+                    });
+                  },
+                ),
+                Text(widget.product.inStock.toString()),
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    setState(() {
+                      widget.product.inStock++;
+                    });
+                  },
+                )
+              ],
+            ),
+            Divider(),
+            TextField(
+              controller: priceController,
+              onChanged: (value) => widget.product.price = int.parse(value),
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Price",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            Divider(),
+            widget.product.image == null || widget.product.image.isEmpty
+                ? Text("No Image")
+                : Image.memory(Base64Decoder().convert(widget.product.image),
+                    width: MediaQuery.of(context).size.width / 2),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  child: Text("Upload", style: TextStyle(color: Colors.white)),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.blue)),
+                  onPressed: () {
+                    print('upload');
 
-                // final _picker = ImagePicker();
-                //
-                // var _pickedImage = await _picker.getImage(source: ImageSource.gallery);
-                //
-                // setState(() {
-                //   image = _pickedImage.path;
-                // });
-              },
-            ),
-            TextButton(
-              child: Text("Take Photo", style: TextStyle(color: Colors.white)),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue)),
-              onPressed: () async {
-                print('take photo');
+                    // final _picker = ImagePicker();
+                    //
+                    // var _pickedImage = await _picker.getImage(source: ImageSource.gallery);
+                    //
+                    // setState(() {
+                    //   image = _pickedImage.path;
+                    // });
+                  },
+                ),
+                TextButton(
+                  child:
+                      Text("Take Photo", style: TextStyle(color: Colors.white)),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.blue)),
+                  onPressed: () async {
+                    print('take photo');
 
-                var camera = await availableCameras();
-                var result = await showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    content:
-                    TakePictureScreen(camera: camera.first),
-                  ),
-                );
-                print(result.toString());
-                if (result != null) {
-                  setState(() {
-                    widget.product.image = result.toString();
-                  });
-                }
-              },
+                    var camera = await availableCameras();
+                    var result = await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        content: TakePictureScreen(camera: camera.first),
+                      ),
+                    );
+                    print(result.toString());
+                    if (result != null) {
+                      setState(() {
+                        widget.product.image = result.toString();
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
           ],
-        ),
-      ],
-    );
+        ));
   }
 }
-
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
