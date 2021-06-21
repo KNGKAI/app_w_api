@@ -19,12 +19,19 @@ import 'package:app/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
-class OrderView extends StatefulWidget {
+class OrderListView extends StatefulWidget {
+  final String user;
+
+  const OrderListView({
+    this.user,
+    Key key,
+  }) : super(key: key);
+
   @override
   _State createState() => _State();
 }
 
-class _State extends State<OrderView> {
+class _State extends State<OrderListView> {
 
   @override
   void initState() {
@@ -40,7 +47,7 @@ class _State extends State<OrderView> {
     ProductService productService = Provider.of<ProductService>(context);
     return BaseQueryWidget(
       query: """{
-          orders {
+          orders(user: "${widget.user}") {
             id
             user {
               id
@@ -76,9 +83,9 @@ class _State extends State<OrderView> {
                     await showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                      title: Text("Edit Category"),
+                      title: Text("Order"),
                       content: OrderWidget(order: order),
-                      actions: [
+                      actions: profileService.user.role == "admin" ? [
                         TextButton(
                           child: Text("Ship"),
                           onPressed: () async {
@@ -103,7 +110,7 @@ class _State extends State<OrderView> {
                           child: Text("Cancel"),
                           onPressed: () => Navigator.pop(context),
                         )
-                      ],
+                      ] : [],
                     )
                     );
                   },

@@ -6,13 +6,14 @@ class User {
   String username;
   String address;
   String role;
+  int budget;
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? json['_id'];
     email = json['email'];
     username = json['username'];
     address = json['address'];
-    role = json['role'];
+    budget = int.parse(json['budget'].toString());
   }
 
   Map<String, dynamic> toJson() => {

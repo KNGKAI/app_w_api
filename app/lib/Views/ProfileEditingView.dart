@@ -32,9 +32,9 @@ class _State extends State<ProfileEditingView> {
   Widget build(BuildContext context) {
     ProfileService profileService = Provider.of<ProfileService>(context);
     if (!profileService.authorized) {
-      return (Text("Unauthorized"));
+      return Text("Unauthorized");
     }
-    User user = profileService.user;
+    User user = User.fromJson(profileService.user.toJson());
     TextEditingController usernameController = TextEditingController(text: user.username);
     TextEditingController emailController = TextEditingController(text: user.email);
     TextEditingController addressController = TextEditingController(text: user.address);
@@ -57,6 +57,30 @@ class _State extends State<ProfileEditingView> {
           onChanged: (value) => user.address = value,
           decoration: InputDecoration(labelText: "Address"),
         ),
+        TextButton(
+          child: Text("Update"),
+          onPressed: () async {
+            bool updated = await profileService.updateUser(user);
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) {;
+                  return AlertDialog(
+                    title: Text("Updated Profile"),
+                    content: Text(updated ? "Success" : "Failed"),
+                    actions: [
+                      TextButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                          setState(() {
+                            Navigator.of(context).pop();
+                          });
+                        },
+                      )
+                    ],
+                  );
+                });
+          },
+        )
       ],
     );
   }

@@ -7,7 +7,7 @@ myAppBar(BuildContext context, String currentRoute) {
   ProfileService service = Provider.of<ProfileService>(context);
   return AppBar(
     toolbarHeight: 48,
-    title: Text("012SKATE"),
+    title: Text("012"),
     leading: Column(
       children: [
         Navigator.canPop(context)

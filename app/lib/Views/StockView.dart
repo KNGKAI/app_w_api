@@ -3,6 +3,7 @@ import 'package:app/Models/Order.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
+import 'package:app/ViewModels/AppViewModel.dart';
 import 'package:app/Views/CartView.dart';
 import 'package:app/Views/ProfileEditingView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
@@ -40,7 +41,6 @@ class _State extends State<StockView> {
             name
             category
             description
-            image
             size
             inStock
           }
@@ -124,7 +124,8 @@ class _State extends State<StockView> {
               }).toList(),
             ),
             TextButton(
-              child: Text("Add Category"),
+              child: Text("Add Category",
+                  style: TextStyle(color: Colors.blue)),
               onPressed: () async {
                 Category category = Category.create();
                 TextEditingController nameController = TextEditingController(text: category.name);
@@ -141,7 +142,8 @@ class _State extends State<StockView> {
                       ),
                       actions: [
                         TextButton(
-                          child: Text("Add"),
+                          child: Text("Add",
+                              style: TextStyle(color: Colors.blue)),
                           onPressed: () async {
                             if (await productService.addCategory(category)) {
                               Navigator.pop(context);
@@ -150,7 +152,8 @@ class _State extends State<StockView> {
                           },
                         ),
                         TextButton(
-                          child: Text("Cancel"),
+                          child: Text("Cancel",
+                              style: TextStyle(color: Colors.red)),
                           onPressed: () => Navigator.pop(context),
                         )
                       ],
@@ -164,49 +167,15 @@ class _State extends State<StockView> {
                 return ProductTile(
                   product: product,
                   onTap: () async {
-                    Product cachedProduct = Product(
-                      name: product.name,
-                      description: product.description,
-                      category: product.category,
-                      price: product.price,
-                      size: product.name,
-                    );
-                    await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text("Editing: ${product.name}"),
-                          content: ProductEditing(
-                              product: product,
-                              categories: categories.map((e) => e.name).toList()
-                          ),
-                          actions: [
-                            TextButton(
-                              child: Text("Update"),
-                              onPressed: () async {
-                                if (await productService.updateProduct(product)) {
-                                  Navigator.pop(context);
-                                  refetch();
-                                }
-                              },
-                            ),
-                            TextButton(
-                              child: Text("Cancel"),
-                              onPressed: () {
-                                setState(() {
-                                  product = cachedProduct;
-                                });
-                                Navigator.pop(context);
-                              },
-                            )
-                          ],
-                        )
-                    );
+                    AppViewModel.setId(product.id);
+                    Navigator.of(context).pushNamed('/product/edit');
                   },
                 );
               }).toList(),
             ),
             TextButton(
-              child: Text("Add Product"),
+              child: Text("Add Product",
+                  style: TextStyle(color: Colors.blue)),
               onPressed: () async {
                 Product product = Product(
                     name: "",
@@ -227,7 +196,8 @@ class _State extends State<StockView> {
                       ),
                       actions: [
                         TextButton(
-                          child: Text("Add"),
+                          child: Text("Add",
+                              style: TextStyle(color: Colors.blue)),
                           onPressed: () async {
                             if (await productService.addProduct(product)) {
                               Navigator.pop(context);
@@ -236,7 +206,8 @@ class _State extends State<StockView> {
                           },
                         ),
                         TextButton(
-                          child: Text("Cancel"),
+                          child: Text("Cancel",
+                              style: TextStyle(color: Colors.red)),
                           onPressed: () {
                             Navigator.pop(context);
                           },

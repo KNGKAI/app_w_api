@@ -42,9 +42,7 @@ class _ProfileViewState extends State<CartView> {
             name
             category
             description
-            image
             size
-            inStock
           }
         }""",
       builder: (QueryResult result,
@@ -55,8 +53,10 @@ class _ProfileViewState extends State<CartView> {
         print(productService.getCart().toString());
         List<Product> cart = productService.getCart()
             .map<Product>((id) => products.firstWhere((product) => product.id == id,
-            orElse: () => Product(id: id, name: "none", price: 0, size: "none", category: "none")))
+            orElse: () => Product(id: id, name: id, price: 0, size: "-", category: "-")))
             .toList();
+        int totalCost = 0;
+        cart.forEach((element) => totalCost += element.price);
         return cart.isEmpty
             ? Center(child: Text("Nothing in your cart"))
             : ListView(
@@ -75,17 +75,20 @@ class _ProfileViewState extends State<CartView> {
                           title: Text("Remove from cart?"),
                           actions: [
                             TextButton(
-                              child: Text("Yes"),
+                              child: Text("Yes",
+                                  style: TextStyle(color: Colors.blue)),
                               onPressed: () async {
                                 if (await productService.removeFromCart(product)) {
                                   setState(() {
+                                    profileService.user.budget -= totalCost;
                                     Navigator.pop(context);
                                   });
                                 }
                               },
                             ),
                             TextButton(
-                              child: Text("Cancel"),
+                              child: Text("Cancel",
+                                  style: TextStyle(color: Colors.red)),
                               onPressed: () => Navigator.pop(context),
                             )
                           ],
@@ -96,7 +99,8 @@ class _ProfileViewState extends State<CartView> {
               )).toList(),
             ),
             TextButton(
-              child: Text("Place Order"),
+              child: Text("Place Order: R$totalCost",
+                  style: TextStyle(color: Colors.blue)),
               onPressed: () async {
                 if (await productService.placeOrder(profileService.user)) {
                   setState(() { });
@@ -106,7 +110,8 @@ class _ProfileViewState extends State<CartView> {
                       title: Text("Order Place"),
                       actions: [
                         TextButton(
-                          child: Text("Okay"),
+                          child: Text("Okay",
+                              style: TextStyle(color: Colors.blue)),
                           onPressed: () => Navigator.pop(context),
                         ),
                       ],

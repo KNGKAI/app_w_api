@@ -4,6 +4,7 @@ import 'package:app/Models/Category.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
+import 'package:app/ViewModels/AppViewModel.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/MyAppBar.dart';
 import 'package:app/Widgets/ProductGridTile.dart';
@@ -128,26 +129,46 @@ class _HomeView extends State<HomeView> {
                                                       onPressed: () =>
                                                           Navigator.of(context)
                                                               .pop(),
-                                                      child: Text("Cancel",
+                                                      child: Text("Back",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .white))),
                                                   MaterialButton(
-                                                      color: inStock ? Colors.green : Colors.grey,
+                                                      color: inStock ? Colors.blue : Colors.grey,
                                                       onPressed: () async {
                                                         if (inStock) {
-                                                          if (await productService
-                                                              .addToCart(
-                                                              product)) {
-                                                            Navigator.of(context)
-                                                                .pop();
+                                                          if (await productService.addToCart(product)) {
+                                                            await showDialog(
+                                                                context: context,
+                                                                builder: (context) => AlertDialog(
+                                                                  title: Text("Added to cart"),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                        child: Text("Okay"),
+                                                                        onPressed: () => Navigator.of(context).pop()
+                                                                    )
+                                                                  ],
+                                                                )
+                                                            );
+                                                            Navigator.of(context).pop();
                                                           }
                                                         }
                                                         setState(() {
-
+                                                          // ???????
                                                         });
                                                       },
                                                       child: Text(inStock ? "Add to cart" : "Out of Stock",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white))),
+                                                  MaterialButton(
+                                                      color: Colors.green,
+                                                      onPressed: () async {
+                                                        AppViewModel.setId(product.id);
+                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context).pushNamed("/product");
+                                                      },
+                                                      child: Text("View",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .white))),

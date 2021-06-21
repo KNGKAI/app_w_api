@@ -4,7 +4,7 @@ import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Views/CartView.dart';
-import 'package:app/Views/OrderView.dart';
+import 'package:app/Views/OrderListView.dart';
 import 'package:app/Views/ProfileEditingView.dart';
 import 'package:app/Views/StockView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
@@ -52,8 +52,9 @@ class _State extends State<ProfileView> {
             ),
           ),
         ),
-        Center(child: Text(user.username, style: TextStyle(fontSize: 20))),
+        Center(child: Text(user.username, style: TextStyle(fontSize: 24))),
         Center(child: Text(user.email, style: TextStyle(fontSize: 20))),
+        Center(child: Text("R ${user.budget.toString()}")),
         TextButton(
           child: Text("Sign Out"),
           onPressed: () {
@@ -63,15 +64,19 @@ class _State extends State<ProfileView> {
         ),
         Expanded(
             child: DefaultTabController(
-                length: admin ? 4 : 2,
+                length: admin ? 4 : 3,
                 child: Scaffold(
                   appBar: AppBar(
-                    backgroundColor: Colors.lightBlue,
                     automaticallyImplyLeading: false,
+                    title: Text("Dashboard"),
                     bottom: TabBar(
-                      tabs: [
+                      tabs: admin ? [
                         Tab(icon: Icon(Icons.shopping_cart), text: "Cart",),
                         Tab(icon: Icon(Icons.format_align_left), text: "Stock"),
+                        Tab(icon: Icon(Icons.description), text: "Orders"),
+                        Tab(icon: Icon(Icons.settings), text: "Profile"),
+                      ] : [
+                        Tab(icon: Icon(Icons.shopping_cart), text: "Cart",),
                         Tab(icon: Icon(Icons.description), text: "Orders"),
                         Tab(icon: Icon(Icons.settings), text: "Profile"),
                       ],
@@ -81,10 +86,11 @@ class _State extends State<ProfileView> {
                       children: admin ? [
                         CartView(),
                         StockView(),
-                        OrderView(),
+                        OrderListView(),
                         ProfileEditingView(),
                       ] : [
                         CartView(),
+                        OrderListView(user: user.id),
                         ProfileEditingView(),
                       ]
                   ),
