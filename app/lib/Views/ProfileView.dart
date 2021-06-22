@@ -1,21 +1,21 @@
 import 'package:app/Models/Category.dart';
-import 'package:app/Models/Order.dart';
+
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
+
 import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/SkateAppBar.dart';
+
 import 'package:app/Widgets/Settings.dart';
 import 'package:app/Widgets/ProductWidget.dart';
-import 'package:app/Widgets/ProductEditing.dart';
-import 'package:app/Widgets/ProductTile.dart';
+import 'package:app/Widgets/Product/ProductEditing.dart';
+import 'package:app/Widgets/Filter/CategoryChips.dart';
+
 import 'package:flutter/material.dart';
 import 'package:app/Models/User.dart';
 import 'package:app/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
 import 'package:provider/provider.dart';
-import 'package:app/Models/Product.dart';
 import 'package:app/Providers/CartProvider.dart';
 import 'package:app/Views/RootView.dart';
 
@@ -147,28 +147,27 @@ class _ProfileViewState extends State<ProfileView>
                               ),
                         Column(
                           children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (c) {
-                                            return SimpleDialog(
-                                              title: Text("Create product"),
-                                              children: [
-                                                ProductEditing(
-                                                  product: new Product(),
-                                                  categories: categories
-                                                      .map((e) => e.name)
-                                                      .toList(),
-                                                )
-                                              ],
-                                            );
-                                          });
-                                    },
-                                    icon: Icon(Icons.add)),
-                              ],
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      iconSize: 42,
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (c) {
+                                              return ProductEditing(
+                                                product: Product.create(),
+                                                categories: categories
+                                                    .map((e) => e.name)
+                                                    .toList(),
+                                              );
+                                            });
+                                      },
+                                      icon: Icon(Icons.add)),
+                                ],
+                              ),
                             ),
                             Expanded(
                               child: ProductWidget.list(products,
@@ -181,16 +180,11 @@ class _ProfileViewState extends State<ProfileView>
                                         showDialog(
                                             context: context,
                                             builder: (c) {
-                                              return SimpleDialog(
-                                                title: Text("Create product"),
-                                                children: [
-                                                  ProductEditing(
-                                                    product: product,
-                                                    categories: categories
-                                                        .map((e) => e.name)
-                                                        .toList(),
-                                                  )
-                                                ],
+                                              return ProductEditing(
+                                                product: product,
+                                                categories: categories
+                                                    .map((e) => e.name)
+                                                    .toList(),
                                               );
                                             });
                                       },

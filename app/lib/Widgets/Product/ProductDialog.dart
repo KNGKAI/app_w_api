@@ -56,7 +56,22 @@ class ProductDialog extends StatelessWidget {
             height: 100,
             child: Text(product.description),
           ),
-        )
+        ),
+        // Padding(
+        //   padding: EdgeInsets.all(4),
+        //   child: Row(
+        //     children: [
+        //       Tooltip(
+        //           message: "Stock",
+        //           child: Row(
+        //             children: [
+        //               Icon(Icons.filter_none),
+        //               Text(product.inStock.toString())
+        //             ],
+        //           ))
+        //     ],
+        //   ),
+        // )
       ],
     );
     // return SizedBox(

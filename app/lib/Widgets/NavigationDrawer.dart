@@ -32,7 +32,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     return Drawer(
         child: ListView(
       children: [
-        ListItem("Home", "/home", context, currentRoute, Icons.house),
+        ListItem("Store", "/home", context, currentRoute, Icons.store_rounded),
         service.authorized
             ? ListItem(
                 "Profile", "/profile", context, currentRoute, Icons.portrait)

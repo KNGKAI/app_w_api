@@ -23,16 +23,24 @@ class Product {
     inStock = json['inStock'];
   }
 
+  Product.create() {
+    name = "";
+    description = "";
+    size = "";
+    price = 0;
+    inStock = 0;
+  }
+
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-    "category": category,
-    "size": size,
-    // "image": image,
-    "price": price,
-    "inStock": inStock,
-  };
+        "id": id,
+        "name": name,
+        "description": description,
+        "category": category,
+        "size": size,
+        // "image": image,
+        "price": price,
+        "inStock": inStock,
+      };
 
   Product({
     String id,

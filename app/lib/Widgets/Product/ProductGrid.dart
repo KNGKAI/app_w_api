@@ -3,7 +3,7 @@ import 'package:app/Models/Product.dart';
 
 import 'package:app/Widgets/Product/ProductGridTile.dart';
 
-const double productTileWidth = 200;
+const double productTileWidth = 300;
 
 class ProductGrid extends StatefulWidget {
   List<Product> products = [];

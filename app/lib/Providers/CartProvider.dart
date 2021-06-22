@@ -11,6 +11,10 @@ class Cart {
       _products[p] = 1;
   }
 
+  void clearCart() {
+    _products.clear();
+  }
+
   List<Product> getProductsInCart() {
     return _products.keys.toList();
   }
@@ -23,6 +27,11 @@ class Cart {
     if (!_products.containsKey(p)) return;
     _products[p] -= 1;
     if (_products[p] == 0) _products.remove(p);
+  }
+
+  num getProductCount(Product p) {
+    if (!_products.containsKey(p)) return 0;
+    return _products[p];
   }
 
   num getCost() {

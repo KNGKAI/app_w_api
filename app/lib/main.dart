@@ -7,6 +7,7 @@ import 'package:app/Views/LoginView.dart';
 import 'package:app/Views/ProfileView.dart';
 import 'package:app/Views/RegistrationView.dart';
 import 'package:app/Views/SplashView.dart';
+import 'package:app/Views/CartView.dart';
 import 'package:app/Providers/CartProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -67,6 +68,7 @@ class App extends StatelessWidget {
           '/login': (context) => LoginView(),
           '/register': (context) => RegistrationView(),
           '/profile': (context) => ProfileView(),
+          '/cart': (context) => CartView(),
         },
       ),
     );
