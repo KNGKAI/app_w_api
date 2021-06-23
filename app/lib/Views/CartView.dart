@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app/Providers/CartProvider.dart';
 
+import 'package:app/Widgets/Cart/CartList.dart';
+
 class CartView extends StatefulWidget {
   const CartView({Key key}) : super(key: key);
 
@@ -13,37 +15,6 @@ class _CartViewState extends State<CartView> {
   @override
   Widget build(BuildContext context) {
     Cart cart = Provider.of<Cart>(context);
-
-    List<Widget> CartListItems = cart.getAll().entries.map((ci) {
-      return ListTile(
-          title: Text(ci.key.name),
-          trailing: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                  width: 100,
-                  child: Padding(
-                    child: Text('${ci.value} x R${ci.key.price}'),
-                    padding: EdgeInsets.all(4),
-                  )),
-              Container(
-                width: 100,
-                child: Padding(
-                  child: Text('R${ci.value * ci.key.price}'),
-                  padding: EdgeInsets.all(4),
-                ),
-              )
-            ],
-          ));
-    }).toList();
-    CartListItems.add(ListTile(title: Divider()));
-    CartListItems.add(ListTile(
-        title: Text("Total:"),
-        trailing: Container(
-          width: 100,
-          child: Text('R${cart.getCost()}'),
-        )));
 
     return Scaffold(
         appBar: AppBar(
@@ -113,9 +84,7 @@ class _CartViewState extends State<CartView> {
             Expanded(
               child: cart.getAll().isEmpty
                   ? Center(child: Text("Cart is empty"))
-                  : ListView(
-                      children: CartListItems,
-                    ),
+                  : CartList(cart: cart.getAll()),
             )
           ],
         ));

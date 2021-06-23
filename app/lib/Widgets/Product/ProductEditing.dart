@@ -13,10 +13,12 @@ import 'package:provider/provider.dart';
 class ProductEditing extends StatefulWidget {
   final Product product;
   final List<String> categories;
+  final Function(Product) save;
 
   const ProductEditing({
     @required this.product,
     this.categories,
+    this.save,
     Key key,
   }) : super(key: key);
 
@@ -60,6 +62,7 @@ class _State extends State<ProductEditing> {
                   onPressed: () {
                     // To-Do
                     print("Save current edit of product");
+                    widget.save(widget.product);
                   },
                   icon: Icon(Icons.save)),
               IconButton(
@@ -101,9 +104,18 @@ class _State extends State<ProductEditing> {
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.blue)),
-                        onPressed: () {
+                        onPressed: () async {
                           // To-Do
                           print("Upload picture from device");
+
+                          // final _picker = ImagePicker();
+
+                          // var _pickedImage = await _picker.getImage(
+                          //     source: ImageSource.gallery);
+
+                          // setState(() {
+                          //   image = _pickedImage.path;
+                          // });
                         },
                         child: Row(
                           children: [
@@ -122,9 +134,21 @@ class _State extends State<ProductEditing> {
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.purple[300])),
-                        onPressed: () {
+                        onPressed: () async {
                           // To-Do
                           print("Take picture using camera");
+                          var camera = await availableCameras();
+                          var result = await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: TakePictureScreen(camera: camera.first),
+                            ),
+                          );
+                          print(result.toString());
+                          if (result != null)
+                            setState(() {
+                              widget.product.image = result.toString();
+                            });
                         },
                         child: Row(
                           children: [
@@ -150,6 +174,17 @@ class _State extends State<ProductEditing> {
             border: OutlineInputBorder(),
           ),
         )),
+        pad(
+          TextField(
+            controller: priceController,
+            onChanged: (value) => widget.product.price = int.parse(value),
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Price",
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
         pad(TextField(
           controller: descriptionController,
           onChanged: (value) => widget.product.description = value,
@@ -170,6 +205,7 @@ class _State extends State<ProductEditing> {
         ),
         pad(
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Category:"),
               SizedBox(width: 10.0),

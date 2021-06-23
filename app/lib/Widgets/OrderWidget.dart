@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:app/Models/Order.dart';
@@ -29,11 +28,7 @@ class _State extends State<OrderWidget> {
         Text("Address: ${widget.order.user.address}"),
         Divider(),
         Text("Products:"),
-        Column(
-          children: widget.order.products
-              .map((product) => Text(" - ${product.name}"))
-              .toList(),
-        )
+        ListView(),
       ],
     );
   }

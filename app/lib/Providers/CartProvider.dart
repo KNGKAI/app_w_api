@@ -2,7 +2,7 @@ import 'package:app/Models/Product.dart';
 
 class Cart {
   // final List<Product> _products = [];
-  final Map<Product, num> _products = Map<Product, num>();
+  final Map<Product, int> _products = Map<Product, int>();
 
   void addProductToCart(Product p) {
     if (_products.containsKey(p))

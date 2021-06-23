@@ -6,7 +6,7 @@ import 'package:app/Models/User.dart';
 class Order {
   String _id;
   User user;
-  List<Product> products;
+  Map<Product, int> products = new Map<Product, int>();
   String status;
   String reference;
 
@@ -15,18 +15,29 @@ class Order {
   Order.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     user = User.fromJson(json['user']);
-    products = json['product']?.map<Product>((json) => Product.fromJson(json))?.toList() ?? [];
+
+    List<Product> hold = [];
+    hold = json['product']
+        ?.map<Product>((json) => Product.fromJson(json))
+        ?.toList();
+    hold.map((e) {
+      if (products.containsKey(e))
+        products[e] += 1;
+      else
+        products[e] = 1;
+    });
+
     status = json['status'];
     reference = json['reference'];
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "user": user.id,
-    "product": products.map((e) => e.id).toList(),
-    "status": status,
-    "reference": reference,
-  };
+        "id": id,
+        "user": user.id,
+        "product": products.map((e, k) => MapEntry(e.id, k)),
+        "status": status,
+        "reference": reference,
+      };
 
   Order({
     String id,

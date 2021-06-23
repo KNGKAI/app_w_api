@@ -1,4 +1,7 @@
 import 'package:app/Models/Category.dart';
+import 'package:app/Models/Order.dart';
+
+import 'package:app/Widgets/Order/OrderList.dart';
 
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
@@ -74,15 +77,32 @@ class _ProfileViewState extends State<ProfileView>
     return RootView(
       body: BaseQueryWidget(
         query: """{
+          orders {
+            id
+            product {
+              id
+              price
+              name
+              category
+              description
+              size
+              inStock  
+            }
+            user {
+              id
+            }
+            reference
+            status
+          }
           products {
             id
             price
             name
             category
             description
-            image
             size
             inStock
+            image
           }
           categories {
             id
@@ -93,6 +113,10 @@ class _ProfileViewState extends State<ProfileView>
             {VoidCallback refetch, FetchMore fetchMore}) {
           List<Product> products = result.data['products']
               .map<Product>((json) => Product.fromJson(json))
+              .toList();
+
+          List<Order> orders = result.data['orders']
+              .map<Order>((json) => Order.fromJson(json))
               .toList();
           List<Category> categories = result.data['categories']
               .map<Category>((json) => Category.fromJson(json))
@@ -130,7 +154,7 @@ class _ProfileViewState extends State<ProfileView>
                           tabs: [
                             Tab(
                               icon: Icon(Icons.shopping_cart),
-                              text: "Cart",
+                              text: "Orders",
                             ),
                             Tab(
                                 icon: Icon(Icons.format_align_left),
@@ -140,11 +164,12 @@ class _ProfileViewState extends State<ProfileView>
                         ),
                       ),
                       body: TabBarView(children: [
-                        cart.getAll().isEmpty
-                            ? Center(child: Text("Cart is empty"))
-                            : ListView(
-                                children: CartListItems,
-                              ),
+                        OrderList(orders: orders),
+                        // cart.getAll().isEmpty
+                        //     ? Center(child: Text("Cart is empty"))
+                        //     : ListView(
+                        //         children: CartListItems,
+                        //       ),
                         Column(
                           children: [
                             Container(
@@ -181,11 +206,18 @@ class _ProfileViewState extends State<ProfileView>
                                             context: context,
                                             builder: (c) {
                                               return ProductEditing(
-                                                product: product,
-                                                categories: categories
-                                                    .map((e) => e.name)
-                                                    .toList(),
-                                              );
+                                                  product: product,
+                                                  categories: categories
+                                                      .map((e) => e.name)
+                                                      .toList(),
+                                                  save: (p) {
+                                                    productService
+                                                        .updateProduct(p)
+                                                        .whenComplete(() =>
+                                                            Navigator.pop(
+                                                                context));
+                                                    Navigator.pop(context);
+                                                  });
                                             });
                                       },
                                       icon: Icon(Icons.edit))
