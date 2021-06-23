@@ -50,8 +50,13 @@ const RootQuery = new GraphQLObjectType({
         },
         orders: {
             type: new GraphQLList(OrderType),
+            args: { user: { type: GraphQLString } },
             resolve(parent, args) {
-                return OrderModel.find({});
+                var query = {};
+                if (args.user) {
+                    query = { user: args.user }
+                }
+                return OrderModel.find(query);
             }
         },
         order: {

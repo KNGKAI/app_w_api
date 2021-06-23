@@ -4,6 +4,7 @@ import 'package:app/Models/Category.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
+import 'package:app/ViewModels/AppViewModel.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/ProductWidget.dart';
 import 'package:flutter/material.dart';

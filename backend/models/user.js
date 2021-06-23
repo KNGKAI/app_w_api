@@ -7,6 +7,7 @@ var User = new mongoose.Schema({
   email: String,
   address: String,
   role: String,
+  budget: Number,
 });
 
 User.pre('save', function(callback) {

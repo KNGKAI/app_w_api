@@ -4,7 +4,8 @@ const {
     GraphQLSchema,
     GraphQLList,
     GraphQLFloat,
-    GraphQLScalarType
+    GraphQLScalarType,
+    GraphQLInt
 } = require('graphql');
 
 const UserType = new GraphQLObjectType({
@@ -15,6 +16,7 @@ const UserType = new GraphQLObjectType({
         email: { type: GraphQLString },
         address: { type: GraphQLString },
         role: { type: GraphQLString },
+        budget: { type: GraphQLInt },
     })
 })
 

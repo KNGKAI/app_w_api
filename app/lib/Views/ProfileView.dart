@@ -5,7 +5,6 @@ import 'package:app/Widgets/Order/OrderList.dart';
 
 import 'package:app/Models/Product.dart';
 import 'package:app/Services/ProductService.dart';
-
 import 'package:app/Widgets/BaseQueryWidget.dart';
 
 import 'package:app/Widgets/Settings.dart';

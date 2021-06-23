@@ -36,7 +36,8 @@ module.exports = {
                 var user = {
                     username: req.body.username,
                     email: req.body.email,
-                    role: 'user'
+                    role: 'user',
+                    budget: 5000
                 }
                 UserModel.create(user, function(err, doc) {
                     if (err) {

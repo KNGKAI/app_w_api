@@ -4,6 +4,8 @@ import 'package:app/Services/ProfileService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Views/HomeView.dart';
 import 'package:app/Views/LoginView.dart';
+import 'package:app/Views/ProductEditingView.dart';
+import 'package:app/Views/ProductView.dart';
 import 'package:app/Views/ProfileView.dart';
 import 'package:app/Views/RegistrationView.dart';
 import 'package:app/Views/SplashView.dart';
@@ -58,7 +60,7 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.lightBlue,
+          primarySwatch: Colors.grey,
           visualDensity: VisualDensity.comfortable,
         ),
         initialRoute: '/',
