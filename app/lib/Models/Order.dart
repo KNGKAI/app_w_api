@@ -25,8 +25,10 @@ class Order {
       if (products.containsKey(e))
         products[e] += 1;
       else
-        products[e] = 1;
+        products.putIfAbsent(e, () => 1);
     });
+
+    print(products);
 
     createdDateTime = json['createdDateTime'];
 

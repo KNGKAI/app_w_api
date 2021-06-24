@@ -4,6 +4,7 @@ import 'package:app/Models/Order.dart';
 import 'package:app/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './OrderDialog.dart';
 
 class OrderTile extends StatelessWidget {
   final Order order;
@@ -15,7 +16,8 @@ class OrderTile extends StatelessWidget {
       title: Text(order.user.username),
       subtitle: Text(order.user.address + "\n" + order.reference),
       trailing: Text(order.status),
-      // onTap: order.onTap,
+      onTap: () => showDialog(
+          context: context, builder: (c) => OrderDialog(order: order)),
     );
   }
 }
