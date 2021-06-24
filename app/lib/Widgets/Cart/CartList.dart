@@ -17,22 +17,25 @@ class CartList extends StatelessWidget {
       return CartEntry(product: e.key, quantity: e.value);
     }).toList();
 
-    return ListView(children: [
-      ...list,
-      ListTile(title: Divider()),
-      ListTile(
-          title: Text("Total:"),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(width: 100, child: Text(numItems.toString())),
-              Container(
-                width: 100,
-                child: Text('R${total}'),
-              )
-            ],
-          ))
-    ]);
+    return ListView(
+        children: (cart.isEmpty
+            ? [Center(child: Text("Cart is empty"))]
+            : [
+                ...list,
+                ListTile(title: Divider()),
+                ListTile(
+                    title: Text("Total:"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(width: 100, child: Text(numItems.toString())),
+                        Container(
+                          width: 100,
+                          child: Text('R${total}'),
+                        )
+                      ],
+                    ))
+              ]));
   }
 }
