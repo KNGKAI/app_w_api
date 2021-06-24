@@ -9,6 +9,7 @@ import 'package:app/Widgets/BaseQueryWidget.dart';
 
 import 'package:app/Widgets/Settings.dart';
 import 'package:app/Widgets/ProductWidget.dart';
+import 'package:app/Widgets/OrderWidget.dart';
 import 'package:app/Widgets/Product/ProductEditing.dart';
 import 'package:app/Widgets/Filter/CategoryChips.dart';
 
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:app/Models/User.dart';
 import 'package:app/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:app/Views/StockView.dart';
 
 import 'package:provider/provider.dart';
 import 'package:app/Providers/CartProvider.dart';
@@ -89,6 +91,7 @@ class _ProfileViewState extends State<ProfileView>
             }
             user {
               id
+
             }
             reference
             status
@@ -163,69 +166,8 @@ class _ProfileViewState extends State<ProfileView>
                         ),
                       ),
                       body: TabBarView(children: [
-                        OrderList(orders: orders),
-                        // cart.getAll().isEmpty
-                        //     ? Center(child: Text("Cart is empty"))
-                        //     : ListView(
-                        //         children: CartListItems,
-                        //       ),
-                        Column(
-                          children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                      iconSize: 42,
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (c) {
-                                              return ProductEditing(
-                                                product: Product.create(),
-                                                categories: categories
-                                                    .map((e) => e.name)
-                                                    .toList(),
-                                              );
-                                            });
-                                      },
-                                      icon: Icon(Icons.add)),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: ProductWidget.list(products,
-                                  actionBuilder: (context, Product product) {
-                                return [
-                                  IconButton(
-                                      onPressed: () {
-                                        print(
-                                            'Editing product: ${product.name}');
-                                        showDialog(
-                                            context: context,
-                                            builder: (c) {
-                                              return ProductEditing(
-                                                  product: product,
-                                                  categories: categories
-                                                      .map((e) => e.name)
-                                                      .toList(),
-                                                  save: (p) {
-                                                    productService
-                                                        .updateProduct(p)
-                                                        .whenComplete(() =>
-                                                            Navigator.pop(
-                                                                context));
-                                                    Navigator.pop(context);
-                                                  });
-                                            });
-                                      },
-                                      icon: Icon(Icons.edit))
-                                ];
-                              }),
-                            )
-                          ],
-                        ),
-
+                        OrderWidget.view(),
+                        StockView(),
                         // children: [
                         // ListView(
                         //   padding: EdgeInsets.all(20.0),

@@ -12,9 +12,11 @@ class ProductListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        leading: Image.memory(
-          Base64Decoder().convert(product.image),
-        ),
+        leading: product.image != null
+            ? Image.memory(
+                Base64Decoder().convert(product.image),
+              )
+            : Icon(Icons.broken_image),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

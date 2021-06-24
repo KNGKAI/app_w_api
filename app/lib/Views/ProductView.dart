@@ -10,8 +10,7 @@ import 'package:app/Views/CartView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
 import 'package:app/Widgets/MyAppBar.dart';
-import 'package:app/Widgets/OrderTile.dart';
-import 'package:app/Widgets/ProductEditing.dart';
+
 import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
 import 'package:app/Models/User.dart';
@@ -74,18 +73,19 @@ class _State extends State<ProductView> {
             padding: EdgeInsets.all(20.0),
             children: [
               Image.memory(
-                Base64Decoder()
-                    .convert(_product.image),
+                Base64Decoder().convert(_product.image),
                 width: MediaQuery.of(context).size.width,
                 scale: 0.1,
               ),
               SizedBox(height: 10.0),
-              Text(_product.name, style: TextStyle(
-                fontSize: 30.0,
-              )),
-              Text(_product.size, style: TextStyle(
-                fontSize: 24.0,
-              )),
+              Text(_product.name,
+                  style: TextStyle(
+                    fontSize: 30.0,
+                  )),
+              Text(_product.size,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  )),
               Text(_product.description),
               SizedBox(height: 10.0),
               Row(
@@ -99,15 +99,14 @@ class _State extends State<ProductView> {
                             await showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  title: Text("Added to cart"),
-                                  actions: [
-                                    TextButton(
-                                      child: Text("Okay"),
-                                      onPressed: () => Navigator.of(context).pop()
-                                    )
-                                  ],
-                                )
-                            );
+                                      title: Text("Added to cart"),
+                                      actions: [
+                                        TextButton(
+                                            child: Text("Okay"),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop())
+                                      ],
+                                    ));
                             Navigator.of(context).pop();
                           }
                         }
@@ -116,9 +115,7 @@ class _State extends State<ProductView> {
                         });
                       },
                       child: Text(inStock ? "Add to cart" : "Out of Stock",
-                          style: TextStyle(
-                              color: Colors
-                                  .white))),
+                          style: TextStyle(color: Colors.white))),
                 ],
               )
             ],
@@ -136,17 +133,16 @@ class _State extends State<ProductView> {
                 await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text("Failed Update"),
-                      actions: [
-                        TextButton(
-                          child: Text("Ok"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    )
-                );
+                          title: Text("Failed Update"),
+                          actions: [
+                            TextButton(
+                              child: Text("Ok"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        ));
               }
             },
           ),

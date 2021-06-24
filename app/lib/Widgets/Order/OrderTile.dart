@@ -12,7 +12,7 @@ class OrderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      // title: Text(order.user.username),
+      title: Text(order.user.username),
       subtitle: Text(order.user.address + "\n" + order.reference),
       trailing: Text(order.status),
       // onTap: order.onTap,

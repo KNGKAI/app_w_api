@@ -6,7 +6,7 @@ ListTile ListItem(title, route, context, current, icon) {
   return ListTile(
     leading: Icon(icon),
     title: Text(title),
-    tileColor: current == route ? Colors.blue[400] : Colors.white,
+    tileColor: current == route ? Theme.of(context).primaryColor : Colors.white,
     enabled: current != route,
     onTap: () {
       Navigator.pushNamed(context, route);
@@ -33,9 +33,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         child: ListView(
       children: [
         ListItem("Store", "/home", context, currentRoute, Icons.store_rounded),
+        ListItem(
+            "Orders", "/orders", context, currentRoute, Icons.local_shipping),
         service.authorized
-            ? ListItem(
-                "Profile", "/profile", context, currentRoute, Icons.portrait)
+            ? (ListItem(
+                "Profile", "/profile", context, currentRoute, Icons.portrait))
             : ListItem("Login", "/login", context, currentRoute, Icons.logout)
       ],
     ));

@@ -9,14 +9,18 @@ class OrderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     num width = MediaQuery.of(context).size.width;
-    return ListView(
-      children: orders
-          .map((e) => SizedBox(
-              width: width,
-              child: OrderTile(
-                order: e,
-              )))
-          .toList(),
-    );
+    return orders.isEmpty
+        ? Center(
+            child: Text("No Orders yet"),
+          )
+        : ListView(
+            children: orders
+                .map((e) => SizedBox(
+                    width: width,
+                    child: OrderTile(
+                      order: e,
+                    )))
+                .toList(),
+          );
   }
 }

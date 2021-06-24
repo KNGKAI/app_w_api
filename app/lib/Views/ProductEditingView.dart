@@ -8,8 +8,8 @@ import 'package:app/Views/CartView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
 import 'package:app/Widgets/MyAppBar.dart';
-import 'package:app/Widgets/OrderTile.dart';
-import 'package:app/Widgets/ProductEditing.dart';
+
+import 'package:app/Widgets/ProductWidget.dart';
 import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
 import 'package:app/Models/User.dart';
@@ -46,7 +46,6 @@ class _State extends State<ProductEditingView> {
     String id = widget.product ?? AppViewModel.id;
     return Scaffold(
       appBar: AppBar(title: Text("Editing")),
-
       body: BaseQueryWidget(
         query: """{
           product(id: "$id") {
@@ -70,10 +69,9 @@ class _State extends State<ProductEditingView> {
           List<Category> categories = result.data['categories']
               .map<Category>((json) => Category.fromJson(json))
               .toList();
-          return  ProductEditing(
+          return ProductWidget.editor(
               product: _product,
-              categories: categories.map((e) => e.name).toList()
-          );
+              categories: categories.map((e) => e.name).toList());
         },
       ),
       persistentFooterButtons: [
@@ -86,17 +84,16 @@ class _State extends State<ProductEditingView> {
               await showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text("Failed Update"),
-                    actions: [
-                      TextButton(
-                        child: Text("Ok"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  )
-              );
+                        title: Text("Failed Update"),
+                        actions: [
+                          TextButton(
+                            child: Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ));
             }
           },
         ),

@@ -7,8 +7,7 @@ import 'package:app/Views/CartView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
 import 'package:app/Widgets/MyAppBar.dart';
-import 'package:app/Widgets/OrderTile.dart';
-import 'package:app/Widgets/ProductEditing.dart';
+
 import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
 import 'package:app/Models/User.dart';
@@ -22,7 +21,6 @@ class ProfileEditingView extends StatefulWidget {
 }
 
 class _State extends State<ProfileEditingView> {
-
   @override
   void initState() {
     super.initState();
@@ -35,10 +33,14 @@ class _State extends State<ProfileEditingView> {
       return Text("Unauthorized");
     }
     User user = User.fromJson(profileService.user.toJson());
-    TextEditingController usernameController = TextEditingController(text: user.username);
-    TextEditingController emailController = TextEditingController(text: user.email);
-    TextEditingController addressController = TextEditingController(text: user.address);
-    return ListView( //Settings
+    TextEditingController usernameController =
+        TextEditingController(text: user.username);
+    TextEditingController emailController =
+        TextEditingController(text: user.email);
+    TextEditingController addressController =
+        TextEditingController(text: user.address);
+    return ListView(
+      //Settings
       padding: EdgeInsets.all(20.0),
       children: [
         Text("Profile:", textScaleFactor: 1.4),
@@ -63,7 +65,8 @@ class _State extends State<ProfileEditingView> {
             bool updated = await profileService.updateUser(user);
             await showDialog(
                 context: context,
-                builder: (BuildContext context) {;
+                builder: (BuildContext context) {
+                  ;
                   return AlertDialog(
                     title: Text("Updated Profile"),
                     content: Text(updated ? "Success" : "Failed"),

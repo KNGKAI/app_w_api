@@ -9,6 +9,7 @@ class Order {
   Map<Product, int> products = new Map<Product, int>();
   String status;
   String reference;
+  String createdDateTime;
 
   get id => _id;
 
@@ -26,6 +27,8 @@ class Order {
       else
         products[e] = 1;
     });
+
+    createdDateTime = json['createdDateTime'];
 
     status = json['status'];
     reference = json['reference'];

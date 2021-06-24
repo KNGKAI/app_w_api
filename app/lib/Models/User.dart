@@ -13,7 +13,7 @@ class User {
     email = json['email'];
     username = json['username'];
     address = json['address'];
-    budget = int.parse(json['budget'].toString());
+    budget = json['budget'] != null ? int.parse(json['budget'].toString()) : 0;
   }
 
   Map<String, dynamic> toJson() => {
