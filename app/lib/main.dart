@@ -4,7 +4,7 @@ import 'package:app/Services/ProfileService.dart';
 import 'package:app/Services/SharedPreferenceService.dart';
 import 'package:app/Views/HomeView.dart';
 import 'package:app/Views/LoginView.dart';
-import 'package:app/Views/ProductEditingView.dart';
+
 import 'package:app/Views/ProductView.dart';
 import 'package:app/Views/OrderView.dart';
 import 'package:app/Views/ProfileView.dart';

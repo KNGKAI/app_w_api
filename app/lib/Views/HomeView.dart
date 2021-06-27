@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:app/Models/Category.dart';
 import 'package:app/Models/Product.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:app/Views/RootView.dart';
 import 'package:app/Widgets/Filter/CategoryChips.dart';
+import 'package:app/Widgets/Filter/PriceRange.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class HomeView extends StatefulWidget {
 class _HomeView extends State<HomeView> {
   List<String> _selectedCategories = [];
   List<String> _categories = [];
+  RangeValues _filterRange;
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +45,18 @@ class _HomeView extends State<HomeView> {
         }""",
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
+          int minPrice = 0, maxPrice = 1;
           List<Product> products = result.data['products']
-              .map<Product>((json) => Product.fromJson(json))
+              .map<Product>((json) {
+                Product p = Product.fromJson(json);
+                minPrice = min(minPrice, p.price);
+                maxPrice = max(maxPrice, p.price);
+                return p;
+              })
               .where((product) =>
-                  _selectedCategories.contains(product.category) ||
+                  (_selectedCategories.contains(product.category) &&
+                      product.price >= minPrice &&
+                      product.price <= maxPrice) ||
                   _selectedCategories.isEmpty)
               .toList();
           // ,
@@ -54,6 +65,7 @@ class _HomeView extends State<HomeView> {
               .toList();
           _categories = __categories.map((e) => e.name).toList();
           if (_selectedCategories.isEmpty) _selectedCategories = _categories;
+
           return Column(
             children: [
               CategoryChips(

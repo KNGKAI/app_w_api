@@ -25,28 +25,28 @@ class OrderDialog extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text("Recipient: "),
+                  Text("Recipient "),
                   Expanded(child: Divider()),
                   Text(order.user.username)
                 ],
               ),
               Row(
                 children: [
-                  Text("Address: "),
+                  Text("Address "),
                   Expanded(child: Divider()),
                   Text(order.user.address)
                 ],
               ),
               Row(
                 children: [
-                  Text("Refrence: "),
+                  Text("Refrence "),
                   Expanded(child: Divider()),
                   Text(order.reference)
                 ],
               ),
               Row(
                 children: [
-                  Text("Status: "),
+                  Text("Status "),
                   Expanded(child: Divider()),
                   Text(order.status)
                 ],
