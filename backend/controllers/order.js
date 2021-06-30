@@ -25,38 +25,51 @@ module.exports = {
     },
     
     addOrder: (req, res, next) => {
-        ProductModel.find({ _id : { $in: req.body.products } }, async function(err, docs) {
+        ProductModel.find({ _id : { $in: req.body.products.map(product => product.product) } }, async function(err, docs) {
             if (err) {
                 res.status(404).send(err);
             } else if (docs) {
-                var total = 0;
-                for (let index = 0; index < docs.length; index++) {
-                    const element = docs[index];
-                    element.inStock--;
-                    element.save();
-                    total += element.price;
-                }
-                UserModel.findOne({ _id: req.body.user }, async function(err, user) {
-                    if (err) {
-                        res.status(404).send(err);
-                    } else if (user) {
-                        if (user.budget >= total) {
-                            var order = {
-                                user: req.body.user,
-                                products: req.body.products,
-                                status: 'placed',
-                                reference: Date.now()
-                            }
-                            await UserModel.updateOne({ _id : req.body.user }, { budget: user.budget - total })
-                            var result = await OrderModel.create(order)
-                            res.status(200).send(result)
-                        } else {
-                            res.status(404).send({ message: "out_of_budget" });
-                        }
-                    } else {
-                        res.status(404).send({ message: "user_not_found" });
+                var outOfStock = false;
+                doc.forEach(product => {
+                    var order = req.body.products.find(a => product.id == a.product)
+                    var stock = product.stock.find(stock => stock.size == order.size)
+                    if (stock.value < order.value) {
+                        outOfStock = true
                     }
                 })
+                if (outOfStock) {
+                    res.status(404).send({ message: "out_of_stock" });
+                } else {
+                    UserModel.findOne({ _id: req.body.user }, async function(err, user) {
+                        if (err) {
+                            res.status(404).send(err);
+                        } else if (user) {
+                            var total = 0;
+                            for (let index = 0; index < docs.length; index++) {
+                                var product = docs[index];
+                                var order = req.body.products.find(a => product.id == a.product)
+                                product.stock.find(stock => stock.size == order.size).value -= order.value;
+                                product.save();
+                                total += product.price * order.value;
+                            }
+                            if (user.budget >= total) {
+                                var order = {
+                                    user: req.body.user,
+                                    products: req.body.products,
+                                    status: 'placed',
+                                    reference: Date.now()
+                                }
+                                await UserModel.updateOne({ _id : req.body.user }, { budget: user.budget - total })
+                                var result = await OrderModel.create(order)
+                                res.status(200).send(result)
+                            } else {
+                                res.status(404).send({ message: "out_of_budget" });
+                            }
+                        } else {
+                            res.status(404).send({ message: "user_not_found" });
+                        }
+                    })
+                }
             } else {
                 res.status(404).send({ message: "products_not_found" });
             }

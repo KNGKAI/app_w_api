@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,8 +24,7 @@ class _State extends State<ProductTile> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.product.name),
-      subtitle: Text(widget.product.category + " - " + widget.product.size),
-      trailing: Text("Stock: ${widget.product.inStock.toString()}"),
+      subtitle: Text(widget.product.category),
       onTap: widget.onTap,
     );
   }

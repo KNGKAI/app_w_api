@@ -1,20 +1,23 @@
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Order.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/ViewModels/AppViewModel.dart';
-import 'package:app/Views/CartView.dart';
-import 'package:app/Views/ProfileEditingView.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/MyAppBar.dart';
-import 'package:app/Widgets/OrderTile.dart';
-import 'package:app/Widgets/ProductEditing.dart';
-import 'package:app/Widgets/ProductTile.dart';
+import 'dart:convert';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Order.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
+import 'package:skate/ViewModels/AppViewModel.dart';
+import 'package:skate/Views/CartView.dart';
+import 'package:skate/Views/ProfileEditingView.dart';
+import 'package:skate/Widgets/BaseQueryWidget.dart';
+import 'package:skate/Widgets/CategoryTile.dart';
+import 'package:skate/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/OrderTile.dart';
+import 'package:skate/Widgets/ProductEditing.dart';
+import 'package:skate/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +27,6 @@ class StockView extends StatefulWidget {
 }
 
 class _State extends State<StockView> {
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +44,10 @@ class _State extends State<StockView> {
             category
             description
             size
-            inStock
+            stock {
+              size
+              value
+            }
           }
           categories {
             id
@@ -63,102 +68,99 @@ class _State extends State<StockView> {
             Text("Categories:"),
             Column(
               children: categories.map((category) {
-                TextEditingController nameController = TextEditingController(text: category.name);
+                TextEditingController nameController =
+                    TextEditingController(text: category.name);
                 return CategoryTile(
                   category: category,
                   onEdit: () async {
                     await showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text("Edit Category"),
-                          content: TextField(
-                            controller: nameController,
-                            onChanged: (value) => category.name = value,
-                            decoration: InputDecoration(
-                                labelText: "Name"
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              child: Text("Update"),
-                              onPressed: () async {
-                                if (await productService.updateCategory(category)) {
-                                  Navigator.pop(context);
-                                  refetch();
-                                }
-                              },
-                            ),
-                            TextButton(
-                              child: Text("Cancel"),
-                              onPressed: () => Navigator.pop(context),
-                            )
-                          ],
-                        )
-                    );
+                              title: Text("Edit Category"),
+                              content: TextField(
+                                controller: nameController,
+                                onChanged: (value) => category.name = value,
+                                decoration: InputDecoration(labelText: "Name"),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text("Update"),
+                                  onPressed: () async {
+                                    if (await productService
+                                        .updateCategory(category)) {
+                                      Navigator.pop(context);
+                                      refetch();
+                                    }
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text("Cancel"),
+                                  onPressed: () => Navigator.pop(context),
+                                )
+                              ],
+                            ));
                   },
                   onRemove: () async {
                     await showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text("Remove Category"),
-                          content: Text("Are you sure?"),
+                              title: Text("Remove Category"),
+                              content: Text("Are you sure?"),
+                              actions: [
+                                TextButton(
+                                  child: Text("Remove"),
+                                  onPressed: () async {
+                                    if (await productService
+                                        .removeCategory(category)) {
+                                      Navigator.pop(context);
+                                      refetch();
+                                    }
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text("Cancel"),
+                                  onPressed: () => Navigator.pop(context),
+                                )
+                              ],
+                            ));
+                  },
+                );
+              }).toList(),
+            ),
+            TextButton(
+              child: Text("Add Category", style: TextStyle(color: Colors.blue)),
+              onPressed: () async {
+                Category category = Category.create();
+                TextEditingController nameController =
+                    TextEditingController(text: category.name);
+                await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text("Add Category"),
+                          content: TextField(
+                            controller: nameController,
+                            onChanged: (value) => category.name = value,
+                            decoration: InputDecoration(labelText: "Name"),
+                          ),
                           actions: [
                             TextButton(
-                              child: Text("Remove"),
+                              child: Text("Add",
+                                  style: TextStyle(color: Colors.blue)),
                               onPressed: () async {
-                                if (await productService.removeCategory(category)) {
+                                if (await productService
+                                    .addCategory(category)) {
                                   Navigator.pop(context);
                                   refetch();
                                 }
                               },
                             ),
                             TextButton(
-                              child: Text("Cancel"),
+                              child: Text("Cancel",
+                                  style: TextStyle(color: Colors.red)),
                               onPressed: () => Navigator.pop(context),
                             )
                           ],
-                        )
-                    );
-                  },
-                );
-              }).toList(),
-            ),
-            TextButton(
-              child: Text("Add Category",
-                  style: TextStyle(color: Colors.blue)),
-              onPressed: () async {
-                Category category = Category.create();
-                TextEditingController nameController = TextEditingController(text: category.name);
-                await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text("Add Category"),
-                      content: TextField(
-                        controller: nameController,
-                        onChanged: (value) => category.name = value,
-                        decoration: InputDecoration(
-                            labelText: "Name"
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          child: Text("Add",
-                              style: TextStyle(color: Colors.blue)),
-                          onPressed: () async {
-                            if (await productService.addCategory(category)) {
-                              Navigator.pop(context);
-                              refetch();
-                            }
-                          },
-                        ),
-                        TextButton(
-                          child: Text("Cancel",
-                              style: TextStyle(color: Colors.red)),
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      ],
-                    )
-                );
+                        ));
               },
             ),
             Text("Products:"),
@@ -174,46 +176,46 @@ class _State extends State<StockView> {
               }).toList(),
             ),
             TextButton(
-              child: Text("Add Product",
-                  style: TextStyle(color: Colors.blue)),
+              child: Text("Add Product", style: TextStyle(color: Colors.blue)),
               onPressed: () async {
                 Product product = Product(
                     name: "",
                     description: "",
                     category: categories.first?.name ?? "",
-                    size: "",
+                    // size: "",
                     image: "",
-                    inStock: 0,
-                    price: 0
-                );
+                    // inStock: 0,
+                    price: 0);
                 await showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text("Add Product"),
-                      content: ProductEditing(
-                          product: product,
-                          categories: categories.map((e) => e.name).toList()
-                      ),
-                      actions: [
-                        TextButton(
-                          child: Text("Add",
-                              style: TextStyle(color: Colors.blue)),
-                          onPressed: () async {
-                            if (await productService.addProduct(product)) {
+                    builder: (BuildContext context) {
+                      TextEditingController nameController = TextEditingController(text: product.name);
+                      TextEditingController descriptionController = TextEditingController(text: product.description);
+                      TextEditingController priceController = TextEditingController(text: product.price.toString());
+                      return AlertDialog(
+                        title: Text("Add Product"),
+                        content: Text("Product creation"),
+                        actions: [
+                          TextButton(
+                            child: Text("Add",
+                                style: TextStyle(color: Colors.blue)),
+                            onPressed: () async {
+                              if (await productService.addProduct(product)) {
+                                Navigator.pop(context);
+                                refetch();
+                              }
+                            },
+                          ),
+                          TextButton(
+                            child: Text("Cancel",
+                                style: TextStyle(color: Colors.red)),
+                            onPressed: () {
                               Navigator.pop(context);
-                              refetch();
-                            }
-                          },
-                        ),
-                        TextButton(
-                          child: Text("Cancel",
-                              style: TextStyle(color: Colors.red)),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    )
+                            },
+                          )
+                        ],
+                      );
+                    }
                 );
               },
             ),

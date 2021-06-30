@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
-import 'package:app/Widgets/Logo.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/ProfileService.dart';
+import 'package:skate/Widgets/Logo.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationView extends StatefulWidget {
@@ -77,9 +77,9 @@ class _RegistrationState extends State<RegistrationView> {
                           .compareTo(confirmPasswordController.text) ==
                       0) {
                     User user = User(
-                      username: usernameController.text,
-                      email: emailController.text,
-                    );
+                        username: usernameController.text,
+                        email: emailController.text,
+                        address: "");
                     if (await profileService.registerUser(
                         user, passwordController.text)) {
                       print("user registered");

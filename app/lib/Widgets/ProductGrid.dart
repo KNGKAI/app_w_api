@@ -1,6 +1,6 @@
 
-import 'package:app/Models/Product.dart';
-import 'package:app/Widgets/ProductCard.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Widgets/ProductCard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

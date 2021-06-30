@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +43,7 @@ class _State extends State<ProductCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("size: ${widget.product.size}"),
+                    // Text("size: ${widget.product.size}"),
                     Text("price: R${widget.product.price.toString()}"),
                   ],
                 )

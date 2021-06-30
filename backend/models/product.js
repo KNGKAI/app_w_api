@@ -9,7 +9,7 @@ var Product = new mongoose.Schema({
   size: String,
   image: String,
   price: Number,
-  inStock: Number,
+  stock: Array
 });
 
 Product.pre('save', function(callback) {

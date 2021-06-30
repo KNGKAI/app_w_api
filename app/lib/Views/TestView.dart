@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:app/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/MyAppBar.dart';
 
 class TestView extends StatefulWidget {
   @override

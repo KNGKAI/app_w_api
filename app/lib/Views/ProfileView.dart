@@ -1,23 +1,24 @@
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Order.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/Views/CartView.dart';
-import 'package:app/Views/OrderListView.dart';
-import 'package:app/Views/ProfileEditingView.dart';
-import 'package:app/Views/StockView.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/MyAppBar.dart';
-import 'package:app/Widgets/OrderTile.dart';
-import 'package:app/Widgets/ProductEditing.dart';
-import 'package:app/Widgets/ProductTile.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Order.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
+import 'package:skate/Views/CartView.dart';
+import 'package:skate/Views/OrderListView.dart';
+import 'package:skate/Views/ProfileEditingView.dart';
+import 'package:skate/Views/StockView.dart';
+import 'package:skate/Widgets/BaseQueryWidget.dart';
+import 'package:skate/Widgets/CategoryTile.dart';
+import 'package:skate/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/OrderTile.dart';
+import 'package:skate/Widgets/ProductEditing.dart';
+import 'package:skate/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:skate/Widgets/UserCard.dart';
 
 class ProfileView extends StatefulWidget {
   @override
@@ -25,7 +26,6 @@ class ProfileView extends StatefulWidget {
 }
 
 class _State extends State<ProfileView> {
-
   @override
   void initState() {
     super.initState();
@@ -38,66 +38,57 @@ class _State extends State<ProfileView> {
       return (Text("Unauthorized"));
     }
     User user = profileService.user;
-    bool admin = user.role == 'admin';
+    bool admin = user.role.compareTo('admin') == 0;
     return Scaffold(
       appBar: myAppBar(context, '/profile'),
-      body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: CircleAvatar(
-              // backgroundImage: FileImage(_image),
-              radius: 30,
-              child: Text(user.username.toUpperCase()[0]),
+      body: DefaultTabController(
+          length: admin ? 4 : 3,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.lightGreen,
+              automaticallyImplyLeading: false,
+              title: Text("Dashboard"),
+              bottom: TabBar(
+                tabs: admin
+                    ? [
+                  Tab(
+                    icon: Icon(Icons.shopping_cart),
+                    text: "Cart",
+                  ),
+                  Tab(
+                      icon: Icon(Icons.format_align_left),
+                      text: "Stock"),
+                  Tab(
+                      icon: Icon(Icons.description),
+                      text: "Orders"),
+                  Tab(icon: Icon(Icons.settings), text: "Profile"),
+                ]
+                    : [
+                  Tab(
+                    icon: Icon(Icons.shopping_cart),
+                    text: "Cart",
+                  ),
+                  Tab(
+                      icon: Icon(Icons.description),
+                      text: "Orders"),
+                  Tab(icon: Icon(Icons.settings), text: "Profile"),
+                ],
+              ),
             ),
-          ),
-        ),
-        Center(child: Text(user.username, style: TextStyle(fontSize: 24))),
-        Center(child: Text(user.email, style: TextStyle(fontSize: 20))),
-        Center(child: Text("R ${user.budget.toString()}")),
-        TextButton(
-          child: Text("Sign Out"),
-          onPressed: () {
-            profileService.signOutUser();
-            Navigator.of(context).pushReplacementNamed('/login');
-          },
-        ),
-        Expanded(
-            child: DefaultTabController(
-                length: admin ? 4 : 3,
-                child: Scaffold(
-                  appBar: AppBar(
-                    automaticallyImplyLeading: false,
-                    title: Text("Dashboard"),
-                    bottom: TabBar(
-                      tabs: admin ? [
-                        Tab(icon: Icon(Icons.shopping_cart), text: "Cart",),
-                        Tab(icon: Icon(Icons.format_align_left), text: "Stock"),
-                        Tab(icon: Icon(Icons.description), text: "Orders"),
-                        Tab(icon: Icon(Icons.settings), text: "Profile"),
-                      ] : [
-                        Tab(icon: Icon(Icons.shopping_cart), text: "Cart",),
-                        Tab(icon: Icon(Icons.description), text: "Orders"),
-                        Tab(icon: Icon(Icons.settings), text: "Profile"),
-                      ],
-                    ),
-                  ),
-                  body: TabBarView(
-                      children: admin ? [
-                        CartView(),
-                        StockView(),
-                        OrderListView(),
-                        ProfileEditingView(),
-                      ] : [
-                        CartView(),
-                        OrderListView(user: user.id),
-                        ProfileEditingView(),
-                      ]
-                  ),
-                )
-            )
-        )
-      ]),
+            body: TabBarView(
+                children: admin
+                    ? [
+                  CartView(),
+                  StockView(),
+                  OrderListView(),
+                  ProfileEditingView(),
+                ]
+                    : [
+                  CartView(),
+                  OrderListView(user: user.id),
+                  ProfileEditingView(),
+                ]),
+          )),
     );
   }
 }

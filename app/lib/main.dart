@@ -1,14 +1,14 @@
-import 'package:app/Services/Api.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/ProfileService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/Views/HomeView.dart';
-import 'package:app/Views/LoginView.dart';
-import 'package:app/Views/ProductEditingView.dart';
-import 'package:app/Views/ProductView.dart';
-import 'package:app/Views/ProfileView.dart';
-import 'package:app/Views/RegistrationView.dart';
-import 'package:app/Views/SplashView.dart';
+import 'package:skate/Services/Api.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Services/ProfileService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
+import 'package:skate/Views/HomeView.dart';
+import 'package:skate/Views/LoginView.dart';
+import 'package:skate/Views/ProductEditingView.dart';
+import 'package:skate/Views/ProductView.dart';
+import 'package:skate/Views/ProfileView.dart';
+import 'package:skate/Views/RegistrationView.dart';
+import 'package:skate/Views/SplashView.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.grey,
+          primarySwatch: Colors.green,
           visualDensity: VisualDensity.comfortable,
         ),
         initialRoute: '/',

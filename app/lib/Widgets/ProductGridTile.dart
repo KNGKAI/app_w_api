@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,10 +27,17 @@ class _State extends State<ProductGridTile> {
       child: Stack(
         children: [
           Image.memory(Base64Decoder().convert(widget.product.image), scale: 0.01),
-          widget.product.inStock > 0
-              ? Container()
-              : Text("Out of Stock",
-                  style: TextStyle(color: Colors.red, fontSize: 30))
+          // widget.product.inStock > 0
+             true ? Container()
+              : Container(
+            height: 50.0,
+            width: double.infinity,
+            color: Colors.red,
+            child: Center(
+              child: Text("Out of Stock",
+                  style: TextStyle(color: Colors.white, fontSize: 30)),
+            ),
+          )
         ],
       ),
     );

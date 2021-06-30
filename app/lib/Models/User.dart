@@ -13,16 +13,18 @@ class User {
     email = json['email'];
     username = json['username'];
     address = json['address'];
-    budget = int.parse(json['budget'].toString());
+    role = json['role'];
+    budget = int.parse(json['budget']?.toString() ?? "-1");
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "email": email,
-        "username": username,
-        "address": address,
-        "role": role,
-      };
+    "id": id,
+    "email": email,
+    "username": username,
+    "address": address,
+    "role": role,
+    "budget": budget,
+  };
 
   User({
     this.id,
@@ -30,5 +32,6 @@ class User {
     this.username,
     this.address,
     this.role,
+    this.budget,
   });
 }

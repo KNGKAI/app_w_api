@@ -4,7 +4,7 @@ var Order = new mongoose.Schema({
   createdDateTime: Date,
   updatedDateTime: Date,
   user: String,
-  products: [String],
+  products: [Object],
   status: String,
   reference: String,
 });

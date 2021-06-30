@@ -5,10 +5,9 @@ class Product {
   String name;
   String description;
   String category;
-  String size;
   String image;
   int price;
-  int inStock;
+  List<ProductStock> stock;
 
   String get id => _id;
 
@@ -17,10 +16,9 @@ class Product {
     name = json['name'];
     description = json['description'];
     category = json['category'];
-    size = json['size'];
     image = json['image'];
     price = json['price'];
-    inStock = json['inStock'];
+    stock = json['stock']?.map<ProductStock>((json) => ProductStock.fromJson(json))?.toList() ?? [];
   }
 
   Map<String, dynamic> toJson() => {
@@ -28,10 +26,9 @@ class Product {
     "name": name,
     "description": description,
     "category": category,
-    "size": size,
-    // "image": image,
+    "image": image,
     "price": price,
-    "inStock": inStock,
+    "stock": stock.map((e) => e.toJson()).toList(),
   };
 
   Product({
@@ -39,9 +36,28 @@ class Product {
     this.name,
     this.description,
     this.category,
-    this.size,
     this.image,
     this.price,
-    this.inStock,
+    this.stock,
   }) : _id = id;
+}
+
+class ProductStock {
+  String size;
+  int value;
+
+  ProductStock.fromJson(Map<String, dynamic> json) {
+    size = json['size'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() => {
+    "size": size,
+    "value": value,
+  };
+
+  ProductStock({
+    this.size,
+    this.value,
+  });
 }

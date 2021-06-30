@@ -26,10 +26,22 @@ class _BaseQueryWidgetState<T extends ChangeNotifier> extends State<BaseQueryWid
         if (result.hasException) {
           print("Error:");
           print(result.exception.toString());
-          return Text(result.exception.toString());
+          return Center(
+            child: Column(
+              children: [
+                Text(result.exception.toString()),
+                TextButton(
+                  onPressed: () => refetch(),
+                  child: Text("Retry", style: TextStyle(color: Colors.white)),
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue)),
+                )
+              ],
+            ),
+          );
         }
 
         if (result.isLoading) {
+          print("Fetching...");
           return Center(child: CircularProgressIndicator());
         } else {
           print("Result:");

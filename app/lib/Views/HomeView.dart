@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/ViewModels/AppViewModel.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/MyAppBar.dart';
-import 'package:app/Widgets/ProductGridTile.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
+import 'package:skate/ViewModels/AppViewModel.dart';
+import 'package:skate/Widgets/BaseQueryWidget.dart';
+import 'package:skate/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/ProductGridTile.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +33,10 @@ class _HomeView extends State<HomeView> {
             description
             category
             size
-            inStock
+            stock {
+              size
+              value
+            }
             image
             price
           }
@@ -50,13 +53,14 @@ class _HomeView extends State<HomeView> {
           List<Product> products = result.data['products']
               .map<Product>((json) => Product.fromJson(json))
               .map<Product>((Product product) {
-                product.inStock -= cart.where((id) => product.id.compareTo(id) == 0).length;
-                return product;
-              })
-              .toList();
+            // product.inStock -=
+            //     cart.where((id) => product.id.compareTo(id) == 0).length;
+            return product;
+          }).toList();
           if (_selectedCategories != null) {
-            products = products.where(
-                    (product) => product.category.compareTo(_selectedCategories) == 0)
+            products = products
+                .where((product) =>
+                    product.category.compareTo(_selectedCategories) == 0)
                 .toList();
           }
           int horizontalCount = 2;
@@ -65,33 +69,43 @@ class _HomeView extends State<HomeView> {
             children: [
               categories.isEmpty
                   ? Center(child: Text("No Categories Found!"))
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: categories.map((category) {
-                        bool selected = _selectedCategories == category.name;
-                        return MaterialButton(
-                          color: selected ? Colors.blue : Colors.grey,
-                          onPressed: () {
-                            setState(() {
-                              if (selected) {
-                                _selectedCategories = null;
-                              } else {
-                                _selectedCategories = category.name;
-                              }
-                            });
-                          },
-                          child: Text(category.name.toUpperCase(),
-                              style: TextStyle(
-                                  color:
-                                      selected ? Colors.white : Colors.black)),
-                        );
-                      }).toList(),
+                  : Container(
+                      height: 60.0,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: categories.map((category) {
+                          bool selected = _selectedCategories == category.name;
+                          return Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: MaterialButton(
+                              // padding: EdgeInsets.all(10.0),
+                              color: selected ? Colors.blue : Colors.white38,
+                              onPressed: () {
+                                setState(() {
+                                  if (selected) {
+                                    _selectedCategories = null;
+                                  } else {
+                                    _selectedCategories = category.name;
+                                  }
+                                });
+                              },
+                              child: Text(category.name.toUpperCase(),
+                                  style: TextStyle(
+                                      color: selected
+                                          ? Colors.white
+                                          : Colors.black)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
               products.isEmpty
                   ? Center(child: Text("No Products Found!"))
                   : Container(
                       width: MediaQuery.of(context).size.width,
-                      height: (width + 40) * (products.length / horizontalCount).ceil(),
+                      height: (width + 40) *
+                          (products.length / horizontalCount).ceil(),
                       child: GridView.count(
                         primary: false,
                         padding:
@@ -103,80 +117,8 @@ class _HomeView extends State<HomeView> {
                             .map<Widget>((product) => ProductGridTile(
                                   product: product,
                                   onTap: () async {
-                                    await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          bool inStock = product.inStock > 0;
-                                          return SimpleDialog(
-                                            title: Text(
-                                                "${product.name} - R${product.price.toString()}"),
-                                            children: <Widget>[
-                                              SizedBox(height: 10.0),
-                                              Image.memory(
-                                                Base64Decoder()
-                                                    .convert(product.image),
-                                                width: width,
-                                                scale: 0.1,
-                                              ),
-                                              SizedBox(height: 10.0),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  MaterialButton(
-                                                      color: Colors.red,
-                                                      onPressed: () =>
-                                                          Navigator.of(context)
-                                                              .pop(),
-                                                      child: Text("Back",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white))),
-                                                  MaterialButton(
-                                                      color: inStock ? Colors.blue : Colors.grey,
-                                                      onPressed: () async {
-                                                        if (inStock) {
-                                                          if (await productService.addToCart(product)) {
-                                                            await showDialog(
-                                                                context: context,
-                                                                builder: (context) => AlertDialog(
-                                                                  title: Text("Added to cart"),
-                                                                  actions: [
-                                                                    TextButton(
-                                                                        child: Text("Okay"),
-                                                                        onPressed: () => Navigator.of(context).pop()
-                                                                    )
-                                                                  ],
-                                                                )
-                                                            );
-                                                            Navigator.of(context).pop();
-                                                          }
-                                                        }
-                                                        setState(() {
-                                                          // ???????
-                                                        });
-                                                      },
-                                                      child: Text(inStock ? "Add to cart" : "Out of Stock",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white))),
-                                                  MaterialButton(
-                                                      color: Colors.green,
-                                                      onPressed: () async {
-                                                        AppViewModel.setId(product.id);
-                                                        Navigator.of(context).pop();
-                                                        Navigator.of(context).pushNamed("/product");
-                                                      },
-                                                      child: Text("View",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white))),
-                                                ],
-                                              )
-                                            ],
-                                          );
-                                        });
+                                    AppViewModel.setId(product.id);
+                                    Navigator.of(context).pushNamed("/product");
                                   },
                                 ))
                             .toList(),

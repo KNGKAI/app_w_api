@@ -1,8 +1,8 @@
 
 import 'dart:convert';
 
-import 'package:app/Models/Order.dart';
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Order.dart';
+import 'package:skate/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,14 +24,17 @@ class _State extends State<OrderWidget> {
     return Column(
       children: [
         Text("Order: ${widget.order.reference}"),
+        Text("Status: ${widget.order.status}"),
+        Divider(),
         Text("User: ${widget.order.user.username}"),
         Text("Email: ${widget.order.user.email}"),
         Text("Address: ${widget.order.user.address}"),
         Divider(),
         Text("Products:"),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: widget.order.products
-              .map((product) => Text(" - ${product.name}"))
+              .map((order) => Text(" - ${order.product.name} - ${order.size} - ${order.value.toString()}"))
               .toList(),
         )
       ],
