@@ -5,10 +5,17 @@ class Cart {
   final Map<Product, int> _products = Map<Product, int>();
 
   void addProductToCart(Product p) {
-    if (_products.containsKey(p))
+    if (_products.containsKey(p)) {
       _products[p] += 1;
-    else
+    } else {
+      for (Product d in _products.keys) {
+        if (p.id == d.id) {
+          _products[d] += 1;
+          return;
+        }
+      }
       _products[p] = 1;
+    }
   }
 
   void clearCart() {
@@ -30,6 +37,9 @@ class Cart {
   }
 
   num getProductCount(Product p) {
+    for (Product d in _products.keys) {
+      if (d.id == p.id) return _products[d];
+    }
     if (!_products.containsKey(p)) return 0;
     return _products[p];
   }

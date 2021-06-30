@@ -6,7 +6,7 @@ AppBar SkateAppBar(
   return AppBar(
     toolbarHeight: 48,
     title: Text("012SKATE"),
-    actions: [openModal, ...moreActions],
+    actions: moreActions,
     leading: backbtn,
   );
 }

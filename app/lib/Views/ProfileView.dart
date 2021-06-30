@@ -41,36 +41,36 @@ class _ProfileViewState extends State<ProfileView>
     ProductService productService = Provider.of<ProductService>(context);
     Cart cart = Provider.of<Cart>(context);
 
-    List<Widget> CartListItems = cart.getAll().entries.map((ci) {
-      return ListTile(
-          title: Text(ci.key.name),
-          trailing: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                  width: 100,
-                  child: Padding(
-                    child: Text('${ci.value} x R${ci.key.price}'),
-                    padding: EdgeInsets.all(4),
-                  )),
-              Container(
-                width: 100,
-                child: Padding(
-                  child: Text('R${ci.value * ci.key.price}'),
-                  padding: EdgeInsets.all(4),
-                ),
-              )
-            ],
-          ));
-    }).toList();
-    CartListItems.add(ListTile(title: Divider()));
-    CartListItems.add(ListTile(
-        title: Text("Total:"),
-        trailing: Container(
-          width: 100,
-          child: Text('R${cart.getCost()}'),
-        )));
+    // List<Widget> CartListItems = cart.getAll().entries.map((ci) {
+    //   return ListTile(
+    //       title: Text(ci.key.name),
+    //       trailing: Row(
+    //         mainAxisAlignment: MainAxisAlignment.end,
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //           Container(
+    //               width: 100,
+    //               child: Padding(
+    //                 child: Text('${ci.value} x R${ci.key.price}'),
+    //                 padding: EdgeInsets.all(4),
+    //               )),
+    //           Container(
+    //             width: 100,
+    //             child: Padding(
+    //               child: Text('R${ci.value * ci.key.price}'),
+    //               padding: EdgeInsets.all(4),
+    //             ),
+    //           )
+    //         ],
+    //       ));
+    // }).toList();
+    // CartListItems.add(ListTile(title: Divider()));
+    // CartListItems.add(ListTile(
+    //     title: Text("Total:"),
+    //     trailing: Container(
+    //       width: 100,
+    //       child: Text('R${cart.getCost()}'),
+    //     )));
 
     if (!profileService.authorized) {
       return (Text("Unauthorized"));

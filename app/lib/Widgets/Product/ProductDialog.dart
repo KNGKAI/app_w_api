@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app/Models/Product.dart';
 import 'package:app/Providers/CartProvider.dart';
 import 'package:provider/provider.dart';
+import '../Buttons.dart';
 import 'dart:convert';
 
 class ProductDialog extends StatelessWidget {
@@ -21,14 +22,7 @@ class ProductDialog extends StatelessWidget {
           Text(product.name),
           Row(
             children: [
-              IconButton(
-                  // AddTo basket
-                  onPressed: () {
-                    cart.addProductToCart(product);
-                    print('Adding ${product.name} to basket');
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.add_shopping_cart_rounded)),
+              Buttons.addToCartButton(product),
               IconButton(
                   // Close
                   onPressed: () => Navigator.pop(context),
@@ -49,14 +43,19 @@ class ProductDialog extends StatelessWidget {
             ),
           ),
         ),
-        Divider(),
-        Center(
-          child: SizedBox(
-            width: 300,
+        Container(
+            width: 200,
             height: 100,
-            child: Text(product.description),
-          ),
-        ),
+            child: Container(
+              child: Material(
+                elevation: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Text('Description: '), Text(product.description)],
+                ),
+              ),
+            ))
+
         // Padding(
         //   padding: EdgeInsets.all(4),
         //   child: Row(

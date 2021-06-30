@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:app/Providers/CartProvider.dart';
 
 import 'package:app/Widgets/Cart/CartList.dart';
+import 'package:app/Widgets/Dialogs/ConfirmDialog.dart';
 
 class CartView extends StatefulWidget {
   const CartView({Key key}) : super(key: key);
@@ -35,29 +36,13 @@ class _CartViewState extends State<CartView> {
                     onPressed: () {
                       showDialog(
                           context: context,
-                          builder: (cnt) => SimpleDialog(
-                                children: [
-                                  Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: Text("Confirm clear cart...")),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SimpleDialogOption(
-                                        child: Text("Yes"),
-                                        onPressed: () => setState(() {
-                                          cart.clearCart();
-                                          Navigator.pop(context);
-                                        }),
-                                      ),
-                                      SimpleDialogOption(
-                                        child: Text("No"),
-                                        onPressed: () => Navigator.pop(context),
-                                      )
-                                    ],
-                                  )
-                                ],
+                          builder: (cnt) => ConfirmDialog(
+                                message: "Clear cart?",
+                                onAccept: () {
+                                  setState(() {
+                                    cart.clearCart();
+                                  });
+                                },
                               ));
                     },
                     child: Padding(

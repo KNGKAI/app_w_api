@@ -61,9 +61,9 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.grey,
-          visualDensity: VisualDensity.comfortable,
-        ),
+            primarySwatch: Colors.grey,
+            visualDensity: VisualDensity.comfortable,
+            hintColor: Colors.orangeAccent),
         initialRoute: '/',
         routes: {
           '/': (context) => SplashView(),
@@ -73,6 +73,7 @@ class App extends StatelessWidget {
           '/profile': (context) => ProfileView(),
           '/cart': (context) => CartView(),
           '/orders': (context) => OrderView(),
+          '/product': (context) => ProductView()
         },
       ),
     );

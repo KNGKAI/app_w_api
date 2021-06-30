@@ -32,10 +32,7 @@ class _HomeView extends State<HomeView> {
           products {
             id
             name
-            description
             category
-            size
-            inStock
             image
             price
           }

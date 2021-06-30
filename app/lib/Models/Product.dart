@@ -42,6 +42,11 @@ class Product {
         "inStock": inStock,
       };
 
+  bool operator ==(Object eq) {
+    Product p = eq as Product;
+    return p.id == id;
+  }
+
   Product({
     String id,
     this.name,

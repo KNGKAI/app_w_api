@@ -18,6 +18,8 @@ import 'package:app/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'package:app/Widgets/Buttons.dart';
+
 class ProductView extends StatefulWidget {
   final String product;
 
@@ -32,6 +34,13 @@ class ProductView extends StatefulWidget {
 
 class _State extends State<ProductView> {
   Product _product;
+  final TextStyle headingStyle = TextStyle(
+    fontSize: 30.0,
+  );
+
+  final TextStyle subheadingStyle = TextStyle(
+    fontSize: 24.0,
+  );
 
   @override
   void initState() {
@@ -45,7 +54,10 @@ class _State extends State<ProductView> {
       return Text("Unauthorized");
     }
     ProductService productService = Provider.of<ProductService>(context);
-    String id = widget.product ?? AppViewModel.id;
+
+    var Args = ModalRoute.of(context)?.settings.arguments as Map ?? {};
+
+    String id = Args['id'];
     return Scaffold(
       appBar: myAppBar(context, '/product'),
       body: BaseQueryWidget(
@@ -58,101 +70,45 @@ class _State extends State<ProductView> {
             description
             image
             size
-            inStock
+            stock
           }
-          categories {
-            id
-            name
-          }
+
         }""",
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           _product = Product.fromJson(result.data['product']);
-          bool inStock = _product.inStock > 0;
-          return ListView(
-            padding: EdgeInsets.all(20.0),
-            children: [
-              Image.memory(
-                Base64Decoder().convert(_product.image),
-                width: MediaQuery.of(context).size.width,
-                scale: 0.1,
-              ),
-              SizedBox(height: 10.0),
-              Text(_product.name,
-                  style: TextStyle(
-                    fontSize: 30.0,
-                  )),
-              Text(_product.size,
-                  style: TextStyle(
-                    fontSize: 24.0,
-                  )),
-              Text(_product.description),
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  MaterialButton(
-                      color: inStock ? Colors.green : Colors.grey,
-                      onPressed: () async {
-                        if (inStock) {
-                          if (await productService.addToCart(_product)) {
-                            await showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title: Text("Added to cart"),
-                                      actions: [
-                                        TextButton(
-                                            child: Text("Okay"),
-                                            onPressed: () =>
-                                                Navigator.of(context).pop())
-                                      ],
-                                    ));
-                            Navigator.of(context).pop();
-                          }
-                        }
-                        setState(() {
-                          // ???????
-                        });
-                      },
-                      child: Text(inStock ? "Add to cart" : "Out of Stock",
-                          style: TextStyle(color: Colors.white))),
-                ],
-              )
-            ],
-          );
+          return Center(
+              child: SizedBox(
+                  width: 400,
+                  child: ListView(
+                    padding: EdgeInsets.all(20.0),
+                    children: [
+                      Image.memory(
+                        Base64Decoder().convert(_product.image),
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(_product.name, style: headingStyle),
+                          Buttons.addToCartButton(_product)
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Size: ",
+                            style: subheadingStyle,
+                          ),
+                          Text(_product.size, style: subheadingStyle),
+                        ],
+                      ),
+                      Text(_product.description),
+                      Chip(label: Text(_product.category)),
+                      SizedBox(height: 10.0),
+                    ],
+                  )));
         },
-      ),
-      bottomSheet: Row(
-        children: [
-          TextButton(
-            child: Text("Update"),
-            onPressed: () async {
-              if (await productService.updateProduct(_product)) {
-                Navigator.pop(context);
-              } else {
-                await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text("Failed Update"),
-                          actions: [
-                            TextButton(
-                              child: Text("Ok"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            )
-                          ],
-                        ));
-              }
-            },
-          ),
-          TextButton(
-            child: Text("Cancel"),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
       ),
     );
   }

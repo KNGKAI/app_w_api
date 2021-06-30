@@ -5,6 +5,8 @@ import 'package:app/Widgets/SkateAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:app/Widgets/NavigationDrawer.dart';
 
+import 'package:app/Widgets/Buttons.dart';
+
 class RootView extends StatelessWidget {
   final Widget body;
   final Function(BuildContext) modal;
@@ -25,15 +27,8 @@ class RootView extends StatelessWidget {
           moreActions: [
             IconButton(
                 onPressed: () => Navigator.pushNamed(context, '/cart'),
-                icon: Icon(Icons.shopping_cart))
+                icon: Icon(Icons.shopping_cart_outlined))
           ],
-          openModal: modal != null
-              ? IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(context: context, builder: modal);
-                  },
-                  icon: modalIcon)
-              : Container(),
           backbtn: !enableDrawer
               ? IconButton(
                   onPressed: () => {Navigator.pop(context)},
