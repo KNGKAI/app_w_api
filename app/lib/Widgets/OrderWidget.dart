@@ -34,9 +34,11 @@ class _State extends State<OrderWidget> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: widget.order.products
-              .map((order) => Text(" - ${order.product.name} - ${order.size} - ${order.value.toString()}"))
+              .map((order) => Text(" - ${order.product.name} - ${order.size} : R${order.product.price.toString()} X ${order.value.toString()}"))
               .toList(),
-        )
+        ),
+        Divider(),
+        Text("Total: R${widget.order.total}"),
       ],
     );
   }

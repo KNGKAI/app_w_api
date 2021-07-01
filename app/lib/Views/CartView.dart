@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:skate/Models/Category.dart';
 import 'package:skate/Models/Order.dart';
 import 'package:skate/Models/Product.dart';
@@ -49,16 +51,17 @@ class _ProfileViewState extends State<CartView> {
         List<Product> products = result.data['products']
             .map<Product>((json) => Product.fromJson(json))
             .toList();
-        print(productService.getCart().toString());
-        List<Product> cart = productService
+        List<OrderProduct> cart = ProductService
             .getCart()
-            .map<Product>((id) => products.firstWhere(
-                (product) => product.id == id,
-                orElse: () => Product(
-                    id: id, name: id, price: 0, category: "-")))
+            .map<OrderProduct>((order) {
+              Map<String, dynamic> decoded = json.decode(order);
+              print(decoded.toString());
+              decoded['product'] = products.firstWhere((product) => product.id == decoded['product']).toJson();
+              return OrderProduct.fromJson(decoded);
+            })
             .toList();
         int totalCost = 0;
-        cart.forEach((element) => totalCost += element.price);
+        cart.forEach((order) => totalCost += order.product.price * order.value);
         return cart.isEmpty
             ? Center(child: Text("Nothing in your cart"))
             : ListView(
@@ -66,10 +69,8 @@ class _ProfileViewState extends State<CartView> {
                 children: [
                   Column(
                     children: cart
-                        .map((product) => ListTile(
-                              title: Text(product.name +
-                                  " - R" +
-                                  product.price.toString()),
+                        .map((order) => ListTile(
+                              title: Text("${order.product.name} - R${order.product.price.toString()} X ${order.value.toString()}"),
                               // subtitle: Text(product.size),
                               trailing: IconButton(
                                 icon: Icon(Icons.delete),
@@ -86,7 +87,7 @@ class _ProfileViewState extends State<CartView> {
                                                 onPressed: () async {
                                                   if (await productService
                                                       .removeFromCart(
-                                                          product)) {
+                                                          order)) {
                                                     setState(() {
                                                       profileService.user
                                                           .budget -= totalCost;
@@ -114,7 +115,10 @@ class _ProfileViewState extends State<CartView> {
                         style: TextStyle(color: Colors.blue)),
                     onPressed: () async {
                       if (await productService
-                          .placeOrder(profileService.user)) {
+                          .placeOrder(Order(
+                        user: profileService.user,
+                        products: cart
+                      ))) {
                         setState(() {});
                         showDialog(
                             context: context,

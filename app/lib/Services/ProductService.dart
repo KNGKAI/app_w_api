@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:skate/Models/Category.dart';
 import 'package:skate/Models/Order.dart';
@@ -11,33 +12,22 @@ class ProductService {
   final Api _api;
   final List<String> _cart;
 
-  ProductService({Api api}) : _api = api, _cart = [] {
-    // _cart = SharedPreferenceService.instance.getStringList('cart');
-  }
+  ProductService({Api api}) : _api = api, _cart = ProductService.getCart();
+
+  static List<String> getCart() => SharedPreferenceService.instance.getStringList('cart') ?? [];
 
   Future<bool> addToCart(OrderProduct product) async {
-    // _cart.add(product.);
+    _cart.add(json.encode(product.toJson()));
     return await SharedPreferenceService.instance.setStringList('cart', _cart);
   }
 
-  Future<bool> removeFromCart(Product product) async {
-    // List<String> cart =
-    //     SharedPreferenceService.instance.getStringList('cart') ?? [];
-    // cart.remove(product.id);
+  Future<bool> removeFromCart(OrderProduct product) async {
+    _cart.remove(product.toJson().toString());
     return await SharedPreferenceService.instance.setStringList('cart', _cart);
   }
 
-  List<String> getCart() =>
-      SharedPreferenceService.instance.getStringList('cart') ?? [];
-
-  Future<bool> placeOrder(User user) async {
-    List<String> cart = SharedPreferenceService.instance.getStringList('cart');
-    Map<String, dynamic> body = {
-      'user': user.id,
-      'products': cart,
-      'status': 'placed'
-    };
-    Map<String, dynamic> response = await _api.post('order/add', body);
+  Future<bool> placeOrder(Order order) async {
+    Map<String, dynamic> response = await _api.post('order/add', order.toJson());
     bool placed = response != null;
     if (placed) {
       await SharedPreferenceService.instance.remove('cart');

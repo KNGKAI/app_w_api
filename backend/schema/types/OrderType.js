@@ -41,6 +41,7 @@ const OrderType = new GraphQLObjectType({
         status: { type: GraphQLString },
         reference: { type: GraphQLString },
         products: { type: new GraphQLList(OrderStockType) },
+        total: { type: GraphQLInt },
     })
 })
 

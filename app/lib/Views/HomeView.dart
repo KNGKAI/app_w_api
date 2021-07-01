@@ -46,7 +46,7 @@ class _HomeView extends State<HomeView> {
         }""",
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
-          List<String> cart = productService.getCart();
+          // List<String> cart = ProductService.getCart();
           List<Category> categories = result.data['categories']
               .map<Category>((json) => Category.fromJson(json))
               .toList();

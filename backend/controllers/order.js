@@ -30,7 +30,7 @@ module.exports = {
                 res.status(404).send(err);
             } else if (docs) {
                 var outOfStock = false;
-                doc.forEach(product => {
+                docs.forEach(product => {
                     var order = req.body.products.find(a => product.id == a.product)
                     var stock = product.stock.find(stock => stock.size == order.size)
                     if (stock.value < order.value) {
@@ -57,7 +57,8 @@ module.exports = {
                                     user: req.body.user,
                                     products: req.body.products,
                                     status: 'placed',
-                                    reference: Date.now()
+                                    reference: Date.now(),
+                                    total: total
                                 }
                                 await UserModel.updateOne({ _id : req.body.user }, { budget: user.budget - total })
                                 var result = await OrderModel.create(order)

@@ -57,12 +57,14 @@ class _State extends State<OrderListView> {
             products{
               product {
                 name
+                price
               }
               size
               value
             }
             status
             reference
+            total
           }
         }""",
       builder: (QueryResult result,

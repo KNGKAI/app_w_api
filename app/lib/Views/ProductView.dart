@@ -115,7 +115,7 @@ class _State extends State<ProductView> {
                                   TextButton(
                                     child: Text("Add"),
                                     onPressed: () async {
-                                      if (await productService.addToCart(null)) {
+                                      if (await productService.addToCart(order)) {
                                         await showDialog(
                                             context: context,
                                             builder: (context) => AlertDialog(

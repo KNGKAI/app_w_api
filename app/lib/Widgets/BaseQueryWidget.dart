@@ -41,7 +41,6 @@ class _BaseQueryWidgetState<T extends ChangeNotifier> extends State<BaseQueryWid
         }
 
         if (result.isLoading) {
-          print("Fetching...");
           return Center(child: CircularProgressIndicator());
         } else {
           print("Result:");

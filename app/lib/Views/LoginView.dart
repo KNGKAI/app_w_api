@@ -86,7 +86,7 @@ class _State extends State<LoginView> {
             },
           ),
           MaterialButton(
-            color: Colors.blue,
+            color: Colors.red,
             child: Text(
               'Register',
               style: TextStyle(color: Colors.white),
@@ -104,7 +104,7 @@ class _State extends State<LoginView> {
             },
           ),
           MaterialButton(
-            color: Colors.blue,
+            color: Colors.green,
             child: Text('Login', style: TextStyle(color: Colors.white)),
             onPressed: () async {
               print('logging in...');

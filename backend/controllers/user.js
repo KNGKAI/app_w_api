@@ -36,6 +36,7 @@ module.exports = {
                 var user = {
                     username: req.body.username,
                     email: req.body.email,
+                    address: req.body.address,
                     role: 'user',
                     budget: 5000
                 }

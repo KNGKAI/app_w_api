@@ -7,6 +7,7 @@ var Order = new mongoose.Schema({
   products: [Object],
   status: String,
   reference: String,
+  total: Number,
 });
 
 Order.pre('save', function(callback) {

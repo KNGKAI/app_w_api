@@ -9,6 +9,7 @@ class Order {
   String status;
   String reference;
   List<OrderProduct> products;
+  int total;
 
   get id => _id;
 
@@ -21,17 +22,19 @@ class Order {
         ?? [];
     status = json['status'];
     reference = json['reference'];
+    total = json['total'];
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "user": user.id,
-        "products": products
-            .map((product) => product.toJson())
-            .toList(),
-        "status": status,
-        "reference": reference,
-      };
+    "id": id,
+    "user": user.id,
+    "products": products
+        .map((product) => product.toJson())
+        .toList(),
+    "status": status,
+    "reference": reference,
+    "total": total,
+  };
 
   Order({
     String id,
@@ -39,6 +42,7 @@ class Order {
     this.products,
     this.status,
     this.reference,
+    this.total,
   }) : _id = id;
 }
 
@@ -51,7 +55,7 @@ class OrderProduct{
   OrderProduct.fromJson(Map<String, dynamic> json) {
     product = Product.fromJson(json['product']);
     size = json['size'];
-    product = json['product'];
+    value = json['value'];
   }
 
   Map<String, dynamic> toJson() => {
