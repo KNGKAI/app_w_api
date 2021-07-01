@@ -8,6 +8,14 @@ const {
     GraphQLInt
 } = require('graphql');
 
+const ProductStockType = new GraphQLObjectType({
+    name: "ProductStock",
+    fields: () => ({
+        size: { type: GraphQLString },
+        value: { type: GraphQLInt },
+    })
+})
+
 const ProductType = new GraphQLObjectType({
     name: "Product",
     fields: () => ({
@@ -18,7 +26,7 @@ const ProductType = new GraphQLObjectType({
         size: { type: GraphQLString },
         image: { type: GraphQLString },
         price: { type: GraphQLInt },
-        inStock: { type: GraphQLInt },
+        stock: { type: new GraphQLList(ProductStockType) },
     })
 })
 
