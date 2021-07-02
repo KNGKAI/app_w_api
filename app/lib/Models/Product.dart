@@ -1,5 +1,16 @@
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+class Size {
+  String size;
+  int stock;
+
+  Size.fromJson(Map<String, dynamic> json) {
+    size = json['size'];
+    stock = json['value'];
+  }
+  Size(this.size, this.stock);
+}
+
 class Product {
   String _id;
   String name;
@@ -8,7 +19,7 @@ class Product {
   String size;
   String image;
   int price;
-  int inStock;
+  List<Size> stock = [];
 
   String get id => _id;
 
@@ -20,7 +31,11 @@ class Product {
     size = json['size'];
     image = json['image'];
     price = json['price'];
-    inStock = json['inStock'];
+
+    if (json.containsKey('stock'))
+      for (Map<String, dynamic> i in json['stock'] as List<dynamic>)
+        stock.add(Size.fromJson(i));
+    print(stock);
   }
 
   Product.create() {
@@ -28,7 +43,6 @@ class Product {
     description = "";
     size = "";
     price = 0;
-    inStock = 0;
   }
 
   Map<String, dynamic> toJson() => {
@@ -39,7 +53,7 @@ class Product {
         "size": size,
         // "image": image,
         "price": price,
-        "inStock": inStock,
+        // "inStock": inStock,
       };
 
   bool operator ==(Object eq) {
@@ -55,6 +69,6 @@ class Product {
     this.size,
     this.image,
     this.price,
-    this.inStock,
+    // this.inStock,
   }) : _id = id;
 }

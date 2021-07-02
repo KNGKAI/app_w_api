@@ -13,12 +13,13 @@ class AddToCartButton extends StatefulWidget {
 }
 
 class _AddToCartButtonState extends State<AddToCartButton> {
+  String _selectedSize = "Select Size";
   @override
   Widget build(BuildContext context) {
     Cart cart = Provider.of<Cart>(context);
     ThemeData theme = Theme.of(context);
     int count = cart.getProductCount(widget.product);
-    bool inStock = widget.product.inStock == 0;
+    bool inStock = widget.product.stock.isEmpty;
     return Material(
       borderOnForeground: true,
       elevation: 2,
@@ -33,28 +34,24 @@ class _AddToCartButtonState extends State<AddToCartButton> {
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Material(
-                  child: IconButton(
-                      onPressed: () =>
-                          setState(() => cart.addProductToCart(widget.product)),
-                      icon: Icon(Icons.add_shopping_cart_outlined)),
-                ),
-                count > 0
-                    ? Container(
-                        padding: EdgeInsets.all(8),
-                        child: Text(count.toString()),
-                      )
-                    : Container(
-                        padding: EdgeInsets.all(8),
-                        child: Text("Add to cart"),
-                      ),
-                count > 0
-                    ? Material(
-                        child: IconButton(
-                            onPressed: () => setState(
-                                () => cart.removeFromCart(widget.product)),
-                            icon: Icon(Icons.remove_shopping_cart_outlined)))
-                    : Container()
+                DropdownButton(
+                    onChanged: (v) => setState(() {
+                          _selectedSize = v;
+                        }),
+                    value: _selectedSize,
+                    items: [
+                      DropdownMenuItem(
+                          child: Text("Select Size"), value: "None"),
+                      ...widget.product.stock
+                          .map((e) => DropdownMenuItem(
+                              value: e.size, child: Text(e.size)))
+                          .toList()
+                    ]),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.add_shopping_cart),
+                  tooltip: "Add to cart",
+                )
               ],
             ),
     );

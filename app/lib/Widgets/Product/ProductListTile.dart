@@ -35,7 +35,7 @@ class ProductListTile extends StatelessWidget {
                 children: [
                   Icon(Icons.filter_none),
                   Padding(
-                    child: Text('${product.inStock}'),
+                    child: Text('${product.stock.length}'),
                     padding: EdgeInsets.all(4),
                   )
                 ],

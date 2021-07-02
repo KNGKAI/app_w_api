@@ -13,20 +13,23 @@ class ProductService {
   ProductService({Api api}) : _api = api;
 
   Future<bool> addToCart(Product product) async {
-    if (product.inStock == 0) return false;
-    List<String> cart = SharedPreferenceService.instance.getStringList('cart') ?? [];
+    if (product.stock.isEmpty) return false;
+    List<String> cart =
+        SharedPreferenceService.instance.getStringList('cart') ?? [];
     cart.add(product.id);
     return await SharedPreferenceService.instance.setStringList('cart', cart);
   }
 
   Future<bool> removeFromCart(Product product) async {
-    if (product.inStock == 0) return false;
-    List<String> cart = SharedPreferenceService.instance.getStringList('cart') ?? [];
+    if (product.stock.isEmpty) return false;
+    List<String> cart =
+        SharedPreferenceService.instance.getStringList('cart') ?? [];
     cart.remove(product.id);
     return await SharedPreferenceService.instance.setStringList('cart', cart);
   }
 
-  List<String> getCart() => SharedPreferenceService.instance.getStringList('cart') ?? [];
+  List<String> getCart() =>
+      SharedPreferenceService.instance.getStringList('cart') ?? [];
 
   Future<bool> placeOrder(User user) async {
     List<String> cart = SharedPreferenceService.instance.getStringList('cart');
@@ -44,57 +47,56 @@ class ProductService {
   }
 
   Future<bool> addCategory(Category category) async {
-    Map<String, dynamic> response = await _api
-        .post('category/add', category.toJson());
+    Map<String, dynamic> response =
+        await _api.post('category/add', category.toJson());
     return response != null;
   }
 
   Future<bool> addOrder(Order order) async {
-    Map<String, dynamic> response = await _api
-        .post('order/add', order.toJson());
+    Map<String, dynamic> response =
+        await _api.post('order/add', order.toJson());
     return response != null;
   }
 
   Future<bool> addProduct(Product product) async {
-    Map<String, dynamic> response = await _api
-        .post('product/add', product.toJson());
+    Map<String, dynamic> response =
+        await _api.post('product/add', product.toJson());
     return response != null;
   }
 
   Future<bool> removeCategory(Category category) async {
-    Map<String, dynamic> response = await _api
-        .post('category/remove', category.toJson());
+    Map<String, dynamic> response =
+        await _api.post('category/remove', category.toJson());
     return response != null;
   }
 
   Future<bool> removeOrder(Order order) async {
-    Map<String, dynamic> response = await _api
-        .post('order/remove', order.toJson());
+    Map<String, dynamic> response =
+        await _api.post('order/remove', order.toJson());
     return response != null;
   }
 
   Future<bool> removeProduct(Product product) async {
-    Map<String, dynamic> response = await _api
-        .post('product/remove', product.toJson());
+    Map<String, dynamic> response =
+        await _api.post('product/remove', product.toJson());
     return response != null;
   }
 
   Future<bool> updateCategory(Category category) async {
-    Map<String, dynamic> response = await _api
-        .post('category/update', category.toJson());
+    Map<String, dynamic> response =
+        await _api.post('category/update', category.toJson());
     return response != null;
   }
 
   Future<bool> updateOrder(Order order) async {
-    Map<String, dynamic> response = await _api
-        .post('order/update', order.toJson());
+    Map<String, dynamic> response =
+        await _api.post('order/update', order.toJson());
     return response != null;
   }
 
   Future<bool> updateProduct(Product product) async {
-    Map<String, dynamic> response = await _api
-        .post('product/update', product.toJson());
+    Map<String, dynamic> response =
+        await _api.post('product/update', product.toJson());
     return response != null;
   }
-
 }

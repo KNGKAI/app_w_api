@@ -10,6 +10,7 @@ import 'package:app/Views/CartView.dart';
 import 'package:app/Widgets/BaseQueryWidget.dart';
 import 'package:app/Widgets/CategoryTile.dart';
 import 'package:app/Widgets/MyAppBar.dart';
+import 'package:app/Widgets/NavigationDrawer.dart';
 
 import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,10 @@ class _State extends State<ProductView> {
             description
             image
             size
-            stock
+            stock {
+              size,
+              value
+            }
           }
 
         }""",
@@ -81,12 +85,19 @@ class _State extends State<ProductView> {
               child: SizedBox(
                   width: 400,
                   child: ListView(
-                    padding: EdgeInsets.all(20.0),
+                    // padding: EdgeInsets.all(20.0),
                     children: [
-                      Image.memory(
-                        Base64Decoder().convert(_product.image),
-                        width: MediaQuery.of(context).size.width,
+                      SizedBox(
+                        width: 400,
+                        height: 400,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.memory(
+                            Base64Decoder().convert(_product.image),
+                          ),
+                        ),
                       ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -94,18 +105,19 @@ class _State extends State<ProductView> {
                           Buttons.addToCartButton(_product)
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            "Size: ",
-                            style: subheadingStyle,
-                          ),
-                          Text(_product.size, style: subheadingStyle),
-                        ],
-                      ),
+
+                      ..._product.stock.map((s) => Text(s.size)).toList(),
+
+                      // Row(
+                      //   children: [
+                      //     DropdownButton(
+                      //         items: _product.stock.keys
+                      //             .map((e) => DropdownMenuItem(child: Text(e)))
+                      //             .toList())
+                      //   ],
+                      // ),
                       Text(_product.description),
                       Chip(label: Text(_product.category)),
-                      SizedBox(height: 10.0),
                     ],
                   )));
         },

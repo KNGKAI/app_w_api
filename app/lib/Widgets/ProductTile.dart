@@ -24,7 +24,7 @@ class _State extends State<ProductTile> {
     return ListTile(
       title: Text(widget.product.name),
       subtitle: Text(widget.product.category + " - " + widget.product.size),
-      trailing: Text("Stock: ${widget.product.inStock.toString()}"),
+      trailing: Text("Stock: ${widget.product.toString()}"),
       onTap: widget.onTap,
     );
   }

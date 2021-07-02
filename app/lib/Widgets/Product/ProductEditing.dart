@@ -223,35 +223,35 @@ class _State extends State<ProductEditing> {
                   });
                 },
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() {
-                        if (widget.product.inStock == null)
-                          widget.product.inStock = 0;
-                        widget.product.inStock--;
-                        if (widget.product.inStock < 0) {
-                          widget.product.inStock = 0;
-                        }
-                      });
-                    },
-                  ),
-                  Text(widget.product.inStock.toString()),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        if (widget.product.inStock == null)
-                          widget.product.inStock = 0;
-                        widget.product.inStock++;
-                      });
-                    },
-                  )
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     IconButton(
+              //       icon: Icon(Icons.remove),
+              //       onPressed: () {
+              //         setState(() {
+              //           if (widget.product.inStock == null)
+              //             widget.product.inStock = 0;
+              //           widget.product.inStock--;
+              //           if (widget.product.inStock < 0) {
+              //             widget.product.inStock = 0;
+              //           }
+              //         });
+              //       },
+              //     ),
+              //     Text(widget.product.inStock.toString()),
+              //     IconButton(
+              //       icon: Icon(Icons.add),
+              //       onPressed: () {
+              //         setState(() {
+              //           if (widget.product.inStock == null)
+              //             widget.product.inStock = 0;
+              //           widget.product.inStock++;
+              //         });
+              //       },
+              //     )
+              //   ],
+              // ),
             ],
           ),
         )
