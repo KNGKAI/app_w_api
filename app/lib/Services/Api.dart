@@ -50,27 +50,27 @@ class Api {
 class DioExceptions implements Exception {
   DioExceptions.fromDioError(DioError dioError) {
     switch (dioError.type) {
-      case DioErrorType.CANCEL:
+      case DioErrorType.cancel:
         message = "Request to API server was cancelled";
         break;
-      case DioErrorType.CONNECT_TIMEOUT:
+      case DioErrorType.connectTimeout:
         message = "Connection timeout with API server";
         break;
-      case DioErrorType.DEFAULT:
-        message = "Connection to API server failed due to internet connection";
-        break;
-      case DioErrorType.RECEIVE_TIMEOUT:
+      case DioErrorType.receiveTimeout:
         message = "Receive timeout in connection with API server";
         break;
-      case DioErrorType.RESPONSE:
+      case DioErrorType.response:
         message =
             _handleError(dioError.response.statusCode, dioError.response.data);
         break;
-      case DioErrorType.SEND_TIMEOUT:
+      case DioErrorType.sendTimeout:
         message = "Send timeout in connection with API server";
         break;
-      default:
+      case DioErrorType.other:
         message = "Something went wrong";
+        break;
+      default:
+        message = "Connection to API server failed due to internet connection";
         break;
     }
   }

@@ -1,17 +1,20 @@
+import 'dart:convert';
 import 'dart:io';
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Order.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/Api.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Order.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/Api.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductService {
   final Api _api;
+  final List<String> _cart;
 
-  ProductService({Api api}) : _api = api;
+  ProductService({Api api}) : _api = api, _cart = ProductService.getCart();
 
+<<<<<<< HEAD
   Future<bool> addToCart(Product product) async {
     if (product.stock.isEmpty) return false;
     List<String> cart =
@@ -30,15 +33,22 @@ class ProductService {
 
   List<String> getCart() =>
       SharedPreferenceService.instance.getStringList('cart') ?? [];
+=======
+  static List<String> getCart() => SharedPreferenceService.instance.getStringList('cart') ?? [];
 
-  Future<bool> placeOrder(User user) async {
-    List<String> cart = SharedPreferenceService.instance.getStringList('cart');
-    Map<String, dynamic> body = {
-      'user': user.id,
-      'products': cart,
-      'status': 'placed'
-    };
-    Map<String, dynamic> response = await _api.post('order/add', body);
+  Future<bool> addToCart(OrderProduct product) async {
+    _cart.add(json.encode(product.toJson()));
+    return await SharedPreferenceService.instance.setStringList('cart', _cart);
+  }
+
+  Future<bool> removeFromCart(OrderProduct product) async {
+    _cart.remove(product.toJson().toString());
+    return await SharedPreferenceService.instance.setStringList('cart', _cart);
+  }
+>>>>>>> main
+
+  Future<bool> placeOrder(Order order) async {
+    Map<String, dynamic> response = await _api.post('order/add', order.toJson());
     bool placed = response != null;
     if (placed) {
       await SharedPreferenceService.instance.remove('cart');

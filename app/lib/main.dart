@@ -12,6 +12,7 @@ import 'package:app/Views/RegistrationView.dart';
 import 'package:app/Views/SplashView.dart';
 import 'package:app/Views/CartView.dart';
 import 'package:app/Providers/CartProvider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -61,9 +62,9 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            primarySwatch: Colors.grey,
-            visualDensity: VisualDensity.comfortable,
-            hintColor: Colors.orangeAccent),
+          primarySwatch: Colors.green,
+          visualDensity: VisualDensity.comfortable,
+        ),
         initialRoute: '/',
         routes: {
           '/': (context) => SplashView(),
@@ -74,6 +75,7 @@ class App extends StatelessWidget {
           '/cart': (context) => CartView(),
           '/orders': (context) => OrderView(),
           '/product': (context) => ProductView()
+          // '/product/edit': (context) => ProductEditingView(),
         },
       ),
     );

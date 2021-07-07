@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
-import 'package:app/Widgets/Logo.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/ProfileService.dart';
+import 'package:skate/Widgets/Logo.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationView extends StatefulWidget {
@@ -11,10 +11,10 @@ class RegistrationView extends StatefulWidget {
 
 class _RegistrationState extends State<RegistrationView> {
   TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-
+  TextEditingController addressController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     ProfileService profileService = Provider.of<ProfileService>(context);
@@ -36,6 +36,14 @@ class _RegistrationState extends State<RegistrationView> {
               decoration:
                   InputDecoration(labelText: 'email', icon: Icon(Icons.email)),
               controller: emailController,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  labelText: 'address', icon: Icon(Icons.location_pin)),
+              controller: addressController,
             ),
           ),
           Padding(
@@ -68,6 +76,7 @@ class _RegistrationState extends State<RegistrationView> {
                 onPressed: () async {
                   if (usernameController.text.isEmpty ||
                       emailController.text.isEmpty ||
+                      addressController.text.isEmpty ||
                       passwordController.text.isEmpty ||
                       confirmPasswordController.text.isEmpty) {
                     print('text empty error');
@@ -77,9 +86,9 @@ class _RegistrationState extends State<RegistrationView> {
                           .compareTo(confirmPasswordController.text) ==
                       0) {
                     User user = User(
-                      username: usernameController.text,
-                      email: emailController.text,
-                    );
+                        username: usernameController.text,
+                        email: emailController.text,
+                        address: addressController.text);
                     if (await profileService.registerUser(
                         user, passwordController.text)) {
                       print("user registered");

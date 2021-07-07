@@ -16,10 +16,9 @@ class Product {
   String name;
   String description;
   String category;
-  String size;
   String image;
   int price;
-  List<Size> stock = [];
+  List<ProductStock> stock;
 
   String get id => _id;
 
@@ -28,21 +27,12 @@ class Product {
     name = json['name'];
     description = json['description'];
     category = json['category'];
-    size = json['size'];
     image = json['image'];
     price = json['price'];
-
-    if (json.containsKey('stock'))
-      for (Map<String, dynamic> i in json['stock'] as List<dynamic>)
-        stock.add(Size.fromJson(i));
-    print(stock);
-  }
-
-  Product.create() {
-    name = "";
-    description = "";
-    size = "";
-    price = 0;
+    stock = json['stock']
+            ?.map<ProductStock>((json) => ProductStock.fromJson(json))
+            ?.toList() ??
+        [];
   }
 
   Map<String, dynamic> toJson() => {
@@ -50,25 +40,38 @@ class Product {
         "name": name,
         "description": description,
         "category": category,
-        "size": size,
-        // "image": image,
+        "image": image,
         "price": price,
-        // "inStock": inStock,
+        "stock": stock.map((e) => e.toJson()).toList(),
       };
-
-  bool operator ==(Object eq) {
-    Product p = eq as Product;
-    return p.id == id;
-  }
 
   Product({
     String id,
     this.name,
     this.description,
     this.category,
-    this.size,
     this.image,
     this.price,
-    // this.inStock,
+    this.stock,
   }) : _id = id;
+}
+
+class ProductStock {
+  String size;
+  int value;
+
+  ProductStock.fromJson(Map<String, dynamic> json) {
+    size = json['size'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() => {
+        "size": size,
+        "value": value,
+      };
+
+  ProductStock({
+    this.size,
+    this.value,
+  });
 }

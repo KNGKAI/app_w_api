@@ -10,10 +10,11 @@ import 'package:app/Widgets/MyAppBar.dart';
 
 import 'package:app/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:skate/Widgets/UserCard.dart';
 
 class ProfileEditingView extends StatefulWidget {
   @override
@@ -43,6 +44,15 @@ class _State extends State<ProfileEditingView> {
       //Settings
       padding: EdgeInsets.all(20.0),
       children: [
+        UserCard(user: user),
+        TextButton(
+          child: Text("Sign Out",
+              style: TextStyle(fontSize: 20, color: Colors.red)),
+          onPressed: () {
+            profileService.signOutUser();
+            Navigator.of(context).pushReplacementNamed('/login');
+          },
+        ),
         Text("Profile:", textScaleFactor: 1.4),
         TextField(
           controller: usernameController,
@@ -66,7 +76,6 @@ class _State extends State<ProfileEditingView> {
             await showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  ;
                   return AlertDialog(
                     title: Text("Updated Profile"),
                     content: Text(updated ? "Success" : "Failed"),
@@ -83,7 +92,7 @@ class _State extends State<ProfileEditingView> {
                   );
                 });
           },
-        )
+        ),
       ],
     );
   }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:app/Widgets/Logo.dart';
+import 'package:skate/Widgets/Logo.dart';
 import 'package:provider/provider.dart';
-import 'package:app/Services/Api.dart';
-import 'package:app/Services/ProfileService.dart';
-import 'package:app/Views/RootView.dart';
+import 'package:skate/Services/Api.dart';
+import 'package:skate/Services/ProfileService.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -90,16 +89,8 @@ class _State extends State<LoginView> {
               print('Forgot password');
             },
           ),
-          spacedButton(MaterialButton(
-            color: Colors.blue,
-            child: Text('Continue with Facebook',
-                style: TextStyle(color: Colors.white)),
-            onPressed: () async {
-              print("facebook login");
-            },
-          )),
-          spacedButton(MaterialButton(
-            color: Colors.blue,
+          MaterialButton(
+            color: Colors.red,
             child: Text(
               'Register',
               style: TextStyle(color: Colors.white),
@@ -107,9 +98,17 @@ class _State extends State<LoginView> {
             onPressed: () {
               Navigator.pushNamed(context, '/register');
             },
-          )),
-          spacedButton(MaterialButton(
+          ),
+          MaterialButton(
             color: Colors.blue,
+            child: Text('Continue with Facebook',
+                style: TextStyle(color: Colors.white)),
+            onPressed: () async {
+              print("facebook login");
+            },
+          ),
+          MaterialButton(
+            color: Colors.green,
             child: Text('Login', style: TextStyle(color: Colors.white)),
             onPressed: () async {
               print('logging in...');

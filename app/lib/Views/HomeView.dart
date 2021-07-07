@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/ViewModels/AppViewModel.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/ProductWidget.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
+import 'package:skate/ViewModels/AppViewModel.dart';
+import 'package:skate/Widgets/BaseQueryWidget.dart';
+import 'package:skate/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/ProductGridTile.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:app/Views/RootView.dart';
@@ -33,6 +34,11 @@ class _HomeView extends State<HomeView> {
             id
             name
             category
+            size
+            stock {
+              size
+              value
+            }
             image
             price
           }
@@ -42,36 +48,84 @@ class _HomeView extends State<HomeView> {
         }""",
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
-          int minPrice = 0, maxPrice = 1;
-          List<Product> products = result.data['products']
-              .map<Product>((json) {
-                Product p = Product.fromJson(json);
-                minPrice = min(minPrice, p.price);
-                maxPrice = max(maxPrice, p.price);
-                return p;
-              })
-              .where((product) =>
-                  (_selectedCategories.contains(product.category) &&
-                      product.price >= minPrice &&
-                      product.price <= maxPrice) ||
-                  _selectedCategories.isEmpty)
-              .toList();
-          // ,
-          List<Category> __categories = result.data['categories']
+          // List<String> cart = ProductService.getCart();
+          List<Category> categories = result.data['categories']
               .map<Category>((json) => Category.fromJson(json))
               .toList();
-          _categories = __categories.map((e) => e.name).toList();
-          if (_selectedCategories.isEmpty) _selectedCategories = _categories;
-
-          return Column(
+          List<Product> products = result.data['products']
+              .map<Product>((json) => Product.fromJson(json))
+              .map<Product>((Product product) {
+            // product.inStock -=
+            //     cart.where((id) => product.id.compareTo(id) == 0).length;
+            return product;
+          }).toList();
+          if (_selectedCategories != null) {
+            products = products
+                .where((product) =>
+                    product.category.compareTo(_selectedCategories) == 0)
+                .toList();
+          }
+          int horizontalCount = 2;
+          double width = MediaQuery.of(context).size.width / horizontalCount;
+          return ListView(
             children: [
-              CategoryChips(
-                  categories: _categories,
-                  selectedCategories: _selectedCategories,
-                  onFilterUpdate: (ss) => setState(() {
-                        _selectedCategories = ss;
-                      })),
-              Expanded(child: ProductWidget.grid(products))
+              categories.isEmpty
+                  ? Center(child: Text("No Categories Found!"))
+                  : Container(
+                      height: 60.0,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: categories.map((category) {
+                          bool selected = _selectedCategories == category.name;
+                          return Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: MaterialButton(
+                              // padding: EdgeInsets.all(10.0),
+                              color: selected ? Colors.blue : Colors.white38,
+                              onPressed: () {
+                                setState(() {
+                                  if (selected) {
+                                    _selectedCategories = null;
+                                  } else {
+                                    _selectedCategories = category.name;
+                                  }
+                                });
+                              },
+                              child: Text(category.name.toUpperCase(),
+                                  style: TextStyle(
+                                      color: selected
+                                          ? Colors.white
+                                          : Colors.black)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+              products.isEmpty
+                  ? Center(child: Text("No Products Found!"))
+                  : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: (width + 40) *
+                          (products.length / horizontalCount).ceil(),
+                      child: GridView.count(
+                        primary: false,
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 5),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        crossAxisCount: horizontalCount,
+                        children: products
+                            .map<Widget>((product) => ProductGridTile(
+                                  product: product,
+                                  onTap: () async {
+                                    AppViewModel.setId(product.id);
+                                    Navigator.of(context).pushNamed("/product");
+                                  },
+                                ))
+                            .toList(),
+                      ),
+                    )
             ],
           );
           // ListView(

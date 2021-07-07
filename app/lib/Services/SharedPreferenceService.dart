@@ -9,6 +9,7 @@ class SharedPreferenceService {
 
   Future<void> init() async {
     _sharedPrefs ??= await SharedPreferences.getInstance();
+    // _sharedPrefs.clear();
   }
 
   static Future<bool> setToken(String token) {

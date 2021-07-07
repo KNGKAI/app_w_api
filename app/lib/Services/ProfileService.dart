@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/Api.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/Api.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {
@@ -29,11 +29,8 @@ class ProfileService {
   }
 
   Future<bool> registerUser(User user, String password) async {
-    Map<String, dynamic> response = await _api.post('user/register', {
-      "username": user.username,
-      "email": user.email,
-      "password": password
-    });
+    Map<String, dynamic> response = await _api.post('user/register',
+        {"username": user.username, "email": user.email, "password": password});
     return response != null;
   }
 
@@ -51,7 +48,7 @@ class ProfileService {
 
   Future<bool> tokenAuthorizeUser(String token) async {
     Map<String, dynamic> response =
-    await _api.post('auth/token', {"token": token});
+        await _api.post('auth/token', {"token": token});
     if (response != null) {
       _user = User.fromJson(response['user']);
       _token = response['token'];

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:app/Widgets/Logo.dart';
+import 'package:skate/Widgets/Logo.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Services/ProfileService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
+import 'package:skate/Services/ProfileService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
 
 import 'package:provider/provider.dart';
 

@@ -14,8 +14,8 @@ import 'package:app/Widgets/Product/ProductEditing.dart';
 import 'package:app/Widgets/Filter/CategoryChips.dart';
 
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:app/Views/StockView.dart';
 
