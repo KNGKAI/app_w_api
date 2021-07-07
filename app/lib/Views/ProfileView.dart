@@ -1,27 +1,27 @@
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Order.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Order.dart';
 
-import 'package:app/Widgets/Order/OrderList.dart';
+import 'package:skate/Widgets/Order/OrderList.dart';
 
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Widgets/BaseQueryWidget.dart';
 
-import 'package:app/Widgets/Settings.dart';
-import 'package:app/Widgets/ProductWidget.dart';
-import 'package:app/Widgets/OrderWidget.dart';
-import 'package:app/Widgets/Product/ProductEditing.dart';
-import 'package:app/Widgets/Filter/CategoryChips.dart';
+import 'package:skate/Widgets/Settings.dart';
+import 'package:skate/Widgets/ProductWidget.dart';
+import 'package:skate/Widgets/OrderWidget.dart';
+import 'package:skate/Widgets/Product/ProductEditing.dart';
+import 'package:skate/Widgets/Filter/CategoryChips.dart';
 
 import 'package:flutter/material.dart';
 import 'package:skate/Models/User.dart';
 import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:app/Views/StockView.dart';
+import 'package:skate/Views/StockView.dart';
 
 import 'package:provider/provider.dart';
-import 'package:app/Providers/CartProvider.dart';
-import 'package:app/Views/RootView.dart';
+import 'package:skate/Providers/CartProvider.dart';
+import 'package:skate/Views/RootView.dart';
 
 class ProfileView extends StatefulWidget {
   @override

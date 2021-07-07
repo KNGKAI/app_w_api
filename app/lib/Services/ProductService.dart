@@ -10,45 +10,43 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductService {
   final Api _api;
-  final List<String> _cart;
+  final Map<String, dynamic> _cart; // Product -> size -> quantity
 
-  ProductService({Api api}) : _api = api, _cart = ProductService.getCart();
+  ProductService({Api api})
+      : _api = api,
+        _cart = ProductService.getCart();
 
-<<<<<<< HEAD
-  Future<bool> addToCart(Product product) async {
-    if (product.stock.isEmpty) return false;
-    List<String> cart =
-        SharedPreferenceService.instance.getStringList('cart') ?? [];
-    cart.add(product.id);
-    return await SharedPreferenceService.instance.setStringList('cart', cart);
+  static Map<String, dynamic> getCart() {
+    String rawCart = SharedPreferenceService.instance.getString('cart');
+    print(rawCart);
+    if (rawCart == null) return new Map<String, dynamic>();
+    return jsonDecode(rawCart);
   }
-
-  Future<bool> removeFromCart(Product product) async {
-    if (product.stock.isEmpty) return false;
-    List<String> cart =
-        SharedPreferenceService.instance.getStringList('cart') ?? [];
-    cart.remove(product.id);
-    return await SharedPreferenceService.instance.setStringList('cart', cart);
-  }
-
-  List<String> getCart() =>
-      SharedPreferenceService.instance.getStringList('cart') ?? [];
-=======
-  static List<String> getCart() => SharedPreferenceService.instance.getStringList('cart') ?? [];
 
   Future<bool> addToCart(OrderProduct product) async {
-    _cart.add(json.encode(product.toJson()));
-    return await SharedPreferenceService.instance.setStringList('cart', _cart);
+    if (_cart.containsKey(product.product.id)) {
+      if (_cart[product.product.id].containsKey(product.size))
+        _cart[product.product.id][product.size] += 1;
+    } else {
+      _cart.putIfAbsent(product.product.id, () {
+        Map<String, int> ret = {};
+        ret.putIfAbsent(product.size, () => 1);
+        return ret;
+      });
+    }
+
+    return await SharedPreferenceService.instance
+        .setString('cart', jsonEncode(_cart));
   }
 
-  Future<bool> removeFromCart(OrderProduct product) async {
-    _cart.remove(product.toJson().toString());
-    return await SharedPreferenceService.instance.setStringList('cart', _cart);
-  }
->>>>>>> main
+  // Future<bool> removeFromCart(OrderProduct product) async {
+  //   _cart.remove(product.toJson().toString());
+  //   return await SharedPreferenceService.instance.setStringList('cart', _cart);
+  // }
 
   Future<bool> placeOrder(Order order) async {
-    Map<String, dynamic> response = await _api.post('order/add', order.toJson());
+    Map<String, dynamic> response =
+        await _api.post('order/add', order.toJson());
     bool placed = response != null;
     if (placed) {
       await SharedPreferenceService.instance.remove('cart');

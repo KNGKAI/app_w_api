@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Product.dart';
 import 'dart:convert';
 
 class ProductListTile extends StatelessWidget {

@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:app/Widgets/Logo.dart';
-import 'package:app/Widgets/SkateAppBar.dart';
+import 'package:skate/Widgets/Logo.dart';
+import 'package:skate/Widgets/SkateAppBar.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Widgets/NavigationDrawer.dart';
+import 'package:skate/Widgets/NavigationDrawer.dart';
 
-import 'package:app/Widgets/Buttons.dart';
+import 'package:skate/Widgets/Buttons.dart';
 
 class RootView extends StatelessWidget {
   final Widget body;

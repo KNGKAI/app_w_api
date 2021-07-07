@@ -1,7 +1,7 @@
-import 'package:app/Views/RootView.dart';
+import 'package:skate/Views/RootView.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Models/User.dart';
-import 'package:app/Services/ProfileService.dart';
+import 'package:skate/Models/User.dart';
+import 'package:skate/Services/ProfileService.dart';
 import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget {

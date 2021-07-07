@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Providers/CartProvider.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Providers/CartProvider.dart';
 import 'package:provider/provider.dart';
 import '../Buttons.dart';
 import 'dart:convert';

@@ -1,21 +1,21 @@
-import 'package:app/Services/Api.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/ProfileService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/Views/HomeView.dart';
-import 'package:app/Views/LoginView.dart';
+import 'package:skate/Services/Api.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Services/ProfileService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
+import 'package:skate/Views/HomeView.dart';
+import 'package:skate/Views/LoginView.dart';
+import 'package:skate/Views/RegistrationView.dart';
+import 'package:skate/Views/SplashView.dart';
 
-import 'package:app/Views/ProductView.dart';
-import 'package:app/Views/OrderView.dart';
-import 'package:app/Views/ProfileView.dart';
-import 'package:app/Views/RegistrationView.dart';
-import 'package:app/Views/SplashView.dart';
-import 'package:app/Views/CartView.dart';
-import 'package:app/Providers/CartProvider.dart';
+import 'package:skate/Views/ProductView.dart';
+import 'package:skate/Views/CartView.dart';
+// import 'package:skate/Views/OrderView.dart';
+// import 'package:skate/Views/ProfileView.dart';
 
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:skate/Providers/CartProvider.dart';
 
 void main() async {
   print("Starting...");
@@ -71,9 +71,9 @@ class App extends StatelessWidget {
           '/home': (context) => HomeView(),
           '/login': (context) => LoginView(),
           '/register': (context) => RegistrationView(),
-          '/profile': (context) => ProfileView(),
+          // '/profile': (context) => ProfileView(),
           '/cart': (context) => CartView(),
-          '/orders': (context) => OrderView(),
+          // '/orders': (context) => OrderView(),
           '/product': (context) => ProductView()
           // '/product/edit': (context) => ProductEditingView(),
         },

@@ -1,13 +1,13 @@
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Widgets/BaseQueryWidget.dart';
 
-import 'package:app/Widgets/ProductWidget.dart';
+import 'package:skate/Widgets/ProductWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:app/Widgets/Product/ProductEditing.dart';
+import 'package:skate/Widgets/Product/ProductEditing.dart';
 
 class StockView extends StatefulWidget {
   @override

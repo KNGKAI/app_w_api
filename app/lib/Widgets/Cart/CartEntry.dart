@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Product.dart';
 
 class CartEntry extends StatelessWidget {
   final Product product;

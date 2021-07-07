@@ -1,7 +1,7 @@
-import 'package:app/Widgets/Product/ProductGrid.dart';
-import 'package:app/Widgets/Product/ProductList.dart';
+import 'package:skate/Widgets/Product/ProductGrid.dart';
+import 'package:skate/Widgets/Product/ProductList.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Widgets/Product/ProductEditing.dart';
+import 'package:skate/Widgets/Product/ProductEditing.dart';
 
 class ProductWidget {
   static Widget grid(products) => ProductGrid(products: products);

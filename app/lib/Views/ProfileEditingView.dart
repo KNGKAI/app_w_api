@@ -1,14 +1,14 @@
-import 'package:app/Models/Category.dart';
-import 'package:app/Models/Order.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Services/ProductService.dart';
-import 'package:app/Services/SharedPreferenceService.dart';
-import 'package:app/Views/CartView.dart';
-import 'package:app/Widgets/BaseQueryWidget.dart';
-import 'package:app/Widgets/CategoryTile.dart';
-import 'package:app/Widgets/MyAppBar.dart';
+import 'package:skate/Models/Category.dart';
+import 'package:skate/Models/Order.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
+import 'package:skate/Views/CartView.dart';
+import 'package:skate/Widgets/BaseQueryWidget.dart';
+import 'package:skate/Widgets/CategoryTile.dart';
+import 'package:skate/Widgets/MyAppBar.dart';
 
-import 'package:app/Widgets/ProductTile.dart';
+import 'package:skate/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';
 import 'package:skate/Models/User.dart';
 import 'package:skate/Services/ProfileService.dart';

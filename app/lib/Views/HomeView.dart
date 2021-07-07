@@ -8,12 +8,11 @@ import 'package:skate/Services/SharedPreferenceService.dart';
 import 'package:skate/ViewModels/AppViewModel.dart';
 import 'package:skate/Widgets/BaseQueryWidget.dart';
 import 'package:skate/Widgets/MyAppBar.dart';
-import 'package:skate/Widgets/ProductGridTile.dart';
+import 'package:skate/Widgets/Product/ProductGridTile.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:app/Views/RootView.dart';
-import 'package:app/Widgets/Filter/CategoryChips.dart';
-import 'package:app/Widgets/Filter/PriceRange.dart';
+import 'package:skate/Widgets/Filter/CategoryChips.dart';
+import 'package:skate/Widgets/ProductWidget.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -21,13 +20,12 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeView extends State<HomeView> {
-  List<String> _selectedCategories = [];
-  List<String> _categories = [];
+  List<String> _selectedCategories, _categories = [];
   RangeValues _filterRange;
 
   @override
   Widget build(BuildContext context) {
-    return RootView(
+    return Scaffold(
       body: BaseQueryWidget(
         query: """{
           products {
@@ -49,9 +47,11 @@ class _HomeView extends State<HomeView> {
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           // List<String> cart = ProductService.getCart();
-          List<Category> categories = result.data['categories']
-              .map<Category>((json) => Category.fromJson(json))
+          _categories = result.data['categories']
+              .map<String>((json) => Category.fromJson(json).name)
               .toList();
+          if (_selectedCategories == null) _selectedCategories = _categories;
+
           List<Product> products = result.data['products']
               .map<Product>((json) => Product.fromJson(json))
               .map<Product>((Product product) {
@@ -61,47 +61,21 @@ class _HomeView extends State<HomeView> {
           }).toList();
           if (_selectedCategories != null) {
             products = products
-                .where((product) =>
-                    product.category.compareTo(_selectedCategories) == 0)
+                .where(
+                    (product) => _selectedCategories.contains(product.category))
                 .toList();
           }
           int horizontalCount = 2;
-          double width = MediaQuery.of(context).size.width / horizontalCount;
+          double width =
+              300; // MediaQuery.of(context).size.width / horizontalCount;
           return ListView(
             children: [
-              categories.isEmpty
-                  ? Center(child: Text("No Categories Found!"))
-                  : Container(
-                      height: 60.0,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: categories.map((category) {
-                          bool selected = _selectedCategories == category.name;
-                          return Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: MaterialButton(
-                              // padding: EdgeInsets.all(10.0),
-                              color: selected ? Colors.blue : Colors.white38,
-                              onPressed: () {
-                                setState(() {
-                                  if (selected) {
-                                    _selectedCategories = null;
-                                  } else {
-                                    _selectedCategories = category.name;
-                                  }
-                                });
-                              },
-                              child: Text(category.name.toUpperCase(),
-                                  style: TextStyle(
-                                      color: selected
-                                          ? Colors.white
-                                          : Colors.black)),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+              CategoryChips(
+                onFilterUpdate: (cat) =>
+                    setState(() => _selectedCategories = cat),
+                categories: _categories,
+                selectedCategories: _selectedCategories,
+              ),
               products.isEmpty
                   ? Center(child: Text("No Products Found!"))
                   : Container(
@@ -118,10 +92,11 @@ class _HomeView extends State<HomeView> {
                         children: products
                             .map<Widget>((product) => ProductGridTile(
                                   product: product,
-                                  onTap: () async {
-                                    AppViewModel.setId(product.id);
-                                    Navigator.of(context).pushNamed("/product");
-                                  },
+                                  width: width,
+                                  // onTap: () async {
+                                  //   AppViewModel.setId(product.id);
+                                  //   Navigator.of(context).pushNamed("/product");
+                                  // },
                                 ))
                             .toList(),
                       ),

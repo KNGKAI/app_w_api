@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/Order.dart';
+import 'package:skate/Models/Order.dart';
 import './OrderTile.dart';
 
 class OrderList extends StatelessWidget {

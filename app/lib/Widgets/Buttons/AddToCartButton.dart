@@ -1,54 +1,68 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/Providers/CartProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Order.dart';
+// import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Providers/CartProvider.dart';
+import 'package:skate/Models/Product.dart';
 
 class AddToCartButton extends StatefulWidget {
   final Product product;
-  const AddToCartButton({Key key, @required this.product}) : super(key: key);
+  final Function(OrderProduct) addToCart;
+  const AddToCartButton(
+      {Key key, @required this.product, Function(OrderProduct) this.addToCart})
+      : super(key: key);
 
   @override
   _AddToCartButtonState createState() => _AddToCartButtonState();
 }
 
 class _AddToCartButtonState extends State<AddToCartButton> {
-  String _selectedSize = "Select Size";
+  int _selectedSize = 0;
+
   @override
   Widget build(BuildContext context) {
-    Cart cart = Provider.of<Cart>(context);
     ThemeData theme = Theme.of(context);
-    int count = cart.getProductCount(widget.product);
-    bool inStock = widget.product.stock.isEmpty;
+    // ProductService productService = Provider.of<ProductService>(context);
+    Cart cart = Provider.of<Cart>(context);
+    int c = 0;
+    List<ProductStock> availableStock =
+        widget.product.stock.where((element) => element.value > 0).toList();
     return Material(
       borderOnForeground: true,
-      elevation: 2,
-      child: inStock
-          ? Container(
-              color: Colors.grey,
-              child: Text(
-                "Out of stock",
-                style: TextStyle(color: Colors.white),
-              ),
-              padding: EdgeInsets.all(10))
+      elevation: 1,
+      child: availableStock.isEmpty
+          ? Center(
+              child: Text("Out of stock"),
+            )
           : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                DropdownButton(
-                    onChanged: (v) => setState(() {
-                          _selectedSize = v;
-                        }),
-                    value: _selectedSize,
-                    items: [
-                      DropdownMenuItem(
-                          child: Text("Select Size"), value: "None"),
-                      ...widget.product.stock
-                          .map((e) => DropdownMenuItem(
-                              value: e.size, child: Text(e.size)))
-                          .toList()
-                    ]),
+                Row(
+                  children: [
+                    Text(
+                      "Select Size: ",
+                      style: theme.textTheme.headline6,
+                    ),
+                    DropdownButton(
+                        onChanged: (v) => setState(() {
+                              _selectedSize = v;
+                            }),
+                        value: _selectedSize,
+                        items: availableStock
+                            .map((e) => DropdownMenuItem(
+                                value: c++, child: Text(e.size)))
+                            .toList()),
+                  ],
+                ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (widget.addToCart != null)
+                      widget.addToCart(new OrderProduct(
+                          product: widget.product,
+                          size: availableStock[_selectedSize].size,
+                          value: 1));
+                  },
                   icon: Icon(Icons.add_shopping_cart),
                   tooltip: "Add to cart",
                 )

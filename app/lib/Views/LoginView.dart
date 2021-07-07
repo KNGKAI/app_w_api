@@ -48,7 +48,7 @@ class _State extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     ProfileService profileService = Provider.of(context);
-    return RootView(
+    return Scaffold(
       body: ListView(
         padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 50.0),
         children: [
@@ -121,7 +121,7 @@ class _State extends State<LoginView> {
                 });
               }
             },
-          )),
+          ),
           Text(_userCommunication),
         ],
       ),

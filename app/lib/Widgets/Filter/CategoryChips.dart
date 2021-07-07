@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/Category.dart';
+import 'package:skate/Models/Category.dart';
 
 class CategoryChips extends StatefulWidget {
   final void Function(List<String>) onFilterUpdate;
@@ -18,11 +18,13 @@ class CategoryChips extends StatefulWidget {
 class _CategoryChipsState extends State<CategoryChips> {
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return Wrap(
       children: widget.categories
           .map((c) => Padding(
                 padding: EdgeInsets.all(4),
                 child: FilterChip(
+                    selectedColor: theme.accentColor,
                     label: Text(c),
                     selected: widget.selectedCategories.contains(c),
                     onSelected: (v) {

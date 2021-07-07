@@ -4,5 +4,6 @@ import 'package:flutter/material.dart';
 
 class Buttons {
   static Widget cartViewButton() => CartViewButton();
-  static Widget addToCartButton(product) => AddToCartButton(product: product);
+  static Widget addToCartButton(product, {addToCart}) =>
+      AddToCartButton(product: product, addToCart: addToCart);
 }

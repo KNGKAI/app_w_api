@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:app/Widgets/Product/ProductDialog.dart';
-import 'package:app/Providers/CartProvider.dart';
+import 'package:skate/Widgets/Product/ProductDialog.dart';
+import 'package:skate/Providers/CartProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart';
 
@@ -24,25 +24,35 @@ class ProductGridTile extends StatefulWidget {
 class _State extends State<ProductGridTile> {
   @override
   Widget build(BuildContext context) {
-    Cart cart = Provider.of<Cart>(context);
+    // Cart cart = Provider.of<Cart>(context);
     ThemeData theme = Theme.of(context);
-    TextStyle header =
-        new TextStyle(color: theme.textTheme.bodyText1.color, fontSize: 18);
+
+    String sizes = widget.product.stock
+        .map((e) => e.value > 0 ? e.size : 0)
+        .toList()
+        .join(', ');
     return GridTile(
         footer: Container(
-          color: theme.accentColor,
-          padding: EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.product.name,
-                style: header,
-              ),
-              Text('R${widget.product.price}', style: header)
-            ],
-          ),
-        ),
+            color: theme.accentColor,
+            padding: EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.product.name,
+                      style: theme.accentTextTheme.headline6,
+                    ),
+                    Text('R${widget.product.price}',
+                        style: theme.accentTextTheme.headline6)
+                  ],
+                ),
+                Text('(${sizes})', style: theme.accentTextTheme.subtitle1)
+              ],
+            )),
         child: GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, '/product',
@@ -54,9 +64,9 @@ class _State extends State<ProductGridTile> {
               //     });
             },
             child: SizedBox(
-                width: 300,
+                width: 200,
                 // color: Colors.grey[300],
-                height: 300,
+                // height: 300,
                 child: FittedBox(
                   fit: BoxFit.contain,
                   clipBehavior: Clip.hardEdge,
@@ -65,10 +75,10 @@ class _State extends State<ProductGridTile> {
                       Image.memory(
                         Base64Decoder().convert(widget.product.image),
                       ),
-                      cart.getProductCount(widget.product) > 0
-                          ? Text(
-                              cart.getProductCount(widget.product).toString())
-                          : Container()
+                      // cart.getProductCount(widget.product) > 0
+                      //     ? Text(
+                      //         cart.getProductCount(widget.product).toString())
+                      //     : Container()
                     ],
                   ),
                 ))));

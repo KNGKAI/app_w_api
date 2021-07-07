@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/Services/ProfileService.dart';
+import 'package:skate/Services/ProfileService.dart';
 import 'package:provider/provider.dart';
 
 ListTile ListItem(title, route, context, current, icon) {

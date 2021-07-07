@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/Product.dart';
-import 'package:app/Widgets/Cart/CartEntry.dart';
+import 'package:skate/Models/Product.dart';
+import 'package:skate/Widgets/Cart/CartEntry.dart';
 
 class CartList extends StatelessWidget {
   final Map<Product, int> cart;

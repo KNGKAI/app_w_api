@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/Models/Product.dart';
+import 'package:skate/Models/Product.dart';
 
-import 'package:app/Widgets/Product/ProductGridTile.dart';
+import 'package:skate/Widgets/Product/ProductGridTile.dart';
 
 const double productTileWidth = 300;
 
