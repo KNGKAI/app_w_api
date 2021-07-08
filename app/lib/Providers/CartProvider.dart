@@ -66,7 +66,11 @@ class Cart {
       serial = [];
     }
     if (serial == null) return [];
-    return serial.map((e) => OrderProduct.fromJson(jsonDecode(e))).toList();
+    try {
+      return serial.map((e) => OrderProduct.fromJson(jsonDecode(e))).toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   void removeFromCart(OrderProduct s) {

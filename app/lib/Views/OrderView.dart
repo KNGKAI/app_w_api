@@ -8,16 +8,69 @@ import 'package:skate/Services/ProfileService.dart';
 import 'package:skate/Models/Order.dart';
 
 class OrderTile extends StatelessWidget {
-  const OrderTile({Key key}) : super(key: key);
+  final Order order;
+  const OrderTile({Key key, this.order}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Card(
+        child: Padding(
+      padding: EdgeInsets.all(14),
       child: Column(
-        children: [],
+        children: [
+          Text('Order: ${order.reference}', style: theme.textTheme.headline4),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Details:",
+                style: theme.textTheme.subtitle1,
+              ),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.all(14),
+                child: Table(
+                  children: [
+                    TableRow(
+                      children: [Text("Reference:"), Text(order.reference)],
+                    ),
+                    TableRow(
+                      children: [Text("Status:"), Text(order.status)],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Products:",
+                style: theme.textTheme.subtitle1,
+                textAlign: TextAlign.left,
+              ),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.all(14),
+                child: Table(
+                  children: order.products
+                      .map((e) => TableRow(
+                            children: [
+                              Text(e.product.name),
+                              Text(e.size),
+                              Text(e.value.toString()),
+                            ],
+                          ))
+                      .toList(),
+                ),
+              )
+            ],
+          )
+        ],
       ),
-    );
+    ));
   }
 }
 
@@ -87,8 +140,8 @@ class _OrderViewState extends State<OrderView> {
                       children: [
                         ListView(
                             children: activeOrders
-                                .map((e) => ListTile(
-                                      title: Text(e.status),
+                                .map((e) => OrderTile(
+                                      order: e,
                                     ))
                                 .toList()),
                         ListView(
