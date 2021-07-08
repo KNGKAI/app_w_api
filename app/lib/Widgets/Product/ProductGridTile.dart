@@ -3,10 +3,6 @@ import 'dart:convert';
 import 'package:skate/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skate/Widgets/Product/ProductDialog.dart';
-import 'package:skate/Providers/CartProvider.dart';
-import 'package:provider/provider.dart';
-import 'package:path/path.dart';
 
 class ProductGridTile extends StatefulWidget {
   final Product product;
@@ -24,7 +20,6 @@ class ProductGridTile extends StatefulWidget {
 class _State extends State<ProductGridTile> {
   @override
   Widget build(BuildContext context) {
-    // Cart cart = Provider.of<Cart>(context);
     ThemeData theme = Theme.of(context);
 
     String sizes = widget.product.stock

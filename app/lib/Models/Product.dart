@@ -36,12 +36,12 @@ class Product {
         [];
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson({img = true}) => {
         "id": id,
         "name": name,
         "description": description,
         "category": category,
-        "image": image,
+        "image": (img ? image : null),
         "price": price,
         "stock": stock.map((e) => e.toJson()).toList(),
       };

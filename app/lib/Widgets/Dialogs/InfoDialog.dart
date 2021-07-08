@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class InfoDialog extends StatelessWidget {
@@ -16,6 +17,7 @@ class InfoDialog extends StatelessWidget {
           child: Text("Accept"),
           onPressed: () {
             if (onAccept != null) onAccept();
+            Navigator.pop(context);
           },
         )
       ],

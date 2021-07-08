@@ -48,7 +48,6 @@ class _BaseQueryWidgetState<T extends ChangeNotifier>
             return Center(child: CircularProgressIndicator());
           } else {
             print("Result:");
-            print(result.data.toString());
           }
 
           return widget.builder(result, refetch: refetch, fetchMore: fetchMore);

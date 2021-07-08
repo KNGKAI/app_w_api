@@ -1,18 +1,11 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:skate/Models/Category.dart';
 import 'package:skate/Models/Product.dart';
-import 'package:skate/Services/ProductService.dart';
-import 'package:skate/Services/SharedPreferenceService.dart';
-import 'package:skate/ViewModels/AppViewModel.dart';
 import 'package:skate/Widgets/BaseQueryWidget.dart';
-import 'package:skate/Widgets/MyAppBar.dart';
 import 'package:skate/Widgets/Product/ProductGridTile.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:skate/Widgets/Filter/CategoryChips.dart';
-import 'package:skate/Widgets/ProductWidget.dart';
+import './RootView.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -25,7 +18,7 @@ class _HomeView extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return RootView(
       body: BaseQueryWidget(
         query: """{
           products {

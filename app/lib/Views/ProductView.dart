@@ -19,10 +19,10 @@ import 'package:flutter/material.dart';
 import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:skate/Services/ProductService.dart';
 
-import 'package:skate/Widgets/Buttons.dart';
 import 'package:skate/Providers/CartProvider.dart';
+import 'package:skate/Widgets/Buttons/AddToCartButton.dart';
+import 'package:skate/Widgets/Buttons/CartViewButton.dart';
 
 class ProductView extends StatefulWidget {
   final String product;
@@ -61,8 +61,6 @@ class _State extends State<ProductView> {
       return Text("Unauthorized");
     }
 
-    ProductService productService = Provider.of<ProductService>(context);
-
     var Args = ModalRoute.of(context)?.settings.arguments as Map ?? {};
 
     String id = Args['id'];
@@ -70,7 +68,7 @@ class _State extends State<ProductView> {
       // appBar: myAppBar(context, '/product'),
       appBar: AppBar(
         leading: BackButton(),
-        actions: [Buttons.cartViewButton()],
+        actions: [CartViewButton()],
       ),
       body: BaseQueryWidget(
         query: """{
@@ -150,7 +148,8 @@ class _State extends State<ProductView> {
                                 ],
                               ))
                           .toList(),
-                      Buttons.addToCartButton(_product,
+                      AddToCartButton(
+                          product: _product,
                           addToCart: (e) =>
                               setState(() => cart.addProductToCart(e))),
                       Text(_product.name, style: headingStyle),

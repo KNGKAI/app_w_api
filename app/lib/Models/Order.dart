@@ -14,6 +14,7 @@ class Order {
   get id => _id;
 
   Order.fromJson(Map<String, dynamic> json) {
+    print(json);
     _id = json['id'];
     user = User.fromJson(json['user']);
     products = json['products']
@@ -28,7 +29,7 @@ class Order {
   Map<String, dynamic> toJson() => {
         "id": id,
         "user": user.id,
-        "products": products.map((product) => product.toJson()).toList(),
+        "products": products.map((product) => product.toOrderJson()).toList(),
         "status": status,
         "reference": reference,
         "total": total,
@@ -56,6 +57,11 @@ class OrderProduct {
   }
 
   Map<String, dynamic> toJson() => {
+        "product": product.toJson(),
+        "size": size,
+        "value": value,
+      };
+  Map<String, dynamic> toOrderJson() => {
         "product": product.id,
         "size": size,
         "value": value,

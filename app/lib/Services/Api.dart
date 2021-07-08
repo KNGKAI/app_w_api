@@ -21,7 +21,7 @@ class Api {
     print("API Request:");
     print(method);
     print(url);
-    print("Data: " + data.toString());
+    // print("Data: " + data.toString());
     try {
       Response response = method == 'POST'
           ? await dio.post(url, data: data)
@@ -49,6 +49,9 @@ class Api {
 
 class DioExceptions implements Exception {
   DioExceptions.fromDioError(DioError dioError) {
+    print(dioError.type);
+    print(dioError.response.statusCode);
+    print(dioError.response.data);
     switch (dioError.type) {
       case DioErrorType.cancel:
         message = "Request to API server was cancelled";

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skate/Providers/CartProvider.dart';
-import 'package:skate/Models/Product.dart';
-import 'package:skate/Widgets/NavigationDrawer.dart';
+import 'package:skate/Services/ProfileService.dart';
+
+import 'package:skate/Widgets/Dialogs/ConfirmDialog.dart';
+import 'package:skate/Widgets/Dialogs/InfoDialog.dart';
 
 class CartView extends StatefulWidget {
   const CartView({Key key}) : super(key: key);
@@ -12,12 +14,14 @@ class CartView extends StatefulWidget {
 }
 
 class _CartViewState extends State<CartView> {
-  num totalPrice = 0;
-
   @override
   Widget build(BuildContext context) {
+    ProfileService pf = Provider.of<ProfileService>(context);
+
     Cart cart = Provider.of<Cart>(context);
     ThemeData theme = Theme.of(context);
+    num totalPrice = 0;
+
     return Scaffold(
         appBar: AppBar(
           leading: BackButton(),
@@ -30,10 +34,27 @@ class _CartViewState extends State<CartView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (c) => ConfirmDialog(
+                              message: 'Clear cart?',
+                              onAccept: () =>
+                                  setState(() => cart.clearCart()))),
                       child: Text("Clear Cart", style: theme.textTheme.button)),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (await cart.checkout(pf.user)) {
+                          showDialog(
+                              context: context,
+                              builder: (c) =>
+                                  InfoDialog(message: "Order has been placed"));
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (c) =>
+                                  InfoDialog(message: "Could not place order"));
+                        }
+                      },
                       child: Text("Checkout", style: theme.textTheme.button))
                 ],
               ),
@@ -75,6 +96,10 @@ class _CartViewState extends State<CartView> {
                           Row(
                             children: [
                               IconButton(
+                                  onPressed: () => setState(() => e.value++),
+                                  icon: Icon(Icons.add)),
+                              Text(e.value.toString()),
+                              IconButton(
                                   onPressed: () {
                                     setState(() {
                                       if (e.value == 1)
@@ -86,10 +111,6 @@ class _CartViewState extends State<CartView> {
                                   icon: Icon(e.value == 1
                                       ? Icons.delete
                                       : Icons.remove)),
-                              Text(e.value.toString()),
-                              IconButton(
-                                  onPressed: () => setState(() => e.value++),
-                                  icon: Icon(Icons.add))
                             ],
                           ),
                           Text((e.value * e.product.price).toString())

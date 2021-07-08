@@ -29,17 +29,29 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     var route = ModalRoute.of(context);
     var currentRoute = route != null ? route.settings.name : '/';
 
-    return Drawer(
-        child: ListView(
-      children: [
-        ListItem("Store", "/home", context, currentRoute, Icons.store_rounded),
-        ListItem(
-            "Orders", "/orders", context, currentRoute, Icons.local_shipping),
-        service.authorized
-            ? (ListItem(
-                "Profile", "/profile", context, currentRoute, Icons.portrait))
-            : ListItem("Login", "/login", context, currentRoute, Icons.logout)
-      ],
-    ));
+    final header = UserAccountsDrawerHeader(
+      accountName: Text(service.user.username),
+      accountEmail: Text(service.user.email),
+      currentAccountPicture: CircleAvatar(child: FlutterLogo(size: 42)),
+    );
+
+    List<Widget> navigationItems = [];
+
+    if (service.authorized)
+      navigationItems.add(GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/profile'),
+        child: header,
+      ));
+    else
+      navigationItems
+          .add(ListItem("Login", "/login", context, currentRoute, Icons.login));
+    navigationItems.add(
+        ListItem("Store", "/home", context, currentRoute, Icons.store_rounded));
+    navigationItems.add(ListItem(
+        "Orders", "/orders", context, currentRoute, Icons.local_shipping));
+    navigationItems.add(ListItem(
+        "Settings", "/settings", context, currentRoute, Icons.settings));
+
+    return Drawer(child: ListView(children: navigationItems));
   }
 }

@@ -9,7 +9,7 @@ import 'package:skate/Views/SplashView.dart';
 
 import 'package:skate/Views/ProductView.dart';
 import 'package:skate/Views/CartView.dart';
-// import 'package:skate/Views/OrderView.dart';
+import 'package:skate/Views/OrderView.dart';
 // import 'package:skate/Views/ProfileView.dart';
 
 import 'package:flutter/material.dart';
@@ -51,12 +51,11 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider.value(value: Api()),
-        Provider.value(value: Cart()),
         ProxyProvider<Api, ProfileService>(
           update: (context, api, service) => ProfileService(api: api),
         ),
-        ProxyProvider<Api, ProductService>(
-          update: (context, api, service) => ProductService(api: api),
+        ProxyProvider<Api, Cart>(
+          update: (context, api, service) => Cart(api),
         ),
       ],
       child: MaterialApp(
@@ -73,7 +72,7 @@ class App extends StatelessWidget {
           '/register': (context) => RegistrationView(),
           // '/profile': (context) => ProfileView(),
           '/cart': (context) => CartView(),
-          // '/orders': (context) => OrderView(),
+          '/orders': (context) => OrderView(),
           '/product': (context) => ProductView()
           // '/product/edit': (context) => ProductEditingView(),
         },
