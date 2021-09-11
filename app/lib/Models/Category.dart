@@ -1,5 +1,3 @@
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 class Category {
   String _id;
   String name;
@@ -8,6 +6,7 @@ class Category {
   get id => _id;
 
   Category.fromJson(Map<String, dynamic> json) {
+    if (json == null) return;
     _id = json['id'];
     name = json['name'];
     description = json['description'];
@@ -23,7 +22,7 @@ class Category {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": description,
+        "name": name,
         "description": description,
       };
 

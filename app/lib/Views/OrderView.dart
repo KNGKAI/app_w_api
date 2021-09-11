@@ -1,158 +1,114 @@
+import 'package:skate/Base/BaseViewModel.dart';
+import 'package:skate/Base/BaseViewWidget.dart';
+import 'package:skate/Models/Order.dart';
+import 'package:skate/Services/ProductService.dart';
+import 'package:skate/Base/BaseQueryWidget.dart';
+import 'package:skate/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/OrderTile.dart';
+import 'package:skate/Widgets/OrderWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
-import './RootView.dart';
-import 'package:skate/Widgets/BaseQueryWidget.dart';
-import 'package:skate/Services/ProfileService.dart';
-import 'package:skate/Models/Order.dart';
-
-class OrderTile extends StatelessWidget {
-  final Order order;
-  const OrderTile({Key key, this.order}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    return Card(
-        child: Padding(
-      padding: EdgeInsets.all(14),
-      child: Column(
-        children: [
-          Text('Order: ${order.reference}', style: theme.textTheme.headline4),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Details:",
-                style: theme.textTheme.subtitle1,
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.all(14),
-                child: Table(
-                  children: [
-                    TableRow(
-                      children: [Text("Reference:"), Text(order.reference)],
-                    ),
-                    TableRow(
-                      children: [Text("Status:"), Text(order.status)],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Products:",
-                style: theme.textTheme.subtitle1,
-                textAlign: TextAlign.left,
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.all(14),
-                child: Table(
-                  children: order.products
-                      .map((e) => TableRow(
-                            children: [
-                              Text(e.product.name),
-                              Text(e.size),
-                              Text(e.value.toString()),
-                            ],
-                          ))
-                      .toList(),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    ));
-  }
-}
-
 class OrderView extends StatefulWidget {
-  const OrderView({Key key}) : super(key: key);
+  const OrderView({
+    Key key,
+  }) : super(key: key);
 
   @override
-  _OrderViewState createState() => _OrderViewState();
+  _State createState() => _State();
 }
 
-class _OrderViewState extends State<OrderView> {
+class _State extends State<OrderView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ProfileService ps = Provider.of(context);
-
-    return BaseQueryWidget(
-        query: """
-                  {
-                    orders(user : "${ps.user.id}"){
-                      user{
-                        id,
-                        address
-                      },
-                      status,
-                      reference,
-                      products {
-                        product {
+    ProfileService profileService = Provider.of<ProfileService>(context);
+    if (!profileService.authorized) {
+      return (Text("Unauthorized"));
+    }
+    ProductService productService = Provider.of<ProductService>(context);
+    String user =
+        profileService.user.role == 'admin' ? null : profileService.user.id;
+    return BaseViewWidget(
+      model: BaseViewModel(),
+      builder: (context, model, child) => Scaffold(
+        appBar: myAppBar(context, '/order'),
+        body: model.busy
+            ? Center(child: CircularProgressIndicator())
+            : BaseQueryWidget(
+                query: """{
+                  ${user == null ? 'orders() {' : 'orders(user: "$user") {'}
+                    id
+                    status
+                    reference
+                    address
+                    total
+                    user {
+                      id
+                      username
+                      email
+                      phone
+                    }
+                    products{
+                      product {
+                        id
+                        name
+                        price
+                        category {
+                          id
                           name
-                          price
-                        },
-                        size,
-                        value
+                        }
                       }
+                      size
+                      value
                     }
                   }
-                  """,
-        builder: (QueryResult result,
-            {VoidCallback refetch, FetchMore fetchMore}) {
-          List<Order> orders = result.data['orders']
-              .map<Order>((json) => Order.fromJson(json))
-              .toList();
-
-          List<Order> activeOrders =
-              orders.where((element) => element.status != 'deliverd').toList();
-          List<Order> orderHistory =
-              orders.where((element) => element.status == 'deliverd').toList();
-
-          return RootView(
-            body: DefaultTabController(
-                length: 2,
-                child: Scaffold(
-                    appBar: AppBar(
-                      automaticallyImplyLeading: false,
-                      toolbarHeight: 50,
-                      bottom: TabBar(
-                        tabs: [
-                          Tab(
-                            text: "In Progress",
-                          ),
-                          Tab(
-                            text: "History",
-                          )
-                        ],
-                      ),
-                    ),
-                    body: TabBarView(
-                      children: [
-                        ListView(
-                            children: activeOrders
-                                .map((e) => OrderTile(
-                                      order: e,
-                                    ))
-                                .toList()),
-                        ListView(
-                            children: orderHistory
-                                .map((e) => ListTile(
-                                      title: Text(e.status),
-                                    ))
-                                .toList())
-                      ],
-                    ))),
-          );
-        });
+                }""",
+                builder: (QueryResult result,
+                    {VoidCallback refetch, FetchMore fetchMore}) {
+                  List<Order> orders = result.data['orders']
+                      .map<Order>((json) => Order.fromJson(json))
+                      .toList();
+                  return ListView(
+                    padding: EdgeInsets.all(20.0),
+                    children: [
+                      Text("Orders:"),
+                      orders.isEmpty
+                          ? Center(child: Text("No Orders"))
+                          : Container(),
+                      ...orders.map((order) {
+                        return OrderTile(
+                          order: order,
+                          onTap: () async {
+                            // AppViewModel.setId(order.id);
+                            // Navigator.of(context).pushNamed('/order');
+                            await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text("Order"),
+                                      content: OrderWidget(order: order),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                        )
+                                      ],
+                                    ));
+                          },
+                        );
+                      }).toList()
+                    ],
+                  );
+                },
+              ),
+      ),
+    );
   }
 }

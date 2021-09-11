@@ -5,18 +5,22 @@ const {
     GraphQLList,
     GraphQLFloat,
     GraphQLScalarType,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLBoolean
 } = require('graphql');
 
 const UserType = new GraphQLObjectType({
     name: "User",
     fields: () => ({
         id: { type: GraphQLString },
+        first: { type: GraphQLString },
+        last: { type: GraphQLString },
         username: { type: GraphQLString },
         email: { type: GraphQLString },
-        address: { type: GraphQLString },
+        phone: { type: GraphQLString },
         role: { type: GraphQLString },
-        budget: { type: GraphQLInt },
+        confirmed: { type: GraphQLBoolean },
+        chat: { type: new GraphQLList(GraphQLString) },
     })
 })
 

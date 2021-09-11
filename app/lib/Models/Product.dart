@@ -1,22 +1,10 @@
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-import './Category.dart';
-
-class Size {
-  String size;
-  int stock;
-
-  Size.fromJson(Map<String, dynamic> json) {
-    size = json['size'];
-    stock = json['value'];
-  }
-  Size(this.size, this.stock);
-}
+import 'package:skate/Models/Category.dart';
 
 class Product {
   String _id;
   String name;
   String description;
-  String category;
+  Category category;
   String image;
   int price;
   List<ProductStock> stock;
@@ -24,10 +12,11 @@ class Product {
   String get id => _id;
 
   Product.fromJson(Map<String, dynamic> json) {
+    if (json == null) return;
     _id = json['id'];
     name = json['name'];
     description = json['description'];
-    category = json['category'];
+    category = Category.fromJson(json['category']);
     image = json['image'];
     price = json['price'];
     stock = json['stock']
@@ -36,12 +25,12 @@ class Product {
         [];
   }
 
-  Map<String, dynamic> toJson({img = true}) => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "description": description,
-        "category": category,
-        "image": (img ? image : null),
+        "category": category.id,
+        "image": image,
         "price": price,
         "stock": stock.map((e) => e.toJson()).toList(),
       };
@@ -62,6 +51,7 @@ class ProductStock {
   int value;
 
   ProductStock.fromJson(Map<String, dynamic> json) {
+    if (json == null) return;
     size = json['size'];
     value = json['value'];
   }

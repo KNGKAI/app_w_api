@@ -1,37 +1,44 @@
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 class User {
   String id;
-  String email;
+  String first;
+  String last;
   String username;
-  String address;
+  String email;
+  String phone;
   String role;
-  int budget;
+  List<String> chat;
 
   User.fromJson(Map<String, dynamic> json) {
+    if (json == null) return;
     id = json['id'] ?? json['_id'];
-    email = json['email'];
+    first = json['first'];
+    last = json['last'];
     username = json['username'];
-    address = json['address'];
+    email = json['email'];
+    phone = json['phone'];
     role = json['role'];
-    budget = int.parse(json['budget']?.toString() ?? "-1");
+    chat = <String>[...json['chat']];
   }
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "email": email,
+        "first": first,
+        "last": last,
         "username": username,
-        "address": address,
+        "email": email,
+        "phone": phone,
         "role": role,
-        "budget": budget,
+        "chat": chat,
       };
 
   User({
     this.id,
-    this.email,
+    this.first,
+    this.last,
     this.username,
-    this.address,
+    this.email,
+    this.phone,
     this.role,
-    this.budget,
+    this.chat,
   });
 }
