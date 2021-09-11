@@ -12,9 +12,6 @@ class TestView extends StatefulWidget {
 class _TestView extends State<TestView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppBar(context, '/test'),
-      // body: WateringWidget()
-    );
+    return Scaffold(appBar: myAppBar(context, '/test'), body: Container());
   }
 }

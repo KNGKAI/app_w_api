@@ -1,7 +1,7 @@
-
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:skate/Models/Category.dart';
 import 'package:skate/Models/Product.dart';
 import 'package:skate/Services/ProductService.dart';
 // import 'package:camera/camera.dart';
@@ -16,7 +16,7 @@ import 'package:skate/Widgets/ProductStockList.dart';
 
 class ProductEditing extends StatefulWidget {
   final Product product;
-  final List<String> categories;
+  final List<Category> categories;
 
   const ProductEditing({
     @required this.product,
@@ -29,14 +29,17 @@ class ProductEditing extends StatefulWidget {
 }
 
 class _State extends State<ProductEditing> {
-
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController = TextEditingController(text: widget.product.name);
-    TextEditingController descriptionController = TextEditingController(text: widget.product.description);
-    TextEditingController priceController = TextEditingController(text: widget.product.price.toString());
+    TextEditingController nameController =
+        TextEditingController(text: widget.product.name);
+    TextEditingController descriptionController =
+        TextEditingController(text: widget.product.description);
+    TextEditingController priceController =
+        TextEditingController(text: widget.product.price.toString());
     return ListView(
       children: [
+        SizedBox(height: 10),
         TextField(
           controller: nameController,
           onChanged: (value) => widget.product.name = value,
@@ -70,15 +73,17 @@ class _State extends State<ProductEditing> {
             Text("Category:"),
             SizedBox(width: 10.0),
             DropdownButton(
-              value: widget.product.category,
+              value: widget.product.category.name,
               items: widget.categories
                   .map((category) => DropdownMenuItem(
-                child: Text(category),
-                value: category,
-              )).toList(),
+                        child: Text(category.name),
+                        value: category.name,
+                      ))
+                  .toList(),
               onChanged: (value) {
                 setState(() {
-                  widget.product.category = value;
+                  widget.product.category = widget.categories
+                      .firstWhere((element) => element.name == value);
                 });
               },
             ),
@@ -91,19 +96,29 @@ class _State extends State<ProductEditing> {
           child: Text("Add Stock"),
           onPressed: () {
             setState(() {
-              widget.product.stock.add(ProductStock(size: "enter_size", value: 1));
+              widget.product.stock
+                  .add(ProductStock(size: "enter_size", value: 1));
             });
           },
         ),
         Divider(),
-        ProductImage(product: widget.product),
+        Container(
+          width: 512,
+          height: 512,
+          child: ProductImage(product: widget.product),
+        ),
+        SizedBox(height: 10.0),
         Center(
           child: TextButton(
             child: Text("Upload", style: TextStyle(color: Colors.white)),
-            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue)),
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.blue)),
             onPressed: () async {
               var picker = ImagePicker();
-              var pickedImage = await picker.getImage(source: ImageSource.gallery);
+              var pickedImage = await picker.getImage(
+                source: ImageSource.gallery,
+                maxWidth: 512,
+              );
               var bytes = await pickedImage.readAsBytes();
               var base64 = base64Encode(bytes);
               print(base64);
@@ -113,6 +128,7 @@ class _State extends State<ProductEditing> {
             },
           ),
         ),
+        Divider(),
       ],
     );
   }

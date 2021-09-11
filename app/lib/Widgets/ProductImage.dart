@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,9 +13,13 @@ import 'package:provider/provider.dart';
 
 class ProductImage extends StatefulWidget {
   final Product product;
+  final double width;
+  final double height;
 
   const ProductImage({
     @required this.product,
+    this.width,
+    this.height,
     Key key,
   }) : super(key: key);
 
@@ -29,6 +32,11 @@ class _State extends State<ProductImage> {
   Widget build(BuildContext context) {
     return widget.product.image.isEmpty
         ? Text("No Image")
-        : Image.memory(Base64Decoder().convert(widget.product.image));
+        : Image.memory(
+            Base64Decoder().convert(widget.product.image),
+            width: widget.width,
+            height: widget.height,
+            scale: 0.1,
+          );
   }
 }

@@ -10,21 +10,21 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width / 2;
+    double width = MediaQuery.of(context).size.width > 512
+        ? 256
+        : MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image(
           width: width,
-          image: AssetImage('assets/images/logo.png'),
+          image: AssetImage('assets/images/icon.png'),
         ),
-        Text("SKATE",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: width / 4,
-            fontWeight: FontWeight.bold
-          )
-        ),
+        // Text("SKATE",
+        //     style: TextStyle(
+        //         color: Colors.black,
+        //         fontSize: width / 4,
+        //         fontWeight: FontWeight.bold)),
       ],
     );
   }

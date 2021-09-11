@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:skate/Models/Order.dart';
@@ -25,7 +24,7 @@ class _State extends State<OrderTile> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.order.user.username),
-      subtitle: Text(widget.order.user.address + "\n" + widget.order.reference),
+      subtitle: Text(widget.order.reference + '\n' + widget.order.address),
       trailing: Text(widget.order.status),
       onTap: widget.onTap,
     );

@@ -8,6 +8,10 @@ const {
     GraphQLInt
 } = require('graphql');
 
+const { CategoryModel } = require('../../models/category');
+
+const { CategoryType } = require('./CategoryType');
+
 const ProductStockType = new GraphQLObjectType({
     name: "ProductStock",
     fields: () => ({
@@ -22,7 +26,12 @@ const ProductType = new GraphQLObjectType({
         id: { type: GraphQLString },
         name: { type: GraphQLString },
         description: { type: GraphQLString },
-        category: { type: GraphQLString },
+        category: {
+            type: CategoryType,
+            resolve(parent, args) {
+                return CategoryModel.findOne({ _id: parent.category });
+            }
+        },
         size: { type: GraphQLString },
         image: { type: GraphQLString },
         price: { type: GraphQLInt },

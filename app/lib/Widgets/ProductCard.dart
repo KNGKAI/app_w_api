@@ -1,9 +1,9 @@
-
 import 'dart:convert';
 
 import 'package:skate/Models/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skate/Widgets/ProductImage.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
@@ -27,7 +27,7 @@ class _State extends State<ProductCard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Image.memory(Base64Decoder().convert(widget.product.image)),
+            ProductImage(product: widget.product),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

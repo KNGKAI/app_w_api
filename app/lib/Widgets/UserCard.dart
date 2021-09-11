@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:skate/Models/Product.dart';
@@ -42,8 +41,8 @@ class _State extends State<UserCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(widget.user.username, style: TextStyle(fontSize: 24)),
+                Text(widget.user.phone, style: TextStyle(fontSize: 20)),
                 Text(widget.user.email, style: TextStyle(fontSize: 20)),
-                Text("R ${widget.user.budget.toString()}")
               ],
             ),
           ],

@@ -16,22 +16,40 @@ class ProfileService {
   User get user => _user;
   String get token => _token;
 
-  Future<bool> authorizeUser(String username, String password) async {
-    Map<String, dynamic> response = await _api
-        .post('auth/local', {"username": username, "password": password});
-    if (response != null) {
-      _user = User.fromJson(response['user']);
-      _token = response['token'];
-      setToken(_token);
-      return true;
+  Future<void> init() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    _token = preferences.getString('token');
+    if (_token != null) {
+      APIResponse response =
+          await _api.post('auth/token', {"token": _token});
+      if (response.success) {
+        _user = User.fromJson(response.body['user']);
+        _token = response.body['token'];
+        setToken(_token);
+      }
     }
-    return false;
   }
 
-  Future<bool> registerUser(User user, String password) async {
-    Map<String, dynamic> response = await _api.post('user/register',
-        {"username": user.username, "email": user.email, "password": password});
-    return response != null;
+  Future<APIResponse> authorizeUser(String username, String password) async {
+    APIResponse response = await _api
+        .post('auth/local', {"username": username, "password": password});
+    if (response.success) {
+      _user = User.fromJson(response.body['user']);
+      _token = response.body['token'];
+      setToken(_token);
+    }
+    return response;
+  }
+
+  Future<APIResponse> registerUser(User user, String password) async {
+    APIResponse response = await _api.post('user/register', {
+      "first": user.first,
+      "last": user.last,
+      "username": user.username,
+      "email": user.email,
+      "password": password
+    });
+    return response;
   }
 
   static void setToken(String token) async {
@@ -46,29 +64,32 @@ class ProfileService {
     return true;
   }
 
-  Future<bool> tokenAuthorizeUser(String token) async {
-    Map<String, dynamic> response =
-        await _api.post('auth/token', {"token": token});
-    if (response != null) {
-      _user = User.fromJson(response['user']);
-      _token = response['token'];
+  Future<APIResponse> tokenAuthorizeUser(String token) async {
+    APIResponse response = await _api.post('auth/token', {"token": token});
+    if (response.success) {
+      _user = User.fromJson(response.body['user']);
+      _token = response.body['token'];
       setToken(_token);
-      return true;
     }
-    return false;
+    return response;
   }
 
-  Future<bool> updateUser(User user) async {
-    Map<String, dynamic> response = await _api.post('api/user/update', {
+  Future<APIResponse> updateUser(User user) async {
+    APIResponse response = await _api.post('user/update', {
       "token": _token,
       "id": user.id,
       "email": user.email,
       "username": user.username,
     });
-    if (response != null) {
-      _user = User.fromJson(response['user']);
-      return true;
+    if (response.success) {
+      _user = User.fromJson(response.body['user']);
     }
-    return false;
+    return response;
   }
+
+  Future<APIResponse> postMessage(User user, String message) =>
+      _api.post('user/message', {
+        "user": user.id,
+        "message": message,
+      });
 }
