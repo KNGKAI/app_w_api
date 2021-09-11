@@ -6,7 +6,7 @@ import 'package:skate/Services/SharedPreferenceService.dart';
 import 'package:skate/Views/CartView.dart';
 import 'package:skate/Widgets/BaseQueryWidget.dart';
 import 'package:skate/Widgets/CategoryTile.dart';
-import 'package:skate/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/AppBar.dart';
 
 import 'package:skate/Widgets/ProductTile.dart';
 import 'package:flutter/material.dart';

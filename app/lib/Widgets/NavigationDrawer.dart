@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:skate/Services/ProfileService.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skate/Services/SharedPreferenceService.dart';
 
 ListTile ListItem(title, route, context, current, icon) {
   return ListTile(
@@ -30,7 +32,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     var currentRoute = route != null ? route.settings.name : '/';
 
     final header = UserAccountsDrawerHeader(
-      accountName: Text(service.user.username),
+      accountName: Column(
+        children: [
+          Text(service.user.username),
+          Text(service.user.role),
+        ],
+      ),
       accountEmail: Text(service.user.email),
       currentAccountPicture: CircleAvatar(child: FlutterLogo(size: 42)),
     );
@@ -51,6 +58,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         "Orders", "/orders", context, currentRoute, Icons.local_shipping));
     navigationItems.add(ListItem(
         "Settings", "/settings", context, currentRoute, Icons.settings));
+
+    if (service.authorized && service.user.role == 'admin') {
+      navigationItems.add(ListItem(
+          "Admin", '/admin', context, currentRoute, Icons.shopping_bag));
+    }
 
     return Drawer(child: ListView(children: navigationItems));
   }

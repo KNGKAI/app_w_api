@@ -10,6 +10,7 @@ import 'package:skate/Views/SplashView.dart';
 import 'package:skate/Views/ProductView.dart';
 import 'package:skate/Views/CartView.dart';
 import 'package:skate/Views/OrderView.dart';
+import 'package:skate/Views/AdminView.dart';
 // import 'package:skate/Views/ProfileView.dart';
 
 import 'package:flutter/material.dart';
@@ -73,7 +74,9 @@ class App extends StatelessWidget {
           // '/profile': (context) => ProfileView(),
           '/cart': (context) => CartView(),
           '/orders': (context) => OrderView(),
-          '/product': (context) => ProductView()
+          '/product': (context) => ProductView(),
+          '/admin': (context) => AdminView()
+
           // '/product/edit': (context) => ProductEditingView(),
         },
       ),

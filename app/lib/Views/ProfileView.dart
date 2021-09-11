@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:skate/Models/User.dart';
 import 'package:skate/Services/ProfileService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:skate/Views/StockView.dart';
+import 'package:skate/Views/AdminView.dart';
 
 import 'package:provider/provider.dart';
 import 'package:skate/Providers/CartProvider.dart';

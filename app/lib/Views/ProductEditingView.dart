@@ -7,7 +7,7 @@ import 'package:skate/ViewModels/AppViewModel.dart';
 import 'package:skate/Views/CartView.dart';
 import 'package:skate/Widgets/BaseQueryWidget.dart';
 import 'package:skate/Widgets/CategoryTile.dart';
-import 'package:skate/Widgets/MyAppBar.dart';
+import 'package:skate/Widgets/AppBar.dart';
 import 'package:skate/Widgets/OrderTile.dart';
 import 'package:skate/Widgets/ProductEditing.dart';
 import 'package:skate/Widgets/ProductTile.dart';
@@ -90,16 +90,16 @@ class _State extends State<ProductEditingView> {
               await showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text("Failed Update"),
-                    actions: [
-                      TextButton(
-                        child: Text("Ok"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  ));
+                        title: Text("Failed Update"),
+                        actions: [
+                          TextButton(
+                            child: Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ));
             }
           },
         ),
@@ -112,16 +112,16 @@ class _State extends State<ProductEditingView> {
               await showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text("Failed Remove"),
-                    actions: [
-                      TextButton(
-                        child: Text("Ok"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  ));
+                        title: Text("Failed Remove"),
+                        actions: [
+                          TextButton(
+                            child: Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ));
             }
           },
         ),
