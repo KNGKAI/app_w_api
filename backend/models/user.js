@@ -1,22 +1,26 @@
 var mongoose = require('mongoose');
 
 var User = new mongoose.Schema({
-  createdDateTime: Date,
-  updatedDateTime: Date,
+  created: Date,
+  updated: Date,
   username: String,
   email: String,
-  address: String,
+  hash: String,
   role: String,
-  budget: Number,
+  active: Boolean,
+  confirmed: Boolean,
 });
 
 User.pre('save', function(callback) {
   var model = this;
-  if (model.createdDateTime === null){
-    model.createdDateTime = new Date();
+  
+  if (model.created === null){
+    model.created = new Date();
   }
-  model.updatedDateTime = new Date();
+
+  model.updated = new Date();
+
   callback();
 });
 
-module.exports.UserModel = mongoose.model('user', User);
+module.exports.UserModel = mongoose.model('user', User, 'users');

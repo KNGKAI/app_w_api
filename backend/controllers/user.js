@@ -1,89 +1,122 @@
-var jwt = require('jsonwebtoken')
-var bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
+const passport = require('passport')
 
-var { UserModel } = require('../models/user')
-var { PasswordModel } = require('../models/password');
-const { sendMail } = require('../utils/CommsUtil');
+const { UserModel } = require('../models/user')
+const { RoleModel } = require('../models/role');
+const { CompanyyModel } = require('../models/company');
 
+const options = {
+    algorithm: process.env.JWT_ALGORITHM,
+    expiresIn: process.env.JWT_EXPIRES
+};
 
 module.exports = {
 
-    registerUser: (req, res, next) => {
+    register: (req, res, next) => {
         UserModel.findOne({ email: req.body.email }, function(err, doc) {
             if (err) {
                 return res.status(404).send({ status: 'error', message: err });
             } else if (doc) {
                 return res.status(404).send({ status: 'error', message: 'email_already_exists' });
-            } else {
-                var user = {
-                    username: req.body.username,
+            } else {                
+                UserModel.create({
+                    username: req.body.fullname,
                     email: req.body.email,
-                    address: req.body.address,
-                    role: 'user',
-                    budget: 5000
-                }
-                UserModel.create(user, function(err, doc) {
+                    confirmed: false,
+                    active: true,
+                }, function(err, user) {
                     if (err) {
-                        return res.status(404).send({ status: 'error', message: err });
-                    } else if (doc) {
-                        //
-                        // confirmation email
-                        //
-                        // var payload = {
-                        //     user: doc.id,
-                        //     role: doc.role
-                        // };
-                        // var options = {
-                        //     algorithm: process.env.JWT_ALGORITHM,
-                        //     expiresIn: process.env.JWT_EXPIRES
-                        // };
-                        // var token = jwt.sign(payload, process.env.JWT_SECRET, options);
-                        // sendMail(user.email, "Confirm email address", "Please confirm your email address by clicking this link: https://012sktate-server.azurewebsites.net/api/user/confirm/?token=" + token)
-                        //
-
+                        res.status(404).send({ status: 'error', message: err });
+                    } else if (user) {
                         bcrypt.genSalt(13, function(err, salt) {
-                            bcrypt.hash(req.body.password, salt, async function(err, hash) {
-                                var item = {
-                                    user: doc._id,
-                                    hash: hash,
-                                };
-                                PasswordModel.create(item, function(err, created) {
+                            if (err) {
+                                res.status(404).send({ status: 'error', message: err });
+                            } else {
+                                bcrypt.hash(req.body.password, salt, async function(err, hash) {
                                     if (err) {
-                                        return res.status(404).send({ status: 'error', message: err });
-                                    } else if (created) {
-                                        ChatModel.create({ user: doc.id, messages: [ "Welcome to 012skate!" ] })
-                                        return res.status(200).send({ status: 'success', message: 'success' });
+                                        res.status(404).send({ status: 'error', message: err });
+                                    } else if (hash) {
+                                        user.hash = hash;
+                                        user.save(function(err, doc) {
+                                            if (err) {
+                                                res.status(404).send({ status: 'error', message: err });
+                                            } else if (doc) {
+                                                res.status(200).send({ status: 'success', message: 'user_created' });
+                                            } else {
+                                                res.status(404).send({ status: 'error', message: 'hash_error' });
+                                            }
+                                        });
                                     } else {
-                                        return res.status(404).send({ status: 'error', message: 'unknown_password_create_error' });
+                                        res.status(404).send({ status: 'error', message: 'hash_error' });
                                     }
                                 });
-                            });
+                            }
                         });
                     } else {
-                        return res.status(404).send({ status: 'error', message: 'unknown_user_create_error' });
+                        res.status(404).send({ status: 'error', message: 'user_not_created' });
                     }
-                })
+                });
             }
         });
     },
 
-    confirmUser: (req, res, next) => {
+    confirm: (req, res, next) => {
+        console.log(req.body)
         var token = req.body.token
         var decoded = jwt.decode(token, options);
         if (decoded) {
-            UserModel.findOne({ _id: decoded.user }, function(err, user) {
+            UserModel.findOne({ _id: decoded.user }, async function(err, user) {
                 if (err) {
                     res.status(404).send({ message: err });
                 } else if (user) {
-                    UserModel.updateOne({ _id: decoded.user }, { confirmed: true }, function(err, updated) {
-                        if (err) {
-                            res.status(404).send({ message: err });
-                        } else if (updated) {
-                            res.status(200).send({ message: "user_confirmed" })
+                    // use role to see if user is starting a company or joining one
+                    if (user.role == null) {
+                        const role = await RoleModel.create({
+                            name: 'admin',
+                            description: 'admin',
+                            features: 1,
+                        });
+                        if (role) {
+                            user.role = role._id;
+                            user.confirmed = true;
+                            user.save(async function(err, doc) {
+                                if (err) {
+                                    res.status(404).send({ message: err });
+                                } else if (doc) {
+                                    const general = await RoleModel.create({
+                                        name: 'general',
+                                        description: 'general',
+                                        features: 0,
+                                    });
+                                    if (general) {
+                                        const company = await CompanyyModel.create({
+                                            name: "untitled",
+                                            description: "enter_description",
+                                            users: [user._id],
+                                            roles: [role._id, general._id],
+                                        });
+                                        company.save(function(err, doc) {
+                                            if (err) {
+                                                res.status(404).send({ status: 'error', message: err });
+                                            } else {
+                                                res.status(200).send({ status: 'success', message: 'user_confirmed' });
+                                            }
+                                        });
+                                    } else {
+                                        res.status(404).send({ message: "general_role_not_created" });
+                                    }
+                                } else {
+                                    res.status(404).send({ message: "user_not_found" });
+                                }
+                            });
                         } else {
-                            res.status(404).send({ message: "update_error" });
+                            res.status(404).send({ message: "role_not_created" });
                         }
-                    })
+                    } else {
+                        // user is joining a company
+                        res.status(200).send({ status: 'success', message: 'user_confirmed' });
+                    }
                 } else {
                     res.status(404).send({ message: "user_not_found" });
                 }
@@ -93,7 +126,54 @@ module.exports = {
         }
     },
 
-    updateUser: (req, res, next) => {
+    auth: async function(req, res, next) {
+        passport.authenticate('local', async function(err, user) {
+            if (err) {
+                res.status(404).send({ message: err });
+            } else if (user) {
+                var token = jwt.sign({ user: user.id }, process.env.JWT_SECRET, options);
+                res.status(200).send({
+                    message: "success",
+                    token: token,
+                })
+            } else {
+                res.status(404).send({ message: "user_not_found" });
+            }
+        })(req, res, next);
+    },
+
+    refresh: async function(req, res, next) {
+        var decoded = jwt.decode(req.body.token, options);
+        if (decoded) {
+            UserModel.findOne({ _id: decoded.user, confirmed: true, active: true }, function(err, user) {
+                if (err) {
+                    res.status(404).send({ message: err });
+                } else if (user) {
+                    RoleModel.findOne({ _id: user.role }, function(err, role) {
+                        if (err) {
+                            res.status(404).send({ message: err });
+                        } else if (role) {
+                            var token = jwt.sign({ user: user.id }, process.env.JWT_SECRET, options);
+                            res.status(200).send({
+                                message: "success",
+                                user: user,
+                                token: token,
+                                admin: role.features > 0 ? true : false,
+                            })
+                        } else {
+                            res.status(404).send({ message: "role_not_found" });
+                        }
+                    });
+                } else {
+                    res.status(404).send({ message: "user_not_found" });
+                }
+            })
+        } else {
+            res.status(404).send({ message: "invalid_token" });
+        }
+    },
+
+    update: (req, res, next) => {
         var id = req.body.id
         delete req.body.id
         UserModel.updateOne({ _id: id }, req.body, function(err, doc) {
@@ -104,27 +184,5 @@ module.exports = {
             }
         })
     },
-
-    postMessage: (req, res, next) => {
-        UserModel.findOne({ _id: req.body.user }, req.body, function(err, doc) {
-            if (err) {
-                res.status(404).send({ message: "error", error: err });
-            } else if (doc) {
-                var chat = user.chat
-                chat.push(doc.username + ' - ' + new Date() + ': ' + req.body.message)
-                UserModel.updateOne({ _id: req.body.user }, { "chat": chat}, function(err, updated) {
-                    if (err) {
-                        res.status(404).send({ message: "error", error: err });
-                    } else if (updated) {
-                        res.status(200).send({ message: "success" });
-                    } else {
-                        res.status(404).send({ message: "unknown" });
-                    }
-                })
-            } else {
-                res.status(404).send({ message: "user_not_found" });
-            }
-        })
-    }
 
 };

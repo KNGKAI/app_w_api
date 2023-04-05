@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var userController = require('../controllers/user.js');
+var controller = require('../controllers/user.js');
 
-router.get('/', userController.getUsers);
-router.get('/get', userController.getUser);
-router.post('/register', userController.registerUser);
-router.post('/update', userController.updateUser);
+router.get('/r', (req, res) => { res.send('user') });
+router.post('/register', controller.register);
+router.post('/confirm', controller.confirm);
+router.post('/auth', controller.auth);
+router.post('/refresh', controller.refresh);
+router.post('/update', controller.update);
 
 module.exports = router;

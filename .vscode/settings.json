@@ -1,8 +1,0 @@
-{
-    "appService.zipIgnorePattern": [
-        "node_modules{,/**}",
-        ".vscode{,/**}"
-    ],
-    "appService.defaultWebAppToDeploy": "/subscriptions/47042222-e6b2-4517-9037-8e6cc82e34ea/resourceGroups/012skate/providers/Microsoft.Web/sites/012sktate-server",
-    "appService.deploySubpath": "backend"
-}
