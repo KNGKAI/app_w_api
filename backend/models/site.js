@@ -1,15 +1,15 @@
 var mongoose = require('mongoose');
 
-var Role = new mongoose.Schema({
+var Site = new mongoose.Schema({
   created: Date,
   updated: Date,
   company: String,
   name: String,
   description: String,
-  features: Number,
+  address: String,
 });
 
-Role.pre('save', function(callback) {
+Site.pre('save', function(callback) {
   var model = this;
   
   if (model.created === null){
@@ -21,4 +21,4 @@ Role.pre('save', function(callback) {
   callback();
 });
 
-module.exports.RoleModel = mongoose.model('role', Role, 'roles');
+module.exports.SiteModel = mongoose.model('site', Site, 'sites');

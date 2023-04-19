@@ -22,3 +22,11 @@ export const confirm = (token: string) => post('/user/confirm',
 {
     token: token
 });
+
+export const update = (id: string, username: string, email: string, role: string, trades: string[] ) => post('/user/update', {
+    id: id,
+    username: username,
+    email: email,
+    role: role,
+    trades: trades
+});

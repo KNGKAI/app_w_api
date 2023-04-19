@@ -6,9 +6,11 @@ var User = new mongoose.Schema({
   username: String,
   email: String,
   hash: String,
-  role: String,
   active: Boolean,
   confirmed: Boolean,
+  company: String,
+  role: String,
+  trades: [String],
 });
 
 User.pre('save', function(callback) {

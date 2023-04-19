@@ -17,7 +17,9 @@ import { login, logout } from './features/auth';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Header from './components/Header/Header';
-import Dashboard from './pages/Dashboard';
+import Home from './pages/Home.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import Manager from './pages/Manager.tsx';
 
 import './App.css'
 import Confirm from './pages/Confirm';
@@ -27,6 +29,8 @@ const theme = createTheme();
 function App() {  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // stop if login or register
@@ -39,6 +43,7 @@ function App() {
     const token = Cookies.get('token');
     
     if (token) {
+      setLoading(true);
       refresh(token)
       .then((res) => {
         if (res.status === 200) {
@@ -53,23 +58,29 @@ function App() {
         }
       })
       .catch((err) => {
-        console.log(err);
         navigate('/login');
+      })
+      .finally(() => {
+        setLoading(false);
       });
     } else {
+      setLoading(false);
       navigate('/login');
     }
 
   }, [dispatch, navigate, setUser, login]);
+
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
 
-        <Header />
+        {loading && <div>Loading...</div>}
 
-        <Box
+        {!loading && <Header />}
+
+        {!loading && <Box
           component="main"
           sx={{
             backgroundColor: (theme) =>
@@ -85,14 +96,16 @@ function App() {
           <Container sx={{ mt: 4, mb: 4 }}>
             
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/confirm" element={<Confirm />} />
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/manager" element={<Manager />} />
             </Routes>
 
           </Container>
-        </Box>
+        </Box>}
       </Box>
     </ThemeProvider>
   );

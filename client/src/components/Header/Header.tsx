@@ -16,9 +16,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Build from '@mui/icons-material/Build';
 import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
+import Home from '@mui/icons-material/Home';
 import LayersIcon from '@mui/icons-material/Layers';
 import Divider from '@mui/material/Divider';
 
@@ -28,41 +28,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../features/auth';
-
-const mainListItems = (
-<React.Fragment>
-    <ListItemButton>
-    <ListItemIcon>
-        <DashboardIcon />
-    </ListItemIcon>
-    <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton>
-    <ListItemIcon>
-        <ShoppingCartIcon />
-    </ListItemIcon>
-    <ListItemText primary="Orders" />
-    </ListItemButton>
-    <ListItemButton>
-    <ListItemIcon>
-        <PeopleIcon />
-    </ListItemIcon>
-    <ListItemText primary="Customers" />
-    </ListItemButton>
-    <ListItemButton>
-    <ListItemIcon>
-        <BarChartIcon />
-    </ListItemIcon>
-    <ListItemText primary="Reports" />
-    </ListItemButton>
-    <ListItemButton>
-    <ListItemIcon>
-        <LayersIcon />
-    </ListItemIcon>
-    <ListItemText primary="Integrations" />
-    </ListItemButton>
-</React.Fragment>
-);
 
 const drawerWidth: number = 240;
 
@@ -126,7 +91,7 @@ const theme = createTheme();
 const Header = ({ authenticated, user }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(authenticated);
+    const [open, setOpen] = useState(false);
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -203,8 +168,9 @@ const Header = ({ authenticated, user }: any) => {
                 </Toolbar>
                 <Divider />
                 <List component="nav">
-                    {menuItem('Dashboard', <DashboardIcon />, () => navigate('/'))}
-                    {menuItem('Orders', <ShoppingCartIcon />, () => navigate('/orders'))}
+                    {menuItem('Home', <Home />, () => navigate('/'))}
+                    {menuItem('Dashboard', <DashboardIcon />, () => navigate('/dashboard'))}
+                    {menuItem('Manager', <Build />, () => navigate('/manager'))}
                     <Divider />
                     {open && menuItem('Sign Out', <PeopleIcon />, () => {
                         setOpen(false);

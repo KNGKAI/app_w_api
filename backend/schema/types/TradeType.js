@@ -10,20 +10,19 @@ const {
 
 const { CompanyModel } = require('../../models/company');
 
-const RoleType = new GraphQLObjectType({
-    name: "Role",
+const TradeType = new GraphQLObjectType({
+    name: "Trade",
     fields: () => ({
         id: { type: GraphQLString },
-        name: { type: GraphQLString },
-        description: { type: GraphQLString },
-        features: { type: GraphQLInt },
         company: {
             type: require('./CompanyType').CompanyType,
             resolve(parent, args) {
                 return CompanyModel.findOne({ _id: parent.company });
             }
-        }
+        },
+        name: { type: GraphQLString },
+        description: { type: GraphQLString },
     })
 })
 
-module.exports.RoleType = RoleType
+module.exports.TradeType = TradeType

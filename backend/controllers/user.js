@@ -4,7 +4,7 @@ const passport = require('passport')
 
 const { UserModel } = require('../models/user')
 const { RoleModel } = require('../models/role');
-const { CompanyyModel } = require('../models/company');
+const { CompanyModel } = require('../models/company');
 
 const options = {
     algorithm: process.env.JWT_ALGORITHM,
@@ -71,48 +71,49 @@ module.exports = {
                     res.status(404).send({ message: err });
                 } else if (user) {
                     // use role to see if user is starting a company or joining one
-                    if (user.role == null) {
-                        const role = await RoleModel.create({
-                            name: 'admin',
-                            description: 'admin',
-                            features: 1,
+                    if (user.company == null) {
+                        const company = await CompanyModel.create({
+                            name: "untitled",
+                            description: "enter_description",
                         });
-                        if (role) {
-                            user.role = role._id;
-                            user.confirmed = true;
-                            user.save(async function(err, doc) {
-                                if (err) {
-                                    res.status(404).send({ message: err });
-                                } else if (doc) {
-                                    const general = await RoleModel.create({
-                                        name: 'general',
-                                        description: 'general',
-                                        features: 0,
-                                    });
-                                    if (general) {
-                                        const company = await CompanyyModel.create({
-                                            name: "untitled",
-                                            description: "enter_description",
-                                            users: [user._id],
-                                            roles: [role._id, general._id],
-                                        });
-                                        company.save(function(err, doc) {
-                                            if (err) {
-                                                res.status(404).send({ status: 'error', message: err });
-                                            } else {
+                        company.save(async function(err, doc) {
+                            if (err) {
+                                res.status(404).send({ status: 'error', message: err });
+                            } else {
+                                const role = await RoleModel.create({
+                                    company: company._id,
+                                    name: 'admin',
+                                    description: 'admin',
+                                    features: 1,
+                                });
+                                if (role) {
+                                    user.company = company._id;
+                                    user.role = role._id;
+                                    user.confirmed = true;
+                                    user.save(async function(err, doc) {
+                                        if (err) {
+                                            res.status(404).send({ message: err });
+                                        } else if (doc) {
+                                            const general = await RoleModel.create({
+                                                company: company._id,
+                                                name: 'general',
+                                                description: 'general',
+                                                features: 0,
+                                            });
+                                            if (general) {
                                                 res.status(200).send({ status: 'success', message: 'user_confirmed' });
+                                            } else {
+                                                res.status(404).send({ message: "general_role_not_created" });
                                             }
-                                        });
-                                    } else {
-                                        res.status(404).send({ message: "general_role_not_created" });
-                                    }
+                                        } else {
+                                            res.status(404).send({ message: "user_not_found" });
+                                        }
+                                    });
                                 } else {
-                                    res.status(404).send({ message: "user_not_found" });
+                                    res.status(404).send({ message: "role_not_created" });
                                 }
-                            });
-                        } else {
-                            res.status(404).send({ message: "role_not_created" });
-                        }
+                            }
+                        });
                     } else {
                         // user is joining a company
                         res.status(200).send({ status: 'success', message: 'user_confirmed' });
@@ -145,7 +146,7 @@ module.exports = {
     refresh: async function(req, res, next) {
         var decoded = jwt.decode(req.body.token, options);
         if (decoded) {
-            UserModel.findOne({ _id: decoded.user, confirmed: true, active: true }, function(err, user) {
+            UserModel.findOne({ _id: decoded.user, confirmed: true, active: true     }, function(err, user) {
                 if (err) {
                     res.status(404).send({ message: err });
                 } else if (user) {
@@ -173,16 +174,25 @@ module.exports = {
         }
     },
 
-    update: (req, res, next) => {
-        var id = req.body.id
-        delete req.body.id
-        UserModel.updateOne({ _id: id }, req.body, function(err, doc) {
-            if (err) {
-                res.status(404).send(err);
-            } else {
-                res.status(200).send(doc);
-            }
-        })
+    update: async (req, res, next) => {
+        var user = await UserModel.findOne({ _id: req.body.id });
+        if (user) {
+            user.username = req.body.username;
+            user.email = req.body.email;
+            user.role = req.body.role;
+            user.trades = req.body.trades;
+            user.save(function(err, doc) {
+                if (err) {
+                    res.status(404).send({ message: err });
+                } else if (doc) {
+                    res.status(200).send({ message: "success" });
+                } else {
+                    res.status(404).send({ message: "user_not_updated" });
+                }
+            });
+        } else {
+            res.status(404).send({ message: "user_not_found" });
+        }
     },
 
 };

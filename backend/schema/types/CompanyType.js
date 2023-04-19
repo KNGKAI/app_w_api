@@ -10,6 +10,8 @@ const {
 
 const { RoleModel } = require('../../models/role');
 const { UserModel } = require('../../models/user');
+const { SiteModel } = require('../../models/site');
+const { TradeModel } = require('../../models/trade');
 
 const CompanyType = new GraphQLObjectType({
     name: "Company",
@@ -20,23 +22,27 @@ const CompanyType = new GraphQLObjectType({
         users: {
             type: new GraphQLList(require('./UserType').UserType),
             resolve(parent, args) {
-                return UserModel.find({
-                    _id: {
-                        $in: parent.users
-                    }
-                });
+                return UserModel.find({ company: parent.id });
             }
         },
         roles: {
             type: new GraphQLList(require('./RoleType').RoleType),
             resolve(parent, args) {
-                return RoleModel.find({
-                    _id: {
-                        $in: parent.roles
-                    }
-                });
+                return RoleModel.find({ company: parent.id });
             }
-        }
+        },
+        sites: {
+            type: new GraphQLList(require('./SiteType').SiteType),
+            resolve(parent, args) {
+                return SiteModel.find({ company: parent.id });
+            }
+        },
+        trades: {
+            type: new GraphQLList(require('./TradeType').TradeType),
+            resolve(parent, args) {
+                return TradeModel.find({ company: parent.id });
+            }
+        },
     })
 })
 
